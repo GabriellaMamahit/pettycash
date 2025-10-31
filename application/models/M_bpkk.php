@@ -700,4 +700,34 @@ class M_bpkk extends CI_Model
         $data = $this->db->get();
         return $data->row();
     }
+
+    public function getWidgetData($status, $jenis_saldo)
+    {
+        // Hitung jumlah data
+        $this->db->from('tb_bpkk_cab');
+        $this->db->where('status_cab', $status);
+        $this->db->where('MONTH(tgl_kredit_cab)', date('m'));
+        $this->db->where('YEAR(tgl_kredit_cab)', date('Y'));
+        if ($jenis_saldo != 'all') {
+            $this->db->where('jenis_saldo', $jenis_saldo);
+        }
+        $count = $this->db->count_all_results();
+
+        // Hitung total nominal
+        $this->db->select_sum('total_kredit_cab');
+        $this->db->from('tb_bpkk_cab');
+        $this->db->where('status_cab', $status);
+        $this->db->where('MONTH(tgl_kredit_cab)', date('m'));
+        $this->db->where('YEAR(tgl_kredit_cab)', date('Y'));
+        if ($jenis_saldo != 'all') {
+            $this->db->where('jenis_saldo', $jenis_saldo);
+        }
+        $totalRow = $this->db->get()->row();
+        $total = $totalRow && $totalRow->total_kredit_cab ? $totalRow->total_kredit_cab : 0;
+
+        return [
+            'count' => $count,
+            'total' => number_format($total, 0, ',', '.')
+        ];
+    }
 }

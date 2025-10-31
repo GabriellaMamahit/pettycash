@@ -166,9 +166,28 @@
                         <div class="card">
                             <div class="card-body selling-card">
                                 <h4 class="text-warning">In Progress</h4>
-                                <span class="f-w-700 f-14 pb-2">Bulan Ini</span>
-                                <h3>12</h3>
-                                <div>Total: Rp 44.500.000</div>
+                                <span class="fw-bold small pb-2"><?= date('F Y'); ?></span>
+                                <h3 id="inProgressCount"><?= $in_progress['count']; ?></h3>
+                                <div>Total: Rp <span id="inProgressTotal"><?= $in_progress['total']; ?></span></div>
+                                <!-- <h3>
+                                    <?php
+                                    $this->db->from('tb_bpkk_cab');
+                                    $this->db->where('status_cab', 'In progress');
+                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
+                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
+                                    echo $this->db->count_all_results(); ?>
+                                </h3>
+                                <div>Total: Rp
+                                    <?php
+                                    $this->db->select_sum('total_kredit_cab');
+                                    $this->db->from('tb_bpkk_cab');
+                                    $this->db->where('status_cab', 'In progress');
+                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
+                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
+                                    $query = $this->db->get()->row();
+                                    echo number_format($query->total_kredit_cab ?? 0, 0, ',', '.');
+                                    ?>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -178,9 +197,29 @@
                         <div class="card">
                             <div class="card-body selling-card">
                                 <h4 class="text-success">Approved</h4>
-                                <span class="f-w-700 f-14 pb-2">Bulan Ini</span>
-                                <h3>32</h3>
-                                <div>Total: Rp 120.000.000</div>
+                                <span class="fw-bold small pb-2"><?= date('F Y'); ?></span>
+                                <h3 id="approvedCount"><?= $approved['count']; ?></h3>
+                                <div>Total: Rp <span id="approvedTotal"><?= $approved['total']; ?></span></div>
+
+                                <!-- <h3>
+                                    <?php
+                                    $this->db->from('tb_bpkk_cab');
+                                    $this->db->where('status_cab', 'Approved');
+                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
+                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
+                                    echo $this->db->count_all_results(); ?>
+                                </h3>
+                                <div>Total: Rp
+                                    <?php
+                                    $this->db->select_sum('total_kredit_cab');
+                                    $this->db->from('tb_bpkk_cab');
+                                    $this->db->where('status_cab', 'Approved');
+                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
+                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
+                                    $query = $this->db->get()->row();
+                                    echo number_format($query->total_kredit_cab ?? 0, 0, ',', '.');
+                                    ?>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -190,9 +229,29 @@
                         <div class="card">
                             <div class="card-body selling-card">
                                 <h4 class="text-info">Revisi</h4>
-                                <span class="f-w-700 f-14 pb-2">Bulan Ini</span>
-                                <h3>5</h3>
-                                <div>Menunggu perbaikan dokumen</div>
+                                <span class="fw-bold small pb-2"><?= date('F Y'); ?></span>
+                                <h3 id="revisiCount"><?= $revisi['count']; ?></h3>
+                                <div>Total: Rp <span id="revisiTotal"><?= $revisi['total']; ?></span></div>
+
+                                <!-- <h3>
+                                    <?php
+                                    $this->db->from('tb_bpkk_cab');
+                                    $this->db->where('status_cab', 'Revisi');
+                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
+                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
+                                    echo $this->db->count_all_results(); ?>
+                                </h3>
+                                <div>Total: Rp
+                                    <?php
+                                    $this->db->select_sum('total_kredit_cab');
+                                    $this->db->from('tb_bpkk_cab');
+                                    $this->db->where('status_cab', 'Revisi');
+                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
+                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
+                                    $query = $this->db->get()->row();
+                                    echo number_format($query->total_kredit_cab ?? 0, 0, ',', '.');
+                                    ?>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -202,9 +261,28 @@
                         <div class="card">
                             <div class="card-body selling-card">
                                 <h4 class="text-danger">Rejected</h4>
-                                <span class="f-w-700 f-14 pb-2">Bulan Ini</span>
-                                <h3>2</h3>
-                                <div>Alasan: dokumen tidak valid</div>
+                                <span class="fw-bold small pb-2"><?= date('F Y'); ?></span>
+                                <h3 id="rejectedCount"><?= $rejected['count']; ?></h3>
+                                <div>Total: Rp <span id="rejectedTotal"><?= $rejected['total']; ?></span></div>
+                                <!-- <h3>
+                                    <?php
+                                    $this->db->from('tb_bpkk_cab');
+                                    $this->db->where('status_cab', 'Rejected');
+                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
+                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
+                                    echo $this->db->count_all_results(); ?>
+                                </h3>
+                                <div>Total: Rp
+                                    <?php
+                                    $this->db->select_sum('total_kredit_cab');
+                                    $this->db->from('tb_bpkk_cab');
+                                    $this->db->where('status_cab', 'Rejected');
+                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
+                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
+                                    $query = $this->db->get()->row();
+                                    echo number_format($query->total_kredit_cab ?? 0, 0, ',', '.');
+                                    ?>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -1089,4 +1167,40 @@ document.addEventListener('DOMContentLoaded', () => {
         passive: true
     });
 });
+
+function filterWidget() {
+    var selected = $('#filterCabang').val();
+
+    // Tampilkan animasi loading
+    $('#loader').show();
+
+    $.ajax({
+        url: "<?php echo base_url('Dashboard/filter_widget'); ?>",
+        type: "POST",
+        data: {
+            jenis_saldo: selected
+        },
+        dataType: "json",
+        success: function(result) {
+
+            $("#inProgressCount").text(result.in_progress.count);
+            $("#inProgressTotal").text(result.in_progress.total);
+
+            $("#approvedCount").text(result.approved.count);
+            $("#approvedTotal").text(result.approved.total);
+
+            $("#revisiCount").text(result.revisi.count);
+            $("#revisiTotal").text(result.revisi.total);
+
+            $("#rejectedCount").text(result.rejected.count);
+            $("#rejectedTotal").text(result.rejected.total);
+
+            $('#loader').hide(); // sembunyikan loading
+        },
+        error: function() {
+            alert("Gagal mengambil data filter");
+            $('#loader').hide();
+        }
+    });
+}
 </script>

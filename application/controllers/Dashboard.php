@@ -132,9 +132,27 @@ class Dashboard extends CI_Controller
 			'rekap_tahunan' => $rekap_tahunan,
 			'data_saldojkt' => $data_saldojkt,
 			'no_bpkk' => $no_bpkk,
+			'in_progress' => $this->M_bpkk->getWidgetData('In progress', 'all'),
+			'approved'    => $this->M_bpkk->getWidgetData('Approved', 'all'),
+			'revisi'      => $this->M_bpkk->getWidgetData('Revisi', 'all'),
+			'rejected'    => $this->M_bpkk->getWidgetData('Rejected', 'all'),
 		);
 
 		$this->template->load('template', 'dashboard', $data);
+	}
+
+	public function filter_widget()
+	{
+		$jenis_saldo = $this->input->post('jenis_saldo');
+
+		$response = [
+			'in_progress' => $this->M_bpkk->getWidgetData('In progress', $jenis_saldo),
+			'approved'    => $this->M_bpkk->getWidgetData('Approved', $jenis_saldo),
+			'revisi'      => $this->M_bpkk->getWidgetData('Revisi', $jenis_saldo),
+			'rejected'    => $this->M_bpkk->getWidgetData('Rejected', $jenis_saldo),
+		];
+
+		echo json_encode($response);
 	}
 
 	public function tambahpengeluaranbpkk()
