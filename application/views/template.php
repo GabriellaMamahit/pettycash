@@ -43,6 +43,7 @@
     <!-- Sweetalert -->
     <!-- <link rel="stylesheet" href="<?= base_url() ?>assets/sweetalert2/sweetalert2.min.css" type="text/css"> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <!-- App css-->
     <link rel="stylesheet" type="text/css" href="<?= base_url() ?>assets/css/style.css">
     <link id="color" rel="stylesheet" href="<?= base_url() ?>assets/css/color-1.css" media="screen">
@@ -234,183 +235,183 @@
                                     </div>
                                 </li>
                                 <?php if (in_array($level, $akses_dashboard)) : ?>
-                                <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav"
-                                        href="<?= site_url('dashboard') ?>">
-                                        <i class="fa fa-thumb-tack"></i>
-                                        <svg class="stroke-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-maps"></use>
-                                        </svg>
-                                        <svg class="fill-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-maps"></use>
-                                        </svg>
-                                        <span>Dashboard</span></a>
-                                </li>
+                                    <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav"
+                                            href="<?= site_url('dashboard') ?>">
+                                            <i class="fa fa-thumb-tack"></i>
+                                            <svg class="stroke-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-maps"></use>
+                                            </svg>
+                                            <svg class="fill-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-maps"></use>
+                                            </svg>
+                                            <span>Dashboard</span></a>
+                                    </li>
                                 <?php endif; ?>
                                 <?php if (in_array($level, $developer_roles) || in_array($level, $basic_user_roles)) : ?>
-                                <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#">
-                                        <i class="fa fa-thumb-tack"></i>
-                                        <svg class="stroke-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-home"></use>
-                                        </svg>
-                                        <svg class="fill-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-home"></use>
-                                        </svg>
-                                        <span>Kantor Cabang</span></a>
-                                    <ul class="sidebar-submenu">
-                                        <?php if (in_array($level, $developer_roles) || $address == 'jakarta') : ?>
-                                        <li><a href="<?= site_url('Dashboard_cab/dashboard_jkt') ?>">Jakarta</a></li>
-                                        <?php endif; ?>
-                                        <?php if (in_array($level, $developer_roles) || $address == 'karimun') : ?>
-                                        <li><a href="<?= site_url('Dashboard_cab/dashboard_karimun') ?>">Karimun</a>
-                                        </li>
-                                        <?php endif; ?>
-                                        <?php if (in_array($level, $developer_roles) || $address == 'balikpapan') : ?>
-                                        <li><a
-                                                href="<?= site_url('Dashboard_cab/dashboard_balikpapan') ?>">Balikpapan</a>
-                                        </li>
-                                        <?php endif; ?>
-                                        <?php if (in_array($level, $developer_roles) || $address == 'galang') : ?>
-                                        <li><a href="<?= site_url('Dashboard_cab/dashboard_galang') ?>">Galang</a></li>
-                                        <?php endif; ?>
-                                        <?php if (in_array($level, $developer_roles) || $address == 'sekupang') : ?>
-                                        <li><a href="<?= site_url('Dashboard_cab/dashboard_sekupang_bbm') ?>">Sekupang
-                                                BBM Boat</a></li>
-                                        <li><a href="<?= site_url('Dashboard_cab/dashboard_sekupang_servicesboat') ?>">Sekupang
-                                                Service Boat</a></li>
-                                        <li><a href="<?= site_url('Dashboard_cab/dashboard_sekupang_rtk') ?>">Sekupang
-                                                RTK</a></li>
-                                        <?php endif; ?>
-                                    </ul>
-                                </li>
+                                    <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#">
+                                            <i class="fa fa-thumb-tack"></i>
+                                            <svg class="stroke-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-home"></use>
+                                            </svg>
+                                            <svg class="fill-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-home"></use>
+                                            </svg>
+                                            <span>Kantor Cabang</span></a>
+                                        <ul class="sidebar-submenu">
+                                            <?php if (in_array($level, $developer_roles) || $address == 'jakarta') : ?>
+                                                <li><a href="<?= site_url('Dashboard_cab/dashboard_jkt') ?>">Jakarta</a></li>
+                                            <?php endif; ?>
+                                            <?php if (in_array($level, $developer_roles) || $address == 'karimun') : ?>
+                                                <li><a href="<?= site_url('Dashboard_cab/dashboard_karimun') ?>">Karimun</a>
+                                                </li>
+                                            <?php endif; ?>
+                                            <?php if (in_array($level, $developer_roles) || $address == 'balikpapan') : ?>
+                                                <li><a
+                                                        href="<?= site_url('Dashboard_cab/dashboard_balikpapan') ?>">Balikpapan</a>
+                                                </li>
+                                            <?php endif; ?>
+                                            <?php if (in_array($level, $developer_roles) || $address == 'galang') : ?>
+                                                <li><a href="<?= site_url('Dashboard_cab/dashboard_galang') ?>">Galang</a></li>
+                                            <?php endif; ?>
+                                            <?php if (in_array($level, $developer_roles) || $address == 'sekupang') : ?>
+                                                <li><a href="<?= site_url('Dashboard_cab/dashboard_sekupang_bbm') ?>">Sekupang
+                                                        BBM Boat</a></li>
+                                                <li><a href="<?= site_url('Dashboard_cab/dashboard_sekupang_servicesboat') ?>">Sekupang
+                                                        Service Boat</a></li>
+                                                <li><a href="<?= site_url('Dashboard_cab/dashboard_sekupang_rtk') ?>">Sekupang
+                                                        RTK</a></li>
+                                            <?php endif; ?>
+                                        </ul>
+                                    </li>
                                 <?php endif; ?>
                                 <?php if (in_array($level, array_merge($basic_user_roles, $developer_roles, $direktur_finance))) : ?>
-                                <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav"
-                                        href="<?= site_url('bukti_pengeluaran_kas_kecil') ?>">
-                                        <i class="fa fa-thumb-tack"></i>
-                                        <svg class="stroke-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-widget"></use>
-                                        </svg>
-                                        <svg class="fill-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-widget"></use>
-                                        </svg>
-                                        <span>Pengeluaran Kas Kecil</span></a>
-                                </li>
-                                <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav"
-                                        href="<?= site_url('pengajuan_pettycash') ?>">
-                                        <i class="fa fa-thumb-tack"></i>
-                                        <svg class="stroke-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-sample-page">
-                                            </use>
-                                        </svg>
-                                        <svg class="fill-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-sample-page">
-                                            </use>
-                                        </svg>
-                                        <span>Pengajuan Petty Cash</span></a>
-                                </li>
+                                    <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav"
+                                            href="<?= site_url('bukti_pengeluaran_kas_kecil') ?>">
+                                            <i class="fa fa-thumb-tack"></i>
+                                            <svg class="stroke-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-widget"></use>
+                                            </svg>
+                                            <svg class="fill-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-widget"></use>
+                                            </svg>
+                                            <span>Pengeluaran Kas Kecil</span></a>
+                                    </li>
+                                    <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav"
+                                            href="<?= site_url('pengajuan_pettycash') ?>">
+                                            <i class="fa fa-thumb-tack"></i>
+                                            <svg class="stroke-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-sample-page">
+                                                </use>
+                                            </svg>
+                                            <svg class="fill-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-sample-page">
+                                                </use>
+                                            </svg>
+                                            <span>Pengajuan Petty Cash</span></a>
+                                    </li>
                                 <?php endif; ?>
 
                                 <?php if (in_array($level, $akses_data_transaksi)) : ?>
-                                <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav"
-                                        href="<?= site_url('data_transaksi') ?>">
-                                        <i class="fa fa-thumb-tack"></i>
-                                        <svg class="stroke-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-starter-kit">
-                                            </use>
-                                        </svg>
-                                        <svg class="fill-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-starter-kit">
-                                            </use>
-                                        </svg>
-                                        <span>Transaksi Debet</span></a>
-                                </li>
-                                <li class="sidebar-list">
-                                    <a class="sidebar-link sidebar-title link-nav"
-                                        href="<?= site_url('laporan_cabang') ?>">
-                                        <svg class="stroke-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-learning">
-                                            </use>
-                                        </svg>
-                                        <svg class="fill-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-learning">
-                                            </use>
-                                        </svg>
-                                        <span>Laporan Cabang</span>
-                                    </a>
-                                </li>
+                                    <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav"
+                                            href="<?= site_url('data_transaksi') ?>">
+                                            <i class="fa fa-thumb-tack"></i>
+                                            <svg class="stroke-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-starter-kit">
+                                                </use>
+                                            </svg>
+                                            <svg class="fill-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-starter-kit">
+                                                </use>
+                                            </svg>
+                                            <span>Transaksi Debet</span></a>
+                                    </li>
+                                    <li class="sidebar-list">
+                                        <a class="sidebar-link sidebar-title link-nav"
+                                            href="<?= site_url('laporan_cabang') ?>">
+                                            <svg class="stroke-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-learning">
+                                                </use>
+                                            </svg>
+                                            <svg class="fill-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-learning">
+                                                </use>
+                                            </svg>
+                                            <span>Laporan Cabang</span>
+                                        </a>
+                                    </li>
                                 <?php endif; ?>
 
                                 <?php if (in_array($level, $akses_kelola_saldo)) : ?>
-                                <li class="sidebar-main-title">
-                                    <div>
-                                        <h6>Finance</h6>
-                                    </div>
-                                </li>
-                                <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav"
-                                        href="<?= site_url('kelola_saldo') ?>">
-                                        <i class="fa fa-thumb-tack"></i>
-                                        <svg class="stroke-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-board"></use>
-                                        </svg>
-                                        <svg class="fill-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-board"></use>
-                                        </svg>
-                                        <span>Approval Center</span></a>
-                                </li>
+                                    <li class="sidebar-main-title">
+                                        <div>
+                                            <h6>Finance</h6>
+                                        </div>
+                                    </li>
+                                    <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav"
+                                            href="<?= site_url('kelola_saldo') ?>">
+                                            <i class="fa fa-thumb-tack"></i>
+                                            <svg class="stroke-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-board"></use>
+                                            </svg>
+                                            <svg class="fill-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-board"></use>
+                                            </svg>
+                                            <span>Approval Center</span></a>
+                                    </li>
                                 <?php endif; ?>
 
                                 <?php if (in_array($level, $akses_laporan_pc)) : ?>
-                                <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#">
-                                        <i class="fa fa-thumb-tack"></i>
-                                        <svg class="stroke-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-charts"></use>
-                                        </svg>
-                                        <svg class="fill-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-charts"></use>
-                                        </svg>
-                                        <span>Laporan Petty Cash</span></a>
-                                    <ul class="sidebar-submenu">
-                                        <li><a href="<?= site_url('laporan_pettycash/laporan_pettycash_jkt') ?>">
-                                                Jakarta</a></li>
-                                        <li><a
-                                                href="<?= site_url('laporan_pettycash/laporan_pettycash_karimun') ?>">Karimun</a>
-                                        </li>
-                                        <li><a
-                                                href="<?= site_url('laporan_pettycash/laporan_pettycash_balikpapan') ?>">Balikpapan</a>
-                                        </li>
-                                        <li><a
-                                                href="<?= site_url('laporan_pettycash/laporan_pettycash_galang') ?>">Galang</a>
-                                        </li>
-                                        <li><a
-                                                href="<?= site_url('laporan_pettycash/laporan_pettycash_sekupang_bbm') ?>">Sekupang
-                                                BBM Boat</a></li>
-                                        <li><a
-                                                href="<?= site_url('laporan_pettycash/laporan_pettycash_sekupang_servicesboat') ?>">Sekupang
-                                                Service Boat</a></li>
-                                        <li><a
-                                                href="<?= site_url('laporan_pettycash/laporan_pettycash_sekupang_rtk') ?>">Sekupang
-                                                RTK</a></li>
-                                    </ul>
-                                </li>
+                                    <li class="sidebar-list"><a class="sidebar-link sidebar-title" href="#">
+                                            <i class="fa fa-thumb-tack"></i>
+                                            <svg class="stroke-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-charts"></use>
+                                            </svg>
+                                            <svg class="fill-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-charts"></use>
+                                            </svg>
+                                            <span>Laporan Petty Cash</span></a>
+                                        <ul class="sidebar-submenu">
+                                            <li><a href="<?= site_url('laporan_pettycash/laporan_pettycash_jkt') ?>">
+                                                    Jakarta</a></li>
+                                            <li><a
+                                                    href="<?= site_url('laporan_pettycash/laporan_pettycash_karimun') ?>">Karimun</a>
+                                            </li>
+                                            <li><a
+                                                    href="<?= site_url('laporan_pettycash/laporan_pettycash_balikpapan') ?>">Balikpapan</a>
+                                            </li>
+                                            <li><a
+                                                    href="<?= site_url('laporan_pettycash/laporan_pettycash_galang') ?>">Galang</a>
+                                            </li>
+                                            <li><a
+                                                    href="<?= site_url('laporan_pettycash/laporan_pettycash_sekupang_bbm') ?>">Sekupang
+                                                    BBM Boat</a></li>
+                                            <li><a
+                                                    href="<?= site_url('laporan_pettycash/laporan_pettycash_sekupang_servicesboat') ?>">Sekupang
+                                                    Service Boat</a></li>
+                                            <li><a
+                                                    href="<?= site_url('laporan_pettycash/laporan_pettycash_sekupang_rtk') ?>">Sekupang
+                                                    RTK</a></li>
+                                        </ul>
+                                    </li>
                                 <?php endif; ?>
 
                                 <?php if (in_array($level, $akses_users_menu)) : ?>
-                                <li class="sidebar-main-title">
-                                    <div>
-                                        <h6>Develops</h6>
-                                    </div>
-                                </li>
-                                <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav"
-                                        href="<?= site_url('users') ?>">
-                                        <i class="fa fa-thumb-tack"></i>
-                                        <svg class="stroke-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-user"></use>
-                                        </svg>
-                                        <svg class="fill-icon">
-                                            <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-user"></use>
-                                        </svg>
-                                        <span>Users</span></a>
-                                </li>
+                                    <li class="sidebar-main-title">
+                                        <div>
+                                            <h6>Develops</h6>
+                                        </div>
+                                    </li>
+                                    <li class="sidebar-list"><a class="sidebar-link sidebar-title link-nav"
+                                            href="<?= site_url('users') ?>">
+                                            <i class="fa fa-thumb-tack"></i>
+                                            <svg class="stroke-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-user"></use>
+                                            </svg>
+                                            <svg class="fill-icon">
+                                                <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-user"></use>
+                                            </svg>
+                                            <span>Users</span></a>
+                                    </li>
                                 <?php endif; ?>
                             </ul>
                         </div>
@@ -488,92 +489,95 @@
     <script src="<?= base_url() ?>assets/js/script.js"></script>
     <!-- Sweetalert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
     <!-- <script src="<?= base_url() ?>assets/js/theme-customizer/customizer.js"></script> -->
     <!-- Plugin used-->
     <script>
-    $(function() {
-        var url = window.location;
-        // console.log(url);
-        $('ul.sidebar-links a').filter(function() {
-            return this.href == url;
-        }).addClass('active');
-
-        $('ul.sidebar-submenu a').filter(function() {
+        $(function() {
+            var url = window.location;
+            // console.log(url);
+            $('ul.sidebar-links a').filter(function() {
                 return this.href == url;
-            }).parentsUntil(".sidebar-links > .sidebar-submenu")
-            .css({
-                'display': 'block'
-            }).prev('a').addClass('active');
+            }).addClass('active');
 
-        $('div.submenu-title').filter(function() {
-            return this.href == url;
-        }).addClass('active');
+            $('ul.sidebar-submenu a').filter(function() {
+                    return this.href == url;
+                }).parentsUntil(".sidebar-links > .sidebar-submenu")
+                .css({
+                    'display': 'block'
+                }).prev('a').addClass('active');
 
-        $('ul.submenu-content a').filter(function() {
+            $('div.submenu-title').filter(function() {
                 return this.href == url;
-            }).parentsUntil(".sidebar-links > .submenu-content")
-            .css({
-                'display': 'block'
-            }).prev('a').addClass('active');
+            }).addClass('active');
 
-    });
+            $('ul.submenu-content a').filter(function() {
+                    return this.href == url;
+                }).parentsUntil(".sidebar-links > .submenu-content")
+                .css({
+                    'display': 'block'
+                }).prev('a').addClass('active');
+
+        });
     </script>
 
     <?php if ($this->session->flashdata('success')): ?>
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: '<?= $this->session->flashdata("success") ?>',
-            confirmButtonColor: '#376464'
-        });
-    });
-    </script>
-    <?php $this->session->unset_userdata('success'); ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: '<?= $this->session->flashdata("success") ?>',
+                    confirmButtonColor: '#376464'
+                });
+            });
+        </script>
+        <?php $this->session->unset_userdata('success'); ?>
     <?php endif; ?>
 
 
     <?php if ($this->session->flashdata('error')): ?>
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        Swal.fire({
-            icon: 'error',
-            title: 'Gagal!',
-            html: '<?= strip_tags($this->session->flashdata("error")) ?>',
-            confirmButtonColor: '#c06240'
-        });
-    });
-    </script>
-    <?php $this->session->unset_userdata('error'); ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    html: '<?= strip_tags($this->session->flashdata("error")) ?>',
+                    confirmButtonColor: '#c06240'
+                });
+            });
+        </script>
+        <?php $this->session->unset_userdata('error'); ?>
     <?php endif; ?>
 
     <script>
-    function loadNotifikasi() {
-        fetch("<?= site_url('notifikasi/get_latest') ?>")
-            .then(response => response.json())
-            .then(data => {
-                let html = "";
-                const notifBadge = document.getElementById("notif-count");
-                const unreadCount = data.length; // sekarang langsung jumlah total unread
+        function loadNotifikasi() {
+            fetch("<?= site_url('notifikasi/get_latest') ?>")
+                .then(response => response.json())
+                .then(data => {
+                    let html = "";
+                    const notifBadge = document.getElementById("notif-count");
+                    const unreadCount = data.length; // sekarang langsung jumlah total unread
 
-                // Update badge merah
-                if (unreadCount > 0) {
-                    notifBadge.innerText = unreadCount;
-                    notifBadge.style.display = "inline-block";
-                } else {
-                    notifBadge.style.display = "none";
-                }
+                    // Update badge merah
+                    if (unreadCount > 0) {
+                        notifBadge.innerText = unreadCount;
+                        notifBadge.style.display = "inline-block";
+                    } else {
+                        notifBadge.style.display = "none";
+                    }
 
-                // Tampilkan daftar notifikasi
-                if (data.length > 0) {
-                    data.forEach(row => {
-                        const warna = row.jenis_notifikasi === 'Permintaan' ? 'text-warning' :
-                            row.jenis_notifikasi === 'Penambahan' ? 'text-success' :
-                            row.jenis_notifikasi === 'Revisi' ? 'text-primary' :
-                            row.jenis_notifikasi === 'Rejected' ? 'text-danger' : 'text-dark';
+                    // Tampilkan daftar notifikasi
+                    if (data.length > 0) {
+                        data.forEach(row => {
+                            const warna = row.jenis_notifikasi === 'Permintaan' ? 'text-warning' :
+                                row.jenis_notifikasi === 'Penambahan' ? 'text-success' :
+                                row.jenis_notifikasi === 'Revisi' ? 'text-primary' :
+                                row.jenis_notifikasi === 'Rejected' ? 'text-danger' : 'text-dark';
 
-                        html += `
+                            html += `
                     <li style="background-color:#f8f9fa;">
                         <div class="user-notification">
                             <div><img src="<?= base_url() ?>assets/images/avtar/2.jpg" alt="avatar"></div>
@@ -586,37 +590,66 @@
                             </div>
                         </div>
                     </li>`;
-                    });
+                        });
 
-                    html +=
-                        `<li class="text-center"><a href="<?= site_url('notifikasi/mark_as_read_all') ?>" id="mark-all">Tandai semua sudah dibaca</a></li>`;
-                } else {
-                    html = `<li><p class="text-center">Tidak ada notifikasi baru</p></li>`;
+                        html +=
+                            `<li class="text-center"><a href="<?= site_url('notifikasi/mark_as_read_all') ?>" id="mark-all">Tandai semua sudah dibaca</a></li>`;
+                    } else {
+                        html = `<li><p class="text-center">Tidak ada notifikasi baru</p></li>`;
+                    }
+
+                    document.getElementById("list-notifikasi").innerHTML = html;
+                })
+                .catch(error => console.error("Error loading notifikasi:", error));
+        }
+
+        // load awal
+        loadNotifikasi();
+        // auto refresh tiap 1 menit
+        setInterval(loadNotifikasi, 60000);
+
+        // klik satu notifikasi → tandai dibaca
+        $(document).on('click', '.notif-item', function() {
+            const id = $(this).data('id');
+            fetch("<?= site_url('notifikasi/mark_as_read/') ?>" + id)
+                .then(() => loadNotifikasi());
+        });
+
+        // klik “tandai semua dibaca”
+        $(document).on('click', '#mark-all', function(e) {
+            e.preventDefault();
+            fetch("<?= site_url('notifikasi/mark_as_read_all') ?>")
+                .then(() => loadNotifikasi());
+        });
+    </script>
+    <script>
+        $(function() {
+            $('#reportrange').daterangepicker({
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment(),
+                ranges: {
+                    'Hari ini': [moment(), moment()],
+                    'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    '7 hari terakhir': [moment().subtract(6, 'days'), moment()],
+                    '30 hari terakhir': [moment().subtract(29, 'days'), moment()],
+                    'Bulan ini': [moment().startOf('month'), moment().endOf('month')],
+                    'Bulan Kemarin': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1,
+                        'month').endOf('month')]
+                },
+                locale: {
+                    format: 'DD/MM/YYYY'
                 }
+            }, function(start, end) {
+                $('#reportrange span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'));
 
-                document.getElementById("list-notifikasi").innerHTML = html;
-            })
-            .catch(error => console.error("Error loading notifikasi:", error));
-    }
+                // reload page with date query
+                let awal = start.format('YYYY-MM-DD');
+                let akhir = end.format('YYYY-MM-DD');
+                window.location = "<?= site_url('Bukti_pengeluaran_kas_kecil/riwayat_bpkk'); ?>?awal=" +
+                    awal + "&akhir=" + akhir;
 
-    // load awal
-    loadNotifikasi();
-    // auto refresh tiap 1 menit
-    setInterval(loadNotifikasi, 60000);
-
-    // klik satu notifikasi → tandai dibaca
-    $(document).on('click', '.notif-item', function() {
-        const id = $(this).data('id');
-        fetch("<?= site_url('notifikasi/mark_as_read/') ?>" + id)
-            .then(() => loadNotifikasi());
-    });
-
-    // klik “tandai semua dibaca”
-    $(document).on('click', '#mark-all', function(e) {
-        e.preventDefault();
-        fetch("<?= site_url('notifikasi/mark_as_read_all') ?>")
-            .then(() => loadNotifikasi());
-    });
+            });
+        });
     </script>
 
 </body>

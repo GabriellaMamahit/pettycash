@@ -1,58 +1,4 @@
 <style>
-    /* .default-dashboard2 .last-orders-table thead tr {
-    border-bottom: 1px solid #f5f5f5;
-}
-
-.default-dashboard2 .last-orders-table thead tr th {
-    color: #848789;
-    padding: 0 5px 11px;
-}
-
-.default-dashboard2 .last-orders-table thead tr th:first-child {
-    padding-left: 0;
-}
-
-.default-dashboard2 .last-orders-table thead tr th:first-child:after {
-    display: none;
-}
-
-.default-dashboard2 .last-orders-table tbody tr td {
-    padding: 18px 5px;
-}
-
-.default-dashboard2 .last-orders-table tbody tr td:first-child {
-    padding-left: 0 !important;
-}
-
-.default-dashboard2 .last-orders-table tbody tr td:last-child {
-    padding-right: 0 !important;
-}
-
-.default-dashboard2 .last-orders-table tbody tr:last-child {
-    border-bottom: none;
-}
-
-.default-dashboard2 .last-orders-table tbody tr:last-child td {
-    border-bottom: none !important;
-    padding-bottom: 0;
-}
-
-.default-dashboard2 .search-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.default-dashboard2 .search-bar label {
-    margin-bottom: 0;
-    color: #333;
-}
-
-.default-dashboard2 .search-bar input {
-    min-width: 200px;
-} */
-
     .dataTables_wrapper .dataTables_paginate {
         margin-top: 20px !important;
     }
@@ -158,6 +104,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="px-3 d-flex justify-content-end mb-2">
+                    <div class="col-12 col-md-3 d-flex justify-content-end">
+                        <button id="reportrange"
+                            class="btn btn-primary w-100 d-flex align-items-center justify-content-center"
+                            type="button">
+                            <i data-feather="calendar" style="width:16px; height:16px; margin-right:10px;"></i>
+                            <span>Pilih Rentang Tanggal</span>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="card-body pt-0">
                     <!-- Table -->
                     <div class="table-responsive">
@@ -194,7 +151,6 @@
                                         </td>
                                         <td class="text-center"><?= $no++ ?>.</td>
                                         <td><?= date('d/m/Y', strtotime($data['tgl_kredit_cab'])); ?></td>
-                                        <!-- <td><?= $data['ket_bpkk_cab']; ?></td> -->
                                         <td>
                                             <div class="user-data">
                                                 <div><a href="javascript:void(0)" class="text-dark text-decoration-none">
@@ -209,20 +165,6 @@
                                         </td>
                                         <td></td>
                                         <td>Rp. <?= number_format($data['total_kredit_cab'], 0, ',', '.'); ?></td>
-                                        <!-- <td>
-                                        <?php if ($data['status_cab'] == 'In progress') : ?>
-                                        <span class="badge badge-warning text-dark">In progress</span>
-                                        <?php elseif ($data['status_cab'] == 'Rejected') : ?>
-                                        <span class="badge badge-danger">Rejected</span>
-                                        <?php if (!empty($data['ket_notifikasi'])): ?>
-                                        <br><small class="text-danger"><?= $data['ket_notifikasi']; ?></small>
-                                        <?php endif; ?>
-                                        <?php elseif ($data['status_cab'] == 'Approved') : ?>
-                                        <span class="badge badge-success">Approved</span>
-                                        <?php else : ?>
-                                        <span class="badge badge-secondary"><?= ucfirst($data['status_cab']); ?></span>
-                                        <?php endif; ?>
-                                    </td> -->
                                         <td>
                                             <?php if ($data['status_cab'] == 'In progress') : ?>
                                                 <span class="badge badge-warning text-dark">In progress</span>
@@ -273,19 +215,8 @@
                                                         <i data-feather="edit" style="width:12px; height:12px;"></i>
                                                     </a>
                                                 <?php endif; ?>
-                                                <!-- Hapus -->
-                                                <!-- <a href="#" class="btn btn-outline-danger btn-sm"
-                                                style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                title="Hapus">
-                                                <i data-feather="trash-2" style="width:12px; height:12px;"></i>
-                                            </a> -->
                                             </div>
                                             <div class="d-flex justify-content-center gap-1">
-                                                <!-- <a href="#" class="btn btn-outline-primary btn-sm"
-                                                style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                title="Print">
-                                                <i data-feather="printer" style="width:12px; height:12px;"></i>
-                                            </a> -->
                                                 <?php if ($data['status_bpkk'] === 'Open' && $data['status_cab'] === 'In progress'): ?>
                                                     <a href="#" class="btn btn-outline-success btn-sm"
                                                         style="height:20px; padding:2px 4px; font-size:10px; display:flex; align-items:center; justify-content:center;"
@@ -371,14 +302,6 @@
                                     <small id="saldo-warning" class="mt-2 text-danger" style="display:none;"></small>
                                 </div>
                             </div>
-                            <!-- <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label class="form-label txt-dark" for="formFile">Upload Dokumen Pendukung :</label>
-                                    <input class="form-control" id="formFile" type="file" name="file_dokumen"
-                                        accept=".pdf">
-                                    <small class="form-text text-muted fst-italic">*File harus dalam format PDF</small>
-                                </div>
-                            </div> -->
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label txt-dark" for="formFile">Upload Dokumen Pendukung :
@@ -417,7 +340,6 @@
                 </h3>
                 <div class="modal-body">
                     <div style="margin:0 -1rem; padding:0;">
-                        <!-- minus margin untuk hilangkan padding modal -->
                         <span class="badge d-block text-center"
                             style="font-size:14px; display:block; width:100%; border-radius:0;">
                         </span>
@@ -457,6 +379,40 @@
         </div>
     </div>
 </div>
+
+<!-- MODAL FILTER TANGGAL -->
+<div class="modal fade" id="modalFilterPengeluaran" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Filter Pengeluaran</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="formFilterTanggal">
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal Dari</label>
+                        <input type="date" class="form-control" name="tgl_awal" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Tanggal Sampai</label>
+                        <input type="date" class="form-control" name="tgl_akhir" required>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button class="btn btn-primary" id="btnFilterTanggal">
+                    <i data-feather="search" style="width:14px;height:14px;margin-right:6px;"></i> Filter
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -499,11 +455,9 @@
             )
             .text(data.status || 'N/A');
 
-        // Hapus preview dulu
         const preview = $('#pratinjauGambar2');
         preview.empty();
 
-        // Tambahkan iframe setelah modal benar-benar terbuka
         modal.one('shown.bs.modal', function() {
             if (!data.file.trim()) {
                 preview.html(`<p style="color:red;font-weight:bold;text-align:center;">
@@ -677,7 +631,6 @@
         const alertBox = document.getElementById('saldo-warning');
         const submitBtn = document.getElementById('submitBtn');
 
-        // Hitung tambahan pengeluaran (hanya jika total baru > total lama)
         if (raw > old) {
             const kebutuhan = raw - old; // total tambahan permintaan
             const kekurangan = kebutuhan - saldo; // sisa kekurangan setelah dipotong saldo
@@ -885,4 +838,6 @@
             return new bootstrap.Popover(popoverTriggerEl)
         })
     });
+
+    feather.replace();
 </script>

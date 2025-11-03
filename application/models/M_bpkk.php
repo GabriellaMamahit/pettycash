@@ -127,6 +127,22 @@ class M_bpkk extends CI_Model
         return $query->result_array();
     }
 
+    public function filterBpkkByDate($address_user, $level, $awal, $akhir)
+    {
+        // $this->db->where('jenis_saldo', $address_user);
+
+        // Tambahkan logika role jika sebelumnya ada
+        // contoh:
+        // if($level == 'super_admin'){ ... }
+
+        // Filter tanggal
+        $this->db->where("DATE(tgl_kredit_cab) >=", $awal);
+        $this->db->where("DATE(tgl_kredit_cab) <=", $akhir);
+
+        return $this->db->get('tb_bpkk_cab')->result_array();
+    }
+
+
     public function getbpkk($address_user, $level)
     {
         // Menentukan cabang/jenis_saldo mana saja yang boleh diakses user

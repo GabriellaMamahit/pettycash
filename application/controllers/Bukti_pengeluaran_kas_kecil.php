@@ -9,6 +9,7 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
         check_not_login();
         $this->load->model('M_bpkk');
     }
+
     public function index()
     {
         $user = $this->fungsi->user_login();
@@ -23,6 +24,66 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
 
         $this->template->load('template', 'laporan_bpkk', $data);
     }
+
+    public function riwayat_bpkk()
+    {
+        $user = $this->fungsi->user_login();
+        $address_user = $user->address_user;
+        $level = $user->level;
+
+        $awal  = $this->input->get('awal');
+        $akhir = $this->input->get('akhir');
+
+        // Jika ada filter tanggal digunakan
+        if ($awal && $akhir) {
+            $rowbpkk = $this->M_bpkk->filterBpkkByDate($address_user, $level, $awal, $akhir);
+        } else {
+            // Jika tidak dipilih tanggal, tampilkan data normal
+            $rowbpkk = $this->M_bpkk->getbpkk($address_user, $level);
+        }
+
+        $data = [
+            'judul'  => "Petty Cash | Riwayat BPKK",
+            'script' => "bpkk.js",
+            'rowbpkk' => $rowbpkk,
+            'awal' => $awal,
+            'akhir' => $akhir,
+        ];
+
+        // LOAD VIEW BARU
+        $this->template->load('template', 'riwayat_laporan/riwayat_bpkk', $data);
+    }
+
+
+    // public function index()
+    // {
+    //     $user = $this->fungsi->user_login();
+    //     $address_user = $user->address_user;
+    //     $level = $user->level;
+
+    //     // Ambil tanggal dari URL (GET)
+    //     $awal  = $this->input->get('awal');
+    //     $akhir = $this->input->get('akhir');
+
+    //     // Jika ada filter tanggal → kirim tanggal ke Model
+    //     if ($awal && $akhir) {
+    //         $rowbpkk = $this->M_bpkk->filterBpkkByDate($address_user, $level, $awal, $akhir);
+    //     } else {
+    //         // Tanpa filter → data normal
+    //         $rowbpkk = $this->M_bpkk->getbpkk($address_user, $level);
+    //     }
+
+    //     $data = array(
+    //         'judul'  => "Petty Cash | Riwayat BPKK",
+    //         'script' => "bpkk.js",
+    //         'rowbpkk' => $rowbpkk,
+    //         'awal' => $awal,
+    //         'akhir' => $akhir,
+    //     );
+
+    //     $this->template->load('template', 'laporan_bpkk', $data);
+    // }
+
 
     public function proses_bpkk()
     {
