@@ -403,25 +403,39 @@ class Kelola_saldo extends CI_Controller
         $config['upload_path']   = $upload_folder;
         $config['allowed_types'] = 'pdf';
         $config['max_size']      = 1048;
-        $config['encrypt_name']  = FALSE;
+        $config['encrypt_name']  = TRUE;
         $config['file_name']     = $file_name;
 
         $this->load->library('upload', $config);
         $filename = null;
 
         if (!is_dir($upload_folder)) {
-            mkdir($upload_folder, 0777, true);
+            mkdir($upload_folder, 0777, true); // buat folder beserta parent
         }
 
-        if ($this->upload->do_upload('file_dokumen_saldo')) {
-            $filename = $file_name;
-        } else {
-            $error = $this->upload->display_errors('', '');
-            $errorMsg = (stripos($error, 'filetype') !== false)
-                ? "File harus dalam format PDF."
-                : "Ukuran file terlalu besar, maksimal 1 MB.";
+        if (!is_writable($upload_folder)) {
+            chmod($upload_folder, 0777);
+        }
 
-            $this->session->set_flashdata('error', $errorMsg);
+        if (!empty($_FILES['file_dokumen_saldo']['name'])) {
+            $config['upload_path']   = $upload_folder;
+            $config['allowed_types'] = 'pdf';
+            $config['max_size']      = 1048;
+            $config['encrypt_name']  = TRUE;
+
+            $this->load->library('upload', $config);
+
+            if ($this->upload->do_upload('file_dokumen_saldo')) {
+                $uploadData = $this->upload->data();
+                $filename = $uploadData['file_name'];
+            } else {
+                $error = $this->upload->display_errors('', '');
+                $this->session->set_flashdata('error', $error);
+                redirect('kelola_saldo/approve_saldo/' . $id_pettycash_saldo . '/' . $jenissaldo);
+                return;
+            }
+        } else {
+            $this->session->set_flashdata('error', 'File PDF harus diunggah.');
             redirect('kelola_saldo/approve_saldo/' . $id_pettycash_saldo . '/' . $jenissaldo);
             return;
         }
@@ -489,7 +503,7 @@ class Kelola_saldo extends CI_Controller
 
         // === Setelah berhasil simpan, hapus pending dari tb_sisasaldo_rembes ===
         if ($pending) {
-            $this->db->delete('tb_sisasaldo_rembes', ['no_petty_cash' => $no_petty_cash]);
+            $this->db->delete('tb_sisasaldo_rembes', ['no_petty_cash' => $nopettycashawal]);
         }
 
         $this->session->set_flashdata('success', 'Saldo rembesment berhasil ditambahkan.');

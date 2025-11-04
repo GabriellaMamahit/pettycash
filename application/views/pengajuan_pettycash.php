@@ -1,19 +1,18 @@
 <style>
-/* Tambahkan jarak bawah kalau pagination terlalu mepet ke border bawah */
-.dataTables_wrapper {
-    padding-bottom: 20px !important;
-}
-
-#viewpermintaan td {
-    white-space: nowrap;
-    vertical-align: middle;
-}
-
-@media (max-width: 1470px) {
-    .signal-table.table-responsive .table tbody tr td:nth-child(n+2) {
-        min-width: auto !important;
+    .dataTables_wrapper {
+        padding-bottom: 20px !important;
     }
-}
+
+    #viewpermintaan td {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    @media (max-width: 1470px) {
+        .signal-table.table-responsive .table tbody tr td:nth-child(n+2) {
+            min-width: auto !important;
+        }
+    }
 </style>
 
 <!-- === Page Header === -->
@@ -115,87 +114,74 @@
                             <tbody>
                                 <?php $no = 1;
                                 foreach ($rowpermintaansaldo as $data) { ?>
-                                <tr>
-                                    <td class="text-center"><?= $no++ ?>.</td>
-                                    <td>
-                                        <div class="user-data">
-                                            <div><a href="javascript:void(0)" class="text-dark text-decoration-none">
-                                                    <p><?= ucfirst($data['kantor_cab']); ?></p>
-                                                </a><span
-                                                    class="<?= $data['tanggal_pettycash'] ? 'text-success' : 'text-success' ?>"
-                                                    style="font-size:12px;">
-                                                    <?= date('d/m/Y', strtotime($data['tanggal_pettycash'])); ?>
-                                                </span>
+                                    <tr>
+                                        <td class="text-center"><?= $no++ ?>.</td>
+                                        <td>
+                                            <div class="user-data">
+                                                <div><a href="javascript:void(0)" class="text-dark text-decoration-none">
+                                                        <p><?= ucfirst($data['kantor_cab']); ?></p>
+                                                    </a><span
+                                                        class="<?= $data['tanggal_pettycash'] ? 'text-success' : 'text-success' ?>"
+                                                        style="font-size:12px;">
+                                                        <?= date('d/m/Y', strtotime($data['tanggal_pettycash'])); ?>
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <!-- <td><?= date('d/m/Y', strtotime($data['tanggal_pettycash'])); ?></td>
-                                    <td><?= ucfirst($data['kantor_cab']); ?> -->
-                                    <td>
-                                        <div class="user-data">
-                                            <div><a href="javascript:void(0)" class="text-dark text-decoration-none">
-                                                    <p><?= $data['ket_pettycash']; ?></p>
-                                                </a><span
-                                                    class="<?= $data['no_pettycash'] ? 'text-success' : 'text-success' ?>"
-                                                    style="font-size:12px;">
-                                                    <?= $data['no_pettycash']; ?>
-                                                </span>
+                                        </td>
+                                        <td>
+                                            <div class="user-data">
+                                                <div><a href="javascript:void(0)" class="text-dark text-decoration-none">
+                                                        <p><?= $data['ket_pettycash']; ?></p>
+                                                    </a><span
+                                                        class="<?= $data['no_pettycash'] ? 'text-success' : 'text-success' ?>"
+                                                        style="font-size:12px;">
+                                                        <?= $data['no_pettycash']; ?>
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <!-- <td><?= $data['ket_pettycash']; ?></td> -->
-                                    <!-- <td><?= $data['no_pettycash']; ?></td> -->
-                                    <td>Rp. <?= number_format($data['saldo_pettycash'], 0, ',', '.'); ?></td>
-                                    <td></td>
-                                    <td>Rp. <?= number_format($data['sisa_saldo'], 0, ',', '.') ?></td>
-                                    <td>
-                                        <?php if ($data['status_permintaan'] == 'Waiting') : ?>
-                                        <span class="badge badge-warning">Waiting</span>
-                                        <?php else : ?>
-                                        <span class="badge badge-success">Success</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="text-center">
-                                        <div class="d-flex justify-content-center gap-1 mb-1">
-                                            <!-- Lihat -->
-                                            <a href="#" class="btn btn-outline-info btn-sm view-permintaan-saldo"
-                                                style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                title="Lihat" data-no-pettycash="<?= $data['no_pettycash']; ?>"
-                                                data-tanggal="<?= $data['tanggal_pettycash']; ?>"
-                                                data-keterangan="<?= $data['ket_pettycash']; ?>"
-                                                data-saldo="<?= $data['saldo_pettycash']; ?>"
-                                                data-status="<?= $data['status_permintaan']; ?>" data-bs-toggle="modal"
-                                                data-bs-target="#viewdatapermintaansaldo">
-                                                <i data-feather="eye" style="width:12px; height:12px;"></i>
-                                            </a>
-                                            <!-- pdf aprroval -->
-                                            <a href="#" class="btn btn-outline-secondary btn-sm"
-                                                style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                title="View Pdf Approval"
-                                                data-nama_dok="<?= $data['nama_dokumenremb']; ?>"
-                                                data-jenissaldo_dok="<?= $data['jenis_saldo']; ?>"
-                                                data-bs-toggle="modal" data-bs-target="#viewpdfapproval">
-                                                <i data-feather="file" style="width:12px; height:12px;"></i>
-                                            </a>
-
-                                            <a href="<?= base_url('pengajuan_pettycash/export_excel?no_pettycash=' . urlencode($data['no_pettycash'])); ?>"
-                                                class="btn btn-outline-success btn-sm"
-                                                style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                title="Export ke Excel">
-                                                <i data-feather="file-text" style="width:12px; height:12px;"></i>
-                                            </a>
-
-                                            <?php if ($this->session->userdata('level') === 'development') : ?>
-                                            <!-- Hapus hanya untuk Development -->
-                                            <!-- <a href="#" class="btn btn-outline-danger btn-sm"
-                                                style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                title="Hapus">
-                                                <i data-feather="trash-2" style="width:12px; height:12px;"></i>
-                                            </a> -->
+                                        </td>
+                                        <td>Rp. <?= number_format($data['saldo_pettycash'], 0, ',', '.'); ?></td>
+                                        <td></td>
+                                        <td>Rp. <?= number_format($data['sisa_saldo'], 0, ',', '.') ?></td>
+                                        <td>
+                                            <?php if ($data['status_permintaan'] == 'Waiting') : ?>
+                                                <span class="badge badge-warning">Waiting</span>
+                                            <?php else : ?>
+                                                <span class="badge badge-success">Success</span>
                                             <?php endif; ?>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-1 mb-1">
+                                                <!-- Lihat -->
+                                                <a href="#" class="btn btn-outline-info btn-sm view-permintaan-saldo"
+                                                    style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
+                                                    title="Lihat" data-no-pettycash="<?= $data['no_pettycash']; ?>"
+                                                    data-tanggal="<?= $data['tanggal_pettycash']; ?>"
+                                                    data-keterangan="<?= $data['ket_pettycash']; ?>"
+                                                    data-saldo="<?= $data['saldo_pettycash']; ?>"
+                                                    data-status="<?= $data['status_permintaan']; ?>" data-bs-toggle="modal"
+                                                    data-bs-target="#viewdatapermintaansaldo">
+                                                    <i data-feather="eye" style="width:12px; height:12px;"></i>
+                                                </a>
+                                                <!-- pdf aprroval -->
+                                                <a href="#" class="btn btn-outline-secondary btn-sm"
+                                                    style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
+                                                    title="View Pdf Approval"
+                                                    data-nama_dok="<?= $data['nama_dokumenremb']; ?>"
+                                                    data-jenissaldo_dok="<?= $data['jenis_saldo']; ?>"
+                                                    data-bs-toggle="modal" data-bs-target="#viewpdfapproval">
+                                                    <i data-feather="file" style="width:12px; height:12px;"></i>
+                                                </a>
+
+                                                <a href="<?= base_url('pengajuan_pettycash/export_excel?no_pettycash=' . urlencode($data['no_pettycash'])); ?>"
+                                                    class="btn btn-outline-success btn-sm"
+                                                    style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
+                                                    title="Export ke Excel">
+                                                    <i data-feather="file-text" style="width:12px; height:12px;"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 <?php } ?>
                             </tbody>
                         </table>
@@ -252,47 +238,47 @@
                                 </div>
                             </div>
                             <?php if ($address_user === 'sekupang'): ?>
-                            <div class="row mb-3">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <p class="form-label txt-dark d-block text-center mb-3">JENIS PETTY CASH</p>
-                                        <div class="d-flex justify-content-center gap-4">
-                                            <div class="form-check radio radio-primary">
-                                                <input class="form-check-input jenis-petty" type="radio"
-                                                    name="jenis_petty_cash" id="jenis_bbm" value="PA_BBM" required>
-                                                <label class="form-check-label" for="jenis_bbm">BBM PILOT BOAT <i
-                                                        class="fa fa-info-circle text-primary ms-1"
-                                                        data-bs-toggle="popover" data-bs-placement="bottom"
-                                                        data-bs-html="true" title="Informasi"
-                                                        data-bs-content="Sedang cek saldo..."></i></label>
-                                            </div>
-                                            <div class="form-check radio radio-primary">
-                                                <input class="form-check-input jenis-petty" type="radio"
-                                                    name="jenis_petty_cash" id="jenis_rtk" value="PA_RTK">
-                                                <label class="form-check-label" for="jenis_rtk">RTK
-                                                    <i class="fa fa-info-circle text-primary ms-1"
-                                                        data-bs-toggle="popover" data-bs-placement="bottom"
-                                                        data-bs-html="true" title="Informasi"
-                                                        data-bs-content="Sedang cek saldo..."></i>
-                                                </label>
-                                            </div>
-                                            <div class="form-check radio radio-primary">
-                                                <input class="form-check-input jenis-petty" type="radio"
-                                                    name="jenis_petty_cash" id="jenis_sb" value="PA_SB">
-                                                <label class="form-check-label" for="jenis_sb">SERVICE BOAT
-                                                    <i class="fa fa-info-circle text-primary ms-1"
-                                                        data-bs-toggle="popover" data-bs-placement="bottom"
-                                                        data-bs-html="true" title="Informasi"
-                                                        data-bs-content="Sedang cek saldo..."></i>
-                                                </label>
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <p class="form-label txt-dark d-block text-center mb-3">JENIS PETTY CASH</p>
+                                            <div class="d-flex justify-content-center gap-4">
+                                                <div class="form-check radio radio-primary">
+                                                    <input class="form-check-input jenis-petty" type="radio"
+                                                        name="jenis_petty_cash" id="jenis_bbm" value="PA_BBM" required>
+                                                    <label class="form-check-label" for="jenis_bbm">BBM PILOT BOAT <i
+                                                            class="fa fa-info-circle text-primary ms-1"
+                                                            data-bs-toggle="popover" data-bs-placement="bottom"
+                                                            data-bs-html="true" title="Informasi"
+                                                            data-bs-content="Sedang cek saldo..."></i></label>
+                                                </div>
+                                                <div class="form-check radio radio-primary">
+                                                    <input class="form-check-input jenis-petty" type="radio"
+                                                        name="jenis_petty_cash" id="jenis_rtk" value="PA_RTK">
+                                                    <label class="form-check-label" for="jenis_rtk">RTK
+                                                        <i class="fa fa-info-circle text-primary ms-1"
+                                                            data-bs-toggle="popover" data-bs-placement="bottom"
+                                                            data-bs-html="true" title="Informasi"
+                                                            data-bs-content="Sedang cek saldo..."></i>
+                                                    </label>
+                                                </div>
+                                                <div class="form-check radio radio-primary">
+                                                    <input class="form-check-input jenis-petty" type="radio"
+                                                        name="jenis_petty_cash" id="jenis_sb" value="PA_SB">
+                                                    <label class="form-check-label" for="jenis_sb">SERVICE BOAT
+                                                        <i class="fa fa-info-circle text-primary ms-1"
+                                                            data-bs-toggle="popover" data-bs-placement="bottom"
+                                                            data-bs-html="true" title="Informasi"
+                                                            data-bs-content="Sedang cek saldo..."></i>
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             <?php else: ?>
-                            <input type="hidden" name="jenis_petty_cash" id="jenis_petty_cash_hidden"
-                                value="<?= $jenis_petty_cash_default ?>">
+                                <input type="hidden" name="jenis_petty_cash" id="jenis_petty_cash_hidden"
+                                    value="<?= $jenis_petty_cash_default ?>">
                             <?php endif; ?>
                             <input type="hidden" name="kode_kantorcab" id="kode_kantorcab" readonly>
                             <!-- <div class="row mb-3">
@@ -538,70 +524,70 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-function formatRupiah(el) {
-    let number_string = el.value.replace(/[^,\d]/g, '').toString(),
-        split = number_string.split(','),
-        sisa = split[0].length % 3,
-        rupiah = split[0].substr(0, sisa),
-        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+    function formatRupiah(el) {
+        let number_string = el.value.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-    // tambahkan titik jika ada ribuan
-    if (ribuan) {
-        let separator = sisa ? '.' : '';
-        rupiah += separator + ribuan.join('.');
+        // tambahkan titik jika ada ribuan
+        if (ribuan) {
+            let separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        // hasil akhir
+        el.value = 'Rp. ' + (split[1] !== undefined ? rupiah + ',' + split[1] : rupiah);
+
+        // simpan ke hidden input tanpa titik dan "Rp."
+        const rawValue = number_string.replace(/\./g, '');
+        document.getElementById('totalDebetRaw').value = rawValue;
     }
 
-    // hasil akhir
-    el.value = 'Rp. ' + (split[1] !== undefined ? rupiah + ',' + split[1] : rupiah);
+    // permintaan saldo
+    $(document).ready(function() {
+        // Untuk Sekupang: trigger AJAX saat radio button dipilih
+        $('input[name="jenis_petty_cash"]').on('change', function() {
+            var jenis_saldo = $(this).val();
+            fetchBpkkTable(jenis_saldo);
+            fetchSisaSaldo(jenis_saldo);
+        });
 
-    // simpan ke hidden input tanpa titik dan "Rp."
-    const rawValue = number_string.replace(/\./g, '');
-    document.getElementById('totalDebetRaw').value = rawValue;
-}
+        // Untuk cabang selain Sekupang (input hidden)
+        var jenis_saldo_default = $('input[name="jenis_petty_cash"]:not(:radio)').val();
+        if (jenis_saldo_default !== undefined && jenis_saldo_default !== '') {
+            fetchBpkkTable(jenis_saldo_default);
+            fetchSisaSaldo(jenis_saldo_default);
+        } else {
+            // kosongkan dulu total debet jika belum ada pilihan jenis saldo
+            $('#totalDebet').val('Rp. 0');
+            $('#totalDebetRaw').val(0);
+            $('#sisaSaldo').val('Rp. 0');
+            $('#sisaSaldoRaw').val(0);
+            $('#pengeluaran_bpkk_saldo tbody').html(
+                '<tr><td colspan="8" class="text-center text-muted">Silakan pilih jenis petty cash terlebih dahulu.</td></tr>'
+            );
+        }
 
-// permintaan saldo
-$(document).ready(function() {
-    // Untuk Sekupang: trigger AJAX saat radio button dipilih
-    $('input[name="jenis_petty_cash"]').on('change', function() {
-        var jenis_saldo = $(this).val();
-        fetchBpkkTable(jenis_saldo);
-        fetchSisaSaldo(jenis_saldo);
-    });
+        function fetchBpkkTable(jenis_saldo) {
+            $.ajax({
+                url: "<?= site_url('pengajuan_pettycash/get_tabel_bpkk_by_jenis') ?>",
+                type: "POST",
+                data: {
+                    jenis_saldo: jenis_saldo
+                },
+                dataType: "json",
+                success: function(response) {
+                    let html = '';
+                    const data = response.table_data;
 
-    // Untuk cabang selain Sekupang (input hidden)
-    var jenis_saldo_default = $('input[name="jenis_petty_cash"]:not(:radio)').val();
-    if (jenis_saldo_default !== undefined && jenis_saldo_default !== '') {
-        fetchBpkkTable(jenis_saldo_default);
-        fetchSisaSaldo(jenis_saldo_default);
-    } else {
-        // kosongkan dulu total debet jika belum ada pilihan jenis saldo
-        $('#totalDebet').val('Rp. 0');
-        $('#totalDebetRaw').val(0);
-        $('#sisaSaldo').val('Rp. 0');
-        $('#sisaSaldoRaw').val(0);
-        $('#pengeluaran_bpkk_saldo tbody').html(
-            '<tr><td colspan="8" class="text-center text-muted">Silakan pilih jenis petty cash terlebih dahulu.</td></tr>'
-        );
-    }
-
-    function fetchBpkkTable(jenis_saldo) {
-        $.ajax({
-            url: "<?= site_url('pengajuan_pettycash/get_tabel_bpkk_by_jenis') ?>",
-            type: "POST",
-            data: {
-                jenis_saldo: jenis_saldo
-            },
-            dataType: "json",
-            success: function(response) {
-                let html = '';
-                const data = response.table_data;
-
-                if (data.length === 0) {
-                    html +=
-                        '<tr><td colspan="8" class="text-center text-muted">Tidak ada data.</td></tr>';
-                } else {
-                    data.forEach(function(row) {
-                        html += `
+                    if (data.length === 0) {
+                        html +=
+                            '<tr><td colspan="8" class="text-center text-muted">Tidak ada data.</td></tr>';
+                    } else {
+                        data.forEach(function(row) {
+                            html += `
                         <tr>
                             <td class="text-center">${row.no}.</td>
                             <td>${row.tanggal}</td>
@@ -613,92 +599,92 @@ $(document).ready(function() {
                                 row.status === 'Rejected' ? '<span class="badge badge-danger">Rejected</span>' : ''}
                             </td>
                         </tr>`;
-                    });
+                        });
+                    }
+
+                    $('#pengeluaran_bpkk_saldo tbody').html(html);
+
+                    // Tampilkan total debet di input form
+                    const formatted = new Intl.NumberFormat('id-ID', {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    }).format(response.total_debet);
+
+                    $('#totalDebet').val('Rp. ' + formatted);
+                    $('#totalDebetRaw').val(response.total_debet);
+                },
+                error: function() {
+                    alert('Gagal mengambil data BPKK!');
                 }
+            });
+        }
 
-                $('#pengeluaran_bpkk_saldo tbody').html(html);
+        function fetchSisaSaldo(jenis_saldo) {
+            $.ajax({
+                url: "<?= site_url('pengajuan_pettycash/get_sisa_saldo_by_jenis') ?>",
+                type: "POST",
+                data: {
+                    jenis_saldo: jenis_saldo
+                },
+                dataType: "json",
+                success: function(res) {
+                    const saldo = res.saldo_pettycash ?? 0;
 
-                // Tampilkan total debet di input form
-                const formatted = new Intl.NumberFormat('id-ID', {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0
-                }).format(response.total_debet);
+                    const formatted = new Intl.NumberFormat('id-ID', {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    }).format(saldo);
 
-                $('#totalDebet').val('Rp. ' + formatted);
-                $('#totalDebetRaw').val(response.total_debet);
-            },
-            error: function() {
-                alert('Gagal mengambil data BPKK!');
-            }
-        });
-    }
+                    $('#sisaSaldo').val('Rp. ' + formatted);
+                    $('#sisaSaldoRaw').val(saldo);
+                },
+                error: function() {
+                    $('#sisaSaldo').val('Rp. 0');
+                    $('#sisaSaldoRaw').val(0);
+                }
+            });
+        }
+    });
 
-    function fetchSisaSaldo(jenis_saldo) {
+    // view data permintaan saldo
+    $(document).on('click', '.view-permintaan-saldo', function() {
+        const noPettyCash = $(this).data('no-pettycash');
+        const tanggal = $(this).data('tanggal');
+        const keterangan = $(this).data('keterangan');
+        const saldo = $(this).data('saldo');
+        const status = $(this).data('status');
+
+        // Isi info permintaan saldo
+        const modal = $('#viewdatapermintaansaldo');
+        modal.find('td:contains("NO PETTY CASH")').next().text(': ' + noPettyCash);
+        modal.find('td:contains("TANGGAL")').next().text(': ' + tanggal);
+        modal.find('td:contains("KETERANGAN")').next().text(': ' + keterangan);
+        modal.find('td:contains("TOTAL PERMINTAAN SALDO")').next().text(': Rp. ' + parseInt(saldo).toLocaleString(
+            'id-ID'));
+        const badge = modal.find('.badge');
+        badge.text(status.toUpperCase()).removeClass('bg-warning bg-success bg-danger text-dark text-white');
+
+        if (status.toLowerCase() === 'waiting') {
+            badge.text('WAITING').addClass('bg-warning text-white fw-bold');
+        } else if (status.toLowerCase() === 'done') {
+            badge.text('SUCCESS').addClass('bg-success text-white fw-bold');
+        } else {
+            badge.addClass('bg-secondary text-white');
+        }
+
+        // Panggil AJAX untuk ambil data pengeluaran BPKK
         $.ajax({
-            url: "<?= site_url('pengajuan_pettycash/get_sisa_saldo_by_jenis') ?>",
-            type: "POST",
+            url: '<?= site_url("pengajuan_pettycash/get_data_bpkk_by_nopettycash") ?>',
+            method: 'POST',
             data: {
-                jenis_saldo: jenis_saldo
+                no_pettycash: noPettyCash
             },
-            dataType: "json",
-            success: function(res) {
-                const saldo = res.saldo_pettycash ?? 0;
-
-                const formatted = new Intl.NumberFormat('id-ID', {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0
-                }).format(saldo);
-
-                $('#sisaSaldo').val('Rp. ' + formatted);
-                $('#sisaSaldoRaw').val(saldo);
-            },
-            error: function() {
-                $('#sisaSaldo').val('Rp. 0');
-                $('#sisaSaldoRaw').val(0);
-            }
-        });
-    }
-});
-
-// view data permintaan saldo
-$(document).on('click', '.view-permintaan-saldo', function() {
-    const noPettyCash = $(this).data('no-pettycash');
-    const tanggal = $(this).data('tanggal');
-    const keterangan = $(this).data('keterangan');
-    const saldo = $(this).data('saldo');
-    const status = $(this).data('status');
-
-    // Isi info permintaan saldo
-    const modal = $('#viewdatapermintaansaldo');
-    modal.find('td:contains("NO PETTY CASH")').next().text(': ' + noPettyCash);
-    modal.find('td:contains("TANGGAL")').next().text(': ' + tanggal);
-    modal.find('td:contains("KETERANGAN")').next().text(': ' + keterangan);
-    modal.find('td:contains("TOTAL PERMINTAAN SALDO")').next().text(': Rp. ' + parseInt(saldo).toLocaleString(
-        'id-ID'));
-    const badge = modal.find('.badge');
-    badge.text(status.toUpperCase()).removeClass('bg-warning bg-success bg-danger text-dark text-white');
-
-    if (status.toLowerCase() === 'waiting') {
-        badge.text('WAITING').addClass('bg-warning text-white fw-bold');
-    } else if (status.toLowerCase() === 'done') {
-        badge.text('SUCCESS').addClass('bg-success text-white fw-bold');
-    } else {
-        badge.addClass('bg-secondary text-white');
-    }
-
-    // Panggil AJAX untuk ambil data pengeluaran BPKK
-    $.ajax({
-        url: '<?= site_url("pengajuan_pettycash/get_data_bpkk_by_nopettycash") ?>',
-        method: 'POST',
-        data: {
-            no_pettycash: noPettyCash
-        },
-        dataType: 'json',
-        success: function(response) {
-            let tbody = '';
-            if (response.length > 0) {
-                $.each(response, function(i, row) {
-                    tbody += `
+            dataType: 'json',
+            success: function(response) {
+                let tbody = '';
+                if (response.length > 0) {
+                    $.each(response, function(i, row) {
+                        tbody += `
                     <tr>
                         <td class="text-center">${i + 1}</td>
                         <td>${row.tanggal}</td>
@@ -727,276 +713,276 @@ $(document).on('click', '.view-permintaan-saldo', function() {
                     </td>
                     </tr>
                 `;
-                });
-            } else {
-                tbody =
-                    `<tr><td colspan="6" class="text-center text-muted">Tidak ada data pengeluaran BPKK.</td></tr>`;
-            }
-            modal.find('#viewpermintaan tbody').html(tbody);
+                    });
+                } else {
+                    tbody =
+                        `<tr><td colspan="6" class="text-center text-muted">Tidak ada data pengeluaran BPKK.</td></tr>`;
+                }
+                modal.find('#viewpermintaan tbody').html(tbody);
 
-            if (typeof feather !== 'undefined') {
-                feather.replace();
-            }
-        },
-        error: function() {
-            alert('Gagal mengambil data pengeluaran BPKK.');
-        }
-    });
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    const fileInput = document.getElementById('formFile');
-    const submitBtn = document.getElementById('submitBtn');
-
-    fileInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            const maxSize = 1 * 1024 * 1024; // 1 MB
-            const fileName = file.name.toLowerCase();
-            const isPDF = fileName.endsWith('.pdf');
-
-            if (!isPDF) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Format File Salah!',
-                    text: 'File harus dalam format PDF.',
-                    confirmButtonColor: "#c06240"
-                });
-                this.value = ''; // reset input
-                submitBtn.disabled = true;
-                return;
-            }
-
-            if (file.size > maxSize) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Ukuran File Terlalu Besar!',
-                    text: 'Maksimal ukuran file adalah 1 MB.',
-                    confirmButtonColor: "#c06240"
-                });
-                this.value = ''; // reset input
-                submitBtn.disabled = true;
-            } else {
-                submitBtn.disabled = false;
-            }
-        }
-    });
-});
-
-const mapping = {
-    "JKT": 1,
-    "BPP": 2,
-    "TBK": 3,
-    "LU": 4,
-    "PA_SB": 5,
-    "PA_BBM": 6,
-    "PA_RTK": 7
-};
-
-document.addEventListener("DOMContentLoaded", function() {
-    const kodeInput = document.getElementById("kode_kantorcab");
-
-    // Kalau hidden input ada (bukan sekupang)
-    const hiddenJenis = document.getElementById("jenis_petty_cash_hidden");
-    if (hiddenJenis) {
-        let val = hiddenJenis.value;
-        kodeInput.value = mapping[val] ?? "";
-    }
-
-    // Kalau pakai radio button (sekupang)
-    document.querySelectorAll(".jenis-petty").forEach(radio => {
-        radio.addEventListener("change", function() {
-            let val = this.value;
-            kodeInput.value = mapping[val] ?? "";
-        });
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-    var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
-        return new bootstrap.Popover(popoverTriggerEl)
-    })
-});
-
-$(document).ready(function() {
-    <?php if ($address_user === 'sekupang'): ?>
-    // Loop semua radio jenis petty cash
-    $('.jenis-petty').each(function() {
-        var radio = $(this);
-        var jenis = radio.val();
-
-        $.ajax({
-            url: "<?= site_url('pengajuan_pettycash/cek_limit_saldo') ?>",
-            type: "POST",
-            data: {
-                jenis_saldo: jenis
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                }
             },
-            dataType: "json",
-            success: function(res) {
-                // cari icon popover di label radio ini
-                let infoIcon = radio.closest('.form-check')
-                    .find('[data-bs-toggle="popover"]')[0];
-
-                if (infoIcon) {
-                    // update isi popover
-                    let content =
-                        `Saldo Rp ${res.saldo.toLocaleString('id-ID')} (min: Rp ${res.limit.toLocaleString('id-ID')})`;
-                    infoIcon.setAttribute("data-bs-content", content);
-
-                    // kalau sudah ada instance → update
-                    let instance = bootstrap.Popover.getInstance(infoIcon);
-                    if (instance) {
-                        instance.setContent({
-                            '.popover-body': content
-                        });
-                    } else {
-                        // kalau belum ada → buat baru
-                        new bootstrap.Popover(infoIcon);
-                    }
-                }
-
-                // kalau saldo < limit → disable radio
-                if (!res.allow) {
-                    radio.prop('disabled', true);
-                }
-                // cek kondisi tombol simpan
-                checkSubmitButton();
+            error: function() {
+                alert('Gagal mengambil data pengeluaran BPKK.');
             }
         });
     });
 
-    function checkSubmitButton() {
-        let allDisabled = $('.jenis-petty').length === $('.jenis-petty:disabled').length;
-        $('#submitBtn').prop('disabled', allDisabled);
-    }
-    <?php endif; ?>
-});
+    document.addEventListener('DOMContentLoaded', () => {
+        const fileInput = document.getElementById('formFile');
+        const submitBtn = document.getElementById('submitBtn');
 
-$('input[name="jenis_petty_cash"]').on('change', function() {
-    var jenis_saldo = $(this).val();
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const maxSize = 1 * 1024 * 1024; // 1 MB
+                const fileName = file.name.toLowerCase();
+                const isPDF = fileName.endsWith('.pdf');
 
-    // Ambil tabel BPKK seperti biasa
-    fetchBpkkTable(jenis_saldo);
+                if (!isPDF) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Format File Salah!',
+                        text: 'File harus dalam format PDF.',
+                        confirmButtonColor: "#c06240"
+                    });
+                    this.value = ''; // reset input
+                    submitBtn.disabled = true;
+                    return;
+                }
 
-    // Ambil sisa saldo dari tb_saldo
-    fetchSisaSaldo(jenis_saldo);
-});
+                if (file.size > maxSize) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Ukuran File Terlalu Besar!',
+                        text: 'Maksimal ukuran file adalah 1 MB.',
+                        confirmButtonColor: "#c06240"
+                    });
+                    this.value = ''; // reset input
+                    submitBtn.disabled = true;
+                } else {
+                    submitBtn.disabled = false;
+                }
+            }
+        });
+    });
 
-$(document).ready(function() {
-    // Saat tombol Dokumen Pendukung diklik
-    $(document).on('click', '#btnDokumenPendukung', function() {
-        var fileName = $(this).data('file');
-        var baseUrl = '<?= base_url("uploads/ppt/"); ?>';
-        console.log('File name:', fileName); // cek di console
+    const mapping = {
+        "JKT": 1,
+        "BPP": 2,
+        "TBK": 3,
+        "LU": 4,
+        "PA_SB": 5,
+        "PA_BBM": 6,
+        "PA_RTK": 7
+    };
 
-        if (fileName) {
-            var filePath = baseUrl + fileName;
-            console.log('Full path:', filePath); // cek di console
+    document.addEventListener("DOMContentLoaded", function() {
+        const kodeInput = document.getElementById("kode_kantorcab");
 
-            // tampilkan PDF di iframe
-            var previewHtml = `
+        // Kalau hidden input ada (bukan sekupang)
+        const hiddenJenis = document.getElementById("jenis_petty_cash_hidden");
+        if (hiddenJenis) {
+            let val = hiddenJenis.value;
+            kodeInput.value = mapping[val] ?? "";
+        }
+
+        // Kalau pakai radio button (sekupang)
+        document.querySelectorAll(".jenis-petty").forEach(radio => {
+            radio.addEventListener("change", function() {
+                let val = this.value;
+                kodeInput.value = mapping[val] ?? "";
+            });
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        })
+    });
+
+    $(document).ready(function() {
+        <?php if ($address_user === 'sekupang'): ?>
+            // Loop semua radio jenis petty cash
+            $('.jenis-petty').each(function() {
+                var radio = $(this);
+                var jenis = radio.val();
+
+                $.ajax({
+                    url: "<?= site_url('pengajuan_pettycash/cek_limit_saldo') ?>",
+                    type: "POST",
+                    data: {
+                        jenis_saldo: jenis
+                    },
+                    dataType: "json",
+                    success: function(res) {
+                        // cari icon popover di label radio ini
+                        let infoIcon = radio.closest('.form-check')
+                            .find('[data-bs-toggle="popover"]')[0];
+
+                        if (infoIcon) {
+                            // update isi popover
+                            let content =
+                                `Saldo Rp ${res.saldo.toLocaleString('id-ID')} (min: Rp ${res.limit.toLocaleString('id-ID')})`;
+                            infoIcon.setAttribute("data-bs-content", content);
+
+                            // kalau sudah ada instance → update
+                            let instance = bootstrap.Popover.getInstance(infoIcon);
+                            if (instance) {
+                                instance.setContent({
+                                    '.popover-body': content
+                                });
+                            } else {
+                                // kalau belum ada → buat baru
+                                new bootstrap.Popover(infoIcon);
+                            }
+                        }
+
+                        // kalau saldo < limit → disable radio
+                        if (!res.allow) {
+                            radio.prop('disabled', true);
+                        }
+                        // cek kondisi tombol simpan
+                        checkSubmitButton();
+                    }
+                });
+            });
+
+            function checkSubmitButton() {
+                let allDisabled = $('.jenis-petty').length === $('.jenis-petty:disabled').length;
+                $('#submitBtn').prop('disabled', allDisabled);
+            }
+        <?php endif; ?>
+    });
+
+    $('input[name="jenis_petty_cash"]').on('change', function() {
+        var jenis_saldo = $(this).val();
+
+        // Ambil tabel BPKK seperti biasa
+        fetchBpkkTable(jenis_saldo);
+
+        // Ambil sisa saldo dari tb_saldo
+        fetchSisaSaldo(jenis_saldo);
+    });
+
+    $(document).ready(function() {
+        // Saat tombol Dokumen Pendukung diklik
+        $(document).on('click', '#btnDokumenPendukung', function() {
+            var fileName = $(this).data('file');
+            var baseUrl = '<?= base_url("uploads/ppt/"); ?>';
+            console.log('File name:', fileName); // cek di console
+
+            if (fileName) {
+                var filePath = baseUrl + fileName;
+                console.log('Full path:', filePath); // cek di console
+
+                // tampilkan PDF di iframe
+                var previewHtml = `
                 <div class="ratio ratio-16x9">
                     <iframe src="${filePath}" width="100%" height="600px"></iframe>
                 </div>
             `;
-            $('#pratinjauGambardok3').html(previewHtml);
-        } else {
-            $('#pratinjauGambardok3').html(
-                '<p class="text-center text-danger">Tidak ada dokumen yang diunggah.</p>'
-            );
-        }
-
-        // Tutup modal utama agar tidak tumpuk (optional)
-        $('#viewdatapermintaansaldo').modal('hide');
-    });
-});
-
-$(document).ready(function() {
-    // Ketika tombol View PDF Approval diklik
-    $(document).on('click', '.btn-outline-secondary[data-bs-target="#viewpdfapproval"]', function() {
-        var namaDok = $(this).data('nama_dok');
-        var jenisSaldo = $(this).data('jenissaldo_dok');
-
-        // Elemen tempat preview
-        var previewContainer = $('#pratinjauGambardok4');
-        previewContainer.empty();
-
-        // Jika nama dokumen kosong/null
-        if (!namaDok || namaDok === 'null' || namaDok.trim() === '') {
-            previewContainer.html('<p class="text-center text-danger mt-3">File tidak tersedia.</p>');
-            return;
-        }
-
-        // Path file-nya
-        var fileUrl = "<?= base_url('uploads/approve/'); ?>" + jenisSaldo + "/" + namaDok;
-
-        // Cek dulu apakah file-nya benar-benar ada
-        $.ajax({
-            url: fileUrl,
-            type: 'HEAD',
-            success: function() {
-                var iframe = '<iframe src="' + fileUrl +
-                    '" width="100%" height="700px" style="border:none;"></iframe>';
-                previewContainer.html(iframe);
-            },
-            error: function() {
-                previewContainer.html(
-                    '<p class="text-center text-danger mt-3">File tidak ditemukan di server.</p>'
+                $('#pratinjauGambardok3').html(previewHtml);
+            } else {
+                $('#pratinjauGambardok3').html(
+                    '<p class="text-center text-danger">Tidak ada dokumen yang diunggah.</p>'
                 );
             }
+
+            // Tutup modal utama agar tidak tumpuk (optional)
+            $('#viewdatapermintaansaldo').modal('hide');
         });
     });
-});
 
-$(document).ready(function() {
-    // Ketika tombol View Dokumen BPKK Rembesment diklik
-    $(document).on('click', '.view-dokumen', function() {
-        var fileName = $(this).data('file'); // nama dokumen
-        var jenisSaldo = $(this).data('jenis'); // jenis saldo
+    $(document).ready(function() {
+        // Ketika tombol View PDF Approval diklik
+        $(document).on('click', '.btn-outline-secondary[data-bs-target="#viewpdfapproval"]', function() {
+            var namaDok = $(this).data('nama_dok');
+            var jenisSaldo = $(this).data('jenissaldo_dok');
 
-        // Elemen tempat preview
-        var previewContainer = $('#pratinjauGambardok5');
-        previewContainer.empty();
+            // Elemen tempat preview
+            var previewContainer = $('#pratinjauGambardok4');
+            previewContainer.empty();
 
-        // Jika file kosong/null
-        if (!fileName || fileName === 'null' || fileName.trim() === '') {
-            previewContainer.html(
-                '<p class="text-center text-danger mt-3">Dokumen tidak tersedia.</p>');
-            return;
-        }
+            // Jika nama dokumen kosong/null
+            if (!namaDok || namaDok === 'null' || namaDok.trim() === '') {
+                previewContainer.html('<p class="text-center text-danger mt-3">File tidak tersedia.</p>');
+                return;
+            }
 
-        // Path file
-        var fileUrl = "<?= base_url('uploads/bpkk/'); ?>" + jenisSaldo + "/" + fileName;
+            // Path file-nya
+            var fileUrl = "<?= base_url('uploads/approve/'); ?>" + jenisSaldo + "/" + namaDok;
 
-        // Cek apakah file ada
-        $.ajax({
-            url: fileUrl,
-            type: 'HEAD',
-            success: function() {
-                // Tampilkan pratinjau sesuai ekstensi
-                var ext = fileName.split('.').pop().toLowerCase();
-                if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+            // Cek dulu apakah file-nya benar-benar ada
+            $.ajax({
+                url: fileUrl,
+                type: 'HEAD',
+                success: function() {
+                    var iframe = '<iframe src="' + fileUrl +
+                        '" width="100%" height="700px" style="border:none;"></iframe>';
+                    previewContainer.html(iframe);
+                },
+                error: function() {
                     previewContainer.html(
-                        `<img src="${fileUrl}" alt="Dokumen" class="img-fluid rounded shadow">`
+                        '<p class="text-center text-danger mt-3">File tidak ditemukan di server.</p>'
                     );
-                } else if (ext === 'pdf') {
-                    previewContainer.html(
-                        `<iframe src="${fileUrl}" width="100%" height="700px" style="border:none;"></iframe>`
-                    );
-                } else {
-                    previewContainer.html(`
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        // Ketika tombol View Dokumen BPKK Rembesment diklik
+        $(document).on('click', '.view-dokumen', function() {
+            var fileName = $(this).data('file'); // nama dokumen
+            var jenisSaldo = $(this).data('jenis'); // jenis saldo
+
+            // Elemen tempat preview
+            var previewContainer = $('#pratinjauGambardok5');
+            previewContainer.empty();
+
+            // Jika file kosong/null
+            if (!fileName || fileName === 'null' || fileName.trim() === '') {
+                previewContainer.html(
+                    '<p class="text-center text-danger mt-3">Dokumen tidak tersedia.</p>');
+                return;
+            }
+
+            // Path file
+            var fileUrl = "<?= base_url('uploads/bpkk/'); ?>" + jenisSaldo + "/" + fileName;
+
+            // Cek apakah file ada
+            $.ajax({
+                url: fileUrl,
+                type: 'HEAD',
+                success: function() {
+                    // Tampilkan pratinjau sesuai ekstensi
+                    var ext = fileName.split('.').pop().toLowerCase();
+                    if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+                        previewContainer.html(
+                            `<img src="${fileUrl}" alt="Dokumen" class="img-fluid rounded shadow">`
+                        );
+                    } else if (ext === 'pdf') {
+                        previewContainer.html(
+                            `<iframe src="${fileUrl}" width="100%" height="700px" style="border:none;"></iframe>`
+                        );
+                    } else {
+                        previewContainer.html(`
                         <p class="text-center text-muted">Tidak dapat menampilkan pratinjau untuk file ini.</p>
                         <a href="${fileUrl}" target="_blank" class="btn btn-primary btn-sm">Download Dokumen</a>
                     `);
+                    }
+                },
+                error: function() {
+                    previewContainer.html(
+                        '<p class="text-center text-danger mt-3">File tidak ditemukan di server.</p>'
+                    );
                 }
-            },
-            error: function() {
-                previewContainer.html(
-                    '<p class="text-center text-danger mt-3">File tidak ditemukan di server.</p>'
-                );
-            }
+            });
         });
     });
-});
 </script>
