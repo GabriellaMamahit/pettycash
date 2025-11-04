@@ -468,10 +468,6 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
             ]);
         }
 
-        // $pdf->SetFont('Arial', 'B', 10);
-        // $pdf->Cell(217, 6, 'Total Pengeluaran', 1, 0, 'L');
-        // $pdf->Cell(30, 6, 'Rp ', 1, 0, 'C');
-
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell(217, 6, 'Total Pengeluaran', 1, 0, 'R');
         $pdf->SetFillColor(211, 211, 211);

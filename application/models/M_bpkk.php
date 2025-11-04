@@ -129,16 +129,46 @@ class M_bpkk extends CI_Model
 
     public function filterBpkkByDate($awal, $akhir)
     {
+        $level = $this->fungsi->user_login()->level;
+        $address_user = strtolower($this->fungsi->user_login()->address_user);
+
+        // Tentukan hak akses
+        $akses = [];
+        if (in_array($level, ['super_admin', 'direktur_finance', 'development', 'finance_bmg'])) {
+            $akses = ['JKT', 'BPP', 'TBK', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK']; // Semua cabang dan saldo
+        } elseif ($level == 'finance_bdp') {
+            $akses = ['LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
+        } elseif ($level == 'finance_bsgroup') {
+            $akses = ['JKT', 'BPP', 'TBK'];
+        } elseif ($level == 'user') {
+            switch ($address_user) {
+                case 'jakarta':
+                    $akses = ['JKT'];
+                    break;
+                case 'balikpapan':
+                    $akses = ['BPP'];
+                    break;
+                case 'karimun':
+                    $akses = ['TBK'];
+                    break;
+                case 'galang':
+                    $akses = ['LU'];
+                    break;
+                case 'sekupang':
+                    $akses = ['PA_BBM', 'PA_SB', 'PA_RTK'];
+                    break;
+            }
+        }
+
+        // Query
         return $this->db
             ->from('tb_bpkk_cab')
             ->where("DATE(tgl_kredit_cab) >=", $awal)
             ->where("DATE(tgl_kredit_cab) <=", $akhir)
+            ->where_in("jenis_saldo", $akses) // Pembatasan disini
             ->get()
             ->result_array();
     }
-
-
-
 
     public function getbpkk($address_user, $level)
     {

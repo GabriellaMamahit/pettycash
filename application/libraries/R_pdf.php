@@ -46,7 +46,7 @@ class R_pdf extends FPDF
         $ci->db->where('jenis_saldo', $this->getCabangAlias($alamat));
         $data = $ci->db->get('tb_penanggung_jawab')->row();
 
-        return $data ? $data->perusahaan : 'PT. BMG'; // fallback jika tidak ditemukan
+        return $data ? $data->perusahaan : 'BIAS MANDIRI GROUP';
     }
 
 
@@ -135,7 +135,7 @@ class R_pdf extends FPDF
 
         $this->SetFont('Arial', 'B', 12);
         $this->SetXY(120, 8);
-        $this->Cell(30, 10, 'REKAP PENGELUARAN', 0, 1, 'C');
+        $this->Cell(30, 10, 'REKAP PENGELUARAN KAS KECIL', 0, 1, 'C');
 
         // 🔥 ambil perusahaan dari cabang user login
         $ci = &get_instance();
