@@ -440,21 +440,30 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
         }
 
         $pdf = new R_pdf('L', 'mm', 'A4');
+
+        // ✅ Judul tampilan pada PDF Viewer
+        $pdf->SetTitle('Rekapan Pengeluaran Kas Kecil', true);
+
+        // ✅ Simpan judul agar header menggunakan ini
+        $pdf->title = 'REKAPAN PENGELUARAN KAS KECIL';
+
+        // ✅ Simpan periode (untuk header/subjudul jika digunakan)
         $pdf->setPeriode($awal, $akhir);
+
         $pdf->SetWidths([9, 20, 45, 113, 30, 30, 30]);
         $pdf->SetAligns(['C', 'C', 'L', 'L', 'C', 'R', 'R']);
         $pdf->AddPage();
         $pdf->SetFont('Arial', '', 9);
 
-        // $saldo = 0;
         $total_pengeluaran = 0;
+
         foreach ($data_bpkk as $i => $row) {
             $tgl = date('d/m/Y', strtotime($row['tgl_kredit_cab']));
             $no_bpkk = $row['no_bpkk_cab'] ?? '-';
             $ket = $row['ket_bpkk_cab'] ?? '-';
             $pengeluaran = $row['total_kredit_cab'] ?? 0;
-            // $pemasukan = 0;
             $saldo = $row['sisa_saldo'] ?? 0;
+
             $total_pengeluaran += $pengeluaran;
 
             $pdf->Row([
@@ -471,12 +480,15 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
         $pdf->SetFont('Arial', 'B', 10);
         $pdf->Cell(217, 6, 'Total Pengeluaran', 1, 0, 'R');
         $pdf->SetFillColor(211, 211, 211);
-        $pdf->SetTextColor(0, 0, 0);
-        $pdf->Cell(60, 6, 'Rp ' . number_format($total_pengeluaran, 0, ',', '.'), 1, 1, 'C', true); // Kolom dengan warna latar abu-abu
+        $pdf->Cell(60, 6, 'Rp ' . number_format($total_pengeluaran, 0, ',', '.'), 1, 1, 'C', true);
 
-
-        $pdf->Output('I', 'Riwayat_BPKK_' . date('Ymd') . '.pdf');
+        // ✅ Nama file download
+        $nama_file = 'Rekapan_Pengeluaran_Kas_Kecil_' . date('Ymd') . '.pdf';
+        $pdf->Output('I', $nama_file);
     }
+
+
+
 
 
 
