@@ -34,3 +34,5 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 # VSCode Settings (jangan diupload ke GitHub)
 .vscode/
 .vscode/sftp.json
+
+uploads/
