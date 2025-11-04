@@ -27,19 +27,20 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
 
     public function riwayat_bpkk()
     {
-        $user = $this->fungsi->user_login();
-        $address_user = $user->address_user;
-        $level = $user->level;
-
         $awal  = $this->input->get('awal');
         $akhir = $this->input->get('akhir');
 
-        // Jika ada filter tanggal digunakan
-        if ($awal && $akhir) {
-            $rowbpkk = $this->M_bpkk->filterBpkkByDate($address_user, $level, $awal, $akhir);
+        // Cek apakah format tanggal valid (YYYY-MM-DD)
+        if (
+            !empty($awal) && !empty($akhir) &&
+            preg_match('/^\d{4}-\d{2}-\d{2}$/', $awal) &&
+            preg_match('/^\d{4}-\d{2}-\d{2}$/', $akhir)
+        ) {
+            // Ambil data berdasarkan filter
+            $rowbpkk = $this->M_bpkk->filterBpkkByDate($awal, $akhir);
         } else {
-            // Jika tidak dipilih tanggal, tampilkan data normal
-            $rowbpkk = $this->M_bpkk->getbpkk($address_user, $level);
+            // Jika tidak ada filter → tampilkan semua data
+            $rowbpkk = $this->db->get('tb_bpkk_cab')->result_array();
         }
 
         $data = [
@@ -50,9 +51,10 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
             'akhir' => $akhir,
         ];
 
-        // LOAD VIEW BARU
         $this->template->load('template', 'riwayat_laporan/riwayat_bpkk', $data);
     }
+
+
 
 
     // public function index()
@@ -422,6 +424,67 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
         $this->session->set_flashdata('success', 'Data Petty Cash berhasil diperbarui.');
         redirect('Bukti_pengeluaran_kas_kecil');
     }
+
+    public function export_pdf()
+    {
+        $this->load->library('r_pdf');
+        $this->load->model('M_bpkk');
+
+        $awal  = $this->input->get('awal');
+        $akhir = $this->input->get('akhir');
+
+        if ($awal && $akhir) {
+            $data_bpkk = $this->M_bpkk->filterBpkkByDate($awal, $akhir);
+        } else {
+            $data_bpkk = $this->db->get('tb_bpkk_cab')->result_array();
+        }
+
+        $pdf = new R_pdf('L', 'mm', 'A4');
+        $pdf->setPeriode($awal, $akhir);
+        $pdf->SetWidths([9, 20, 45, 113, 30, 30, 30]);
+        $pdf->SetAligns(['C', 'C', 'L', 'L', 'C', 'R', 'R']);
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', '', 9);
+
+        // $saldo = 0;
+        $total_pengeluaran = 0;
+        foreach ($data_bpkk as $i => $row) {
+            $tgl = date('d/m/Y', strtotime($row['tgl_kredit_cab']));
+            $no_bpkk = $row['no_bpkk_cab'] ?? '-';
+            $ket = $row['ket_bpkk_cab'] ?? '-';
+            $pengeluaran = $row['total_kredit_cab'] ?? 0;
+            // $pemasukan = 0;
+            $saldo = $row['sisa_saldo'] ?? 0;
+            $total_pengeluaran += $pengeluaran;
+
+            $pdf->Row([
+                $i + 1,
+                $tgl,
+                $no_bpkk,
+                $ket,
+                '-',
+                'Rp ' . number_format($pengeluaran, 0, ',', '.'),
+                'Rp ' . number_format($saldo, 0, ',', '.')
+            ]);
+        }
+
+        // $pdf->SetFont('Arial', 'B', 10);
+        // $pdf->Cell(217, 6, 'Total Pengeluaran', 1, 0, 'L');
+        // $pdf->Cell(30, 6, 'Rp ', 1, 0, 'C');
+
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(217, 6, 'Total Pengeluaran', 1, 0, 'R');
+        $pdf->SetFillColor(211, 211, 211);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->Cell(60, 6, 'Rp ' . number_format($total_pengeluaran, 0, ',', '.'), 1, 1, 'C', true); // Kolom dengan warna latar abu-abu
+
+
+        $pdf->Output('I', 'Riwayat_BPKK_' . date('Ymd') . '.pdf');
+    }
+
+
+
+
 
 
     // public function editpengeluaranbpkkold()

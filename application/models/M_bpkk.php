@@ -127,20 +127,17 @@ class M_bpkk extends CI_Model
         return $query->result_array();
     }
 
-    public function filterBpkkByDate($address_user, $level, $awal, $akhir)
+    public function filterBpkkByDate($awal, $akhir)
     {
-        // $this->db->where('jenis_saldo', $address_user);
-
-        // Tambahkan logika role jika sebelumnya ada
-        // contoh:
-        // if($level == 'super_admin'){ ... }
-
-        // Filter tanggal
-        $this->db->where("DATE(tgl_kredit_cab) >=", $awal);
-        $this->db->where("DATE(tgl_kredit_cab) <=", $akhir);
-
-        return $this->db->get('tb_bpkk_cab')->result_array();
+        return $this->db
+            ->from('tb_bpkk_cab')
+            ->where("DATE(tgl_kredit_cab) >=", $awal)
+            ->where("DATE(tgl_kredit_cab) <=", $akhir)
+            ->get()
+            ->result_array();
     }
+
+
 
 
     public function getbpkk($address_user, $level)
@@ -745,5 +742,13 @@ class M_bpkk extends CI_Model
             'count' => $count,
             'total' => number_format($total, 0, ',', '.')
         ];
+    }
+    public function getpengeluaran_all_cabang()
+    {
+        $this->db->select('*');
+        $this->db->from('tb_bpkk_cab');
+        $this->db->order_by('tgl_kredit_cab', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
     }
 }
