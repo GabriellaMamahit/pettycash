@@ -12,6 +12,7 @@ class R_pdf extends FPDF
     // ✅ Tambahkan penyimpan periode
     public $tglAwal;
     public $tglAkhir;
+    public $title;
 
     // ============================
     // Setter Periode PDF
