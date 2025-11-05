@@ -155,10 +155,14 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
             'status_notifikasi' => '0',
             'tanggal_notifikasi' => date('Y-m-d H:i:s')
         ];
+        $data3 = [
+            'status_mutasi' => 'Revisi'
+        ];
 
         $updated = $this->M_bpkk->updateStatusBpkk($id_bpkk, $data, 'tb_bpkk_cab');
         if ($updated) {
             $this->M_bpkk->notifikasiupdatebpkk('tb_notifikasi', $data2);
+            $this->M_bpkk->updateStatusBpkkmutasi($no_pettycash, $data3, 'tb_data_mutasi');
 
             $this->output
                 ->set_content_type('application/json')

@@ -405,6 +405,12 @@ class M_bpkk extends CI_Model
         return $this->db->update('tb_bpkk_cab', $data);
     }
 
+    public function updateStatusBpkkmutasi($no_pettycash, $data3, $table)
+    {
+        $this->db->where('no_bpkk_cab', $no_pettycash);
+        return $this->db->update($table, $data3);
+    }
+
     public function getAllMutasiByCabang($kode_cabang)
     {
         $this->db->select('*');
