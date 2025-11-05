@@ -78,7 +78,6 @@
                             </svg></a>
                     </li>
                     <li class="breadcrumb-item">General</li>
-                    <!-- <li class="breadcrumb-item">Riwayat BPKK</li> -->
                     <li class="breadcrumb-item active">Bukti Pengeluaran Kas Kecil</li>
                 </ol>
             </div>
