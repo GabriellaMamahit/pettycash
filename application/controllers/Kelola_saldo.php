@@ -503,7 +503,7 @@ class Kelola_saldo extends CI_Controller
 
         // === Setelah berhasil simpan, hapus pending dari tb_sisasaldo_rembes ===
         if ($pending) {
-            $this->db->delete('tb_sisasaldo_rembes', ['no_petty_cash' => $nopettycashawal]);
+            $this->db->delete('tb_sisasaldo_rembes', ['no_pettycash' => $nopettycashawal]);
         }
 
         $this->session->set_flashdata('success', 'Saldo rembesment berhasil ditambahkan.');
