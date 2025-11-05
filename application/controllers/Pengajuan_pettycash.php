@@ -311,31 +311,19 @@ class Pengajuan_pettycash extends CI_Controller
         echo json_encode($result);
     }
 
-    public function cek_limit_saldo()
+    public function cek_bpkk_ready()
     {
         $jenis_saldo = $this->input->post('jenis_saldo');
 
-        $limitSekupang = [
-            'PA_BBM' => 10000000,
-            'PA_SB'  => 3000000,
-            'PA_RTK' => 550000,
-        ];
+        $cek = $this->db->where('jenis_saldo', $jenis_saldo)
+            ->where('status_cab', 'In progress')
+            ->where('status_bpkk', 'Done')
+            ->get('tb_bpkk_cab')
+            ->num_rows();
 
-        $saldo = $this->db->select('saldo_pettycash')
-            ->where('jenis_saldo', $jenis_saldo)
-            ->get('tb_saldo')
-            ->row('saldo_pettycash');
-        $saldo = $saldo !== null ? (int)$saldo : 0;
-
-        $limit = $limitSekupang[$jenis_saldo] ?? 0;
-
-        $response = [
-            'saldo' => $saldo,
-            'limit' => $limit,
-            'allow' => $saldo < $limit // true kalau boleh ajukan
-        ];
-
-        echo json_encode($response);
+        echo json_encode([
+            'allow' => $cek > 0 // true kalau ada data selesai
+        ]);
     }
 
     public function export_excel()
