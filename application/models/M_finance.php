@@ -220,7 +220,12 @@ class M_finance extends CI_Model
         ];
     }
 
-
+    public function getDataByNoPettycash($no_pettycash)
+    {
+        return $this->db->where('no_pc_saldo', $no_pettycash)
+            ->get('tb_bpkk_cab') // sesuaikan nama tabel
+            ->result();
+    }
 
     // public function getdatasaldo($id_saldo)
     // {

@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use setasign\Fpdi\Fpdi;
+
 class Kelola_saldo extends CI_Controller
 {
     function __construct()
@@ -87,6 +89,8 @@ class Kelola_saldo extends CI_Controller
                 'keterangan' => $row['ket_bpkk_cab'],
                 'total'      => 'Rp. ' . number_format($row['total_kredit_cab'], 0, ',', '.'),
                 'status'     => $row['status_cab'],
+                'jenis_saldo'         => $row['jenis_saldo'],
+                'upload_file_cab'     => $row['upload_file_cab'],
             ];
         }
 
@@ -646,21 +650,271 @@ class Kelola_saldo extends CI_Controller
         echo json_encode(['status' => 'ok']);
     }
 
-    // widget
+    public function downloadLaporan()
+    {
+        require_once APPPATH . 'third_party/fpdf/fpdf.php';
+        require_once APPPATH . 'third_party/fpdi/src/autoload.php';
+
+        $jenis = isset($_GET['jenis']) ? $_GET['jenis'] : null;
+        $no_pettycash = isset($_GET['no']) ? urldecode($_GET['no']) : null;
+
+        if (!$no_pettycash) {
+            show_error('No Petty Cash tidak dikirim.');
+            return;
+        }
+
+        $perusahaanData = $this->db
+            ->where('jenis_saldo', $jenis)
+            ->get('tb_penanggung_jawab')
+            ->row_array();
+
+        $namaPerusahaan = $perusahaanData['perusahaan'] ?? 'BIAS MANDIRI GROUP';
+
+        // Ambil data tb_debet_saldo
+        $dataPermintaan = $this->db
+            ->where('no_pc_asal', $no_pettycash)
+            ->get('tb_debet_saldo')
+            ->row_array();
+
+        if (!$dataPermintaan) {
+            $dataPermintaan = $this->db
+                ->where('no_petty_cash', $no_pettycash)
+                ->get('tb_debet_saldo')
+                ->row_array();
+        }
+
+        $no_petty_cash = $dataPermintaan['no_pc_asal'] ?? $dataPermintaan['no_petty_cash'];;
+        $fileDebet = $dataPermintaan['file'] ?? null;
+
+        // Ambil data tb_permintaan_saldo
+        $dataAsal = $this->db
+            ->where('no_pettycash', $no_petty_cash)
+            ->get('tb_permintaan_saldo')
+            ->row_array();
+
+        $filePermintaan = $dataAsal['dokumen_pettycash'] ?? null;
+
+        // Ambil data tb_bpkk_cab
+        $dataBpkk = $this->db
+            ->where('no_pc_saldo', $no_petty_cash)
+            ->order_by('tgl_kredit_cab', 'ASC')
+            ->get('tb_bpkk_cab')
+            ->result_array();
+
+        $totalPengeluaran = 0;
+        $detail = [];
+        $no = 1;
+
+        foreach ($dataBpkk as $row) {
+            $pemasukan = $row['pemasukan'] ?? '-';
+            $pengeluaran = $row['total_kredit_cab'] ?? 0;
+            $date = isset($row['tgl_kredit_cab']) ? date('d/m/Y', strtotime($row['tgl_kredit_cab'])) : '-';
+            $description = $row['ket_bpkk_cab'] ?? '-';
+            $no_bpkk = $row['no_bpkk_cab'] ?? '-';
+            $sisa = $row['sisa_saldo'] ?? 0;
+
+            $totalPengeluaran += $pengeluaran;
+
+            $detail[] = [
+                'no' => $no++,
+                'date' => $date,
+                'no_bpkk' => $no_bpkk,
+                'description' => $description,
+                'pemasukan' => $pemasukan,
+                'pengeluaran' => $pengeluaran,
+                'sisa' => $sisa,
+                'upload_file_cab' => $row['upload_file_cab'] ?? '',
+            ];
+        }
+
+        $detailpemasukan = [];
+        if (!empty($dataPermintaan)) {
+            $detailpemasukan[] = [
+                'no' => 1,
+                'tanggaldebet' => isset($dataPermintaan['tanggal_debet']) ? date('d/m/Y', strtotime($dataPermintaan['tanggal_debet'])) : '-',
+                'nomor_pettycash' => $dataPermintaan['no_petty_cash'] ?? '-',
+                'keterangan_debet' => $dataPermintaan['nama_saldo'] ?? '-',
+                'saldo_debet' => $dataPermintaan['saldo_debet'] ?? 0,
+            ];
+        }
+
+        $dataPettyCash = [
+            'tanggal' => isset($dataPermintaan['tanggal_debet']) ? date('d/m/Y', strtotime($dataPermintaan['tanggal_debet'])) : '-',
+            'no_pettycash' => $dataPermintaan['no_petty_cash'] ?? '-',
+            'keterangan' => $dataPermintaan['nama_saldo'] ?? '-',
+            'total_pengeluaran' => $totalPengeluaran,
+            'sisa_saldo' => $dataPermintaan['sisa_saldo'] ?? 0,
+            'pemasukan' => $dataPermintaan['pemasukan'] ?? 0,
+            'penambahan' => $dataPermintaan['saldo_debet'] ?? 0,
+            'detail' => $detail,
+            'detailpemasukan' => $detailpemasukan
+        ];
+
+        $pdf = new FPDI();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 14);
+
+        // $filename = 'laporan-pettycash-' . time() . '.pdf';
+
+        // header('Content-Type: application/pdf');
+        // header('Content-Disposition: attachment; filename="' . $filename . '"');
+        // header('Content-Transfer-Encoding: binary');
+        // header('Accept-Ranges: bytes');
+
+        // HEADER + Tabel Summary (Tidak diubah)
+        $pdf->Rect(5, 5, 200, 285);
+        $logo_width = 17;
+        $page_width = $pdf->GetPageWidth();
+        $logo_x = ($page_width - $logo_width) / 2;
+        $logo_path = FCPATH . 'assets/images/logo/logo_bmg.jpg';
+        if (file_exists($logo_path)) {
+            $pdf->Image($logo_path, $logo_x, 8, $logo_width);
+        }
+
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->SetXY(0, 23);
+        $pdf->Cell($page_width, 10, 'REIMBURSEMENT', 0, 1, 'C');
+        $pdf->SetXY(0, 29);
+        $pdf->Cell($page_width, 10, strtoupper($namaPerusahaan), 0, 1, 'C');
+        $pdf->Line(5, 40, 205, 40);
+
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->SetXY(10, 45);
+        $pdf->Cell(30, 6, 'Tanggal', 0, 0, 'L');
+        $pdf->Cell(2, 6, ':', 0, 0, 'L');
+        $pdf->Cell(23, 6, $dataPettyCash['tanggal'], 0, 1, 'C');
+
+        $pdf->SetXY(145, 45);
+        $pdf->Cell(50, 6, 'No Petty cash: ' . $dataPettyCash['no_pettycash'], 0, 0, 'C');
+
+        $pdf->SetXY(10, 51);
+        $pdf->Cell(30, 6, 'Keterangan', 0, 0, 'L');
+        $pdf->Cell(2, 6, ':', 0, 0, 'L');
+        $pdf->Cell(48, 6, $dataPettyCash['keterangan'], 0, 1, 'C');
+
+        // data penambahan saldo
+        $pdf->Ln(5);
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(6, 6, 'No', 1, 0, 'C');
+        $pdf->Cell(16, 6, 'Date', 1, 0, 'C');
+        $pdf->Cell(37, 6, 'No Petty Cash', 1, 0, 'C');
+        $pdf->Cell(82, 6, 'Uraian', 1, 0, 'C');
+        $pdf->Cell(50, 6, 'Pemasukan', 1, 0, 'C');
+        $pdf->Ln(6);
+
+        $pdf->SetFont('Arial', '', 8);
+        if (!empty($dataPettyCash['detailpemasukan'])) {
+            foreach ($dataPettyCash['detailpemasukan'] as $rowdebet) {
+                $pdf->Cell(6, 6, $rowdebet['no'], 1, 0, 'C');
+                $pdf->Cell(16, 6, $rowdebet['tanggaldebet'], 1, 0, 'C');
+                $pdf->Cell(37, 6, $rowdebet['nomor_pettycash'], 1, 0, 'C');
+                $pdf->Cell(82, 6, $rowdebet['keterangan_debet'], 1, 0, 'L');
+                $pdf->Cell(50, 6, 'Rp ' . number_format($rowdebet['saldo_debet'], 0, ',', '.'), 1, 0, 'C');
+                $pdf->Ln(6);
+            }
+        }
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(141, 6, 'Total Penambahan Saldo', 1, 0, 'R');
+        $pdf->SetFillColor(211, 211, 211);
+        $pdf->Cell(50, 6, 'Rp ' . number_format($dataPettyCash['penambahan'], 0, ',', '.'), 1, 1, 'C', true);
 
 
-    // public function update_status_bpkk()
-    // {
-    //     $no_bpkk = $this->input->post('no_bpkk');
-    //     $status  = $this->input->post('status');
+        // data bpkk
+        $pdf->Ln(8);
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(6, 6, 'No', 1, 0, 'C');
+        $pdf->Cell(16, 6, 'Date', 1, 0, 'C');
+        $pdf->Cell(37, 6, 'No BPKK', 1, 0, 'C');
+        $pdf->Cell(82, 6, 'Uraian', 1, 0, 'C');
+        $pdf->Cell(25, 6, 'Pengeluaran', 1, 0, 'C');
+        $pdf->Cell(25, 6, 'Sisa Saldo', 1, 1, 'C');
 
-    //     if (!$no_bpkk || !$status) {
-    //         show_error('Data tidak lengkap', 400);
-    //     }
+        $pdf->SetFont('Arial', '', 8);
+        foreach ($dataPettyCash['detail'] as $row) {
+            $pdf->Cell(6, 6, $row['no'], 1, 0, 'C');
+            $pdf->Cell(16, 6, $row['date'], 1, 0, 'C');
+            $pdf->Cell(37, 6, $row['no_bpkk'], 1, 0, 'C');
+            $pdf->Cell(82, 6, $row['description'], 1, 0, 'L');
+            $pdf->Cell(25, 6, ($row['pengeluaran'] ? 'Rp ' . number_format($row['pengeluaran'], 0, ',', '.') : '-'), 1, 0, 'C');
+            $pdf->Cell(25, 6, 'Rp ' . number_format($row['sisa'], 0, ',', '.'), 1, 1, 'R');
+        }
 
-    //     $this->db->where('no_bpkk_cab', $no_bpkk);
-    //     $this->db->update('tb_bpkk_cab', ['status_cab' => $status]);
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(141, 6, 'Total Pengeluaran', 1, 0, 'L');
+        $pdf->SetFillColor(211, 211, 211);
+        $pdf->Cell(25, 6, 'Rp ' . number_format($dataPettyCash['total_pengeluaran'], 0, ',', '.'), 1, 0, 'C', true);
+        $pdf->Cell(25, 6, '', 1, 1, 'R', true);
+        $pdf->SetFillColor(255, 255, 255);
 
-    //     echo json_encode(['status' => 'ok']);
-    // }
+        $pdf->Cell(141, 6, 'Sisa Saldo', 1, 0, 'L');
+        $pdf->SetFillColor(211, 211, 211);
+        $pdf->Cell(25, 6, '', 1, 0, 'C', true);
+        $pdf->Cell(25, 6, 'Rp ' . number_format($dataPettyCash['sisa_saldo'], 0, ',', '.'), 1, 1, 'C', true);
+        $pdf->SetFillColor(255, 255, 255);
+
+        // ✅ ========== AUTO ORIENTATION: FILE DEBET ==========
+        if (!empty($fileDebet)) {
+            $pathDebet = FCPATH . 'uploads/finance/' . $fileDebet;
+
+            if (file_exists($pathDebet)) {
+                $pageCount = $pdf->setSourceFile($pathDebet);
+                for ($i = 1; $i <= $pageCount; $i++) {
+                    $tpl = $pdf->importPage($i);
+                    $size = $pdf->getTemplateSize($tpl);
+
+                    $pdf->AddPage($size['width'] > $size['height'] ? 'L' : 'P');
+                    $pdf->useTemplate($tpl);
+                }
+            } else {
+                $pdf->AddPage();
+                $pdf->SetFont('Arial', 'B', 12);
+                $pdf->Cell(0, 10, 'File Debet tidak ditemukan: ' . $fileDebet, 0, 1, 'C');
+            }
+        }
+
+        // ✅ ========== AUTO ORIENTATION: FILE PERMINTAAN ==========
+        if (!empty($filePermintaan)) {
+            $pathPermintaan = FCPATH . 'uploads/ppt/' . $filePermintaan;
+
+            if (file_exists($pathPermintaan)) {
+                $pageCount = $pdf->setSourceFile($pathPermintaan);
+                for ($i = 1; $i <= $pageCount; $i++) {
+                    $tpl = $pdf->importPage($i);
+                    $size = $pdf->getTemplateSize($tpl);
+
+                    $pdf->AddPage($size['width'] > $size['height'] ? 'L' : 'P');
+                    $pdf->useTemplate($tpl);
+                }
+            } else {
+                $pdf->AddPage();
+                $pdf->SetFont('Arial', 'B', 12);
+                $pdf->Cell(0, 10, 'File Permintaan tidak ditemukan: ' . $filePermintaan, 0, 1, 'C');
+            }
+        }
+
+        // ✅ ========== AUTO ORIENTATION: FILE KWITANSI ==========
+        foreach ($dataPettyCash['detail'] as $row) {
+            if (!empty($row['upload_file_cab'])) {
+                $filePath = FCPATH . 'uploads/bpkk/' . $jenis . '/' . $row['upload_file_cab'];
+
+                if (file_exists($filePath)) {
+                    $pageCount = $pdf->setSourceFile($filePath);
+                    for ($i = 1; $i <= $pageCount; $i++) {
+                        $tpl = $pdf->importPage($i);
+                        $size = $pdf->getTemplateSize($tpl);
+
+                        $pdf->AddPage($size['width'] > $size['height'] ? 'L' : 'P');
+                        $pdf->useTemplate($tpl);
+                    }
+                } else {
+                    $pdf->AddPage();
+                    $pdf->SetFont('Arial', 'B', 16);
+                    $pdf->Cell(0, 10, "File PDF tidak ditemukan: " . $row['upload_file_cab'], 0, 1, 'C');
+                }
+            }
+        }
+
+        ob_end_clean();
+        $pdf->Output('D', 'PettyCash_' . $dataPettyCash['no_pettycash'] . '.pdf');
+    }
 }

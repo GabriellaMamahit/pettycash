@@ -2,6 +2,17 @@
 .dataTables_wrapper {
     padding-bottom: 20px !important;
 }
+
+#viewpermintaan td {
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+@media (max-width: 1470px) {
+    .signal-table.table-responsive .table tbody tr td:nth-child(n+2) {
+        min-width: auto !important;
+    }
+}
 </style>
 
 <!-- === Page Header === -->
@@ -79,19 +90,6 @@
                 <div class="card-header card-no-border">
                     <div class="header-top">
                         <h4>Petty Cash Jakarta</h4>
-                        <!-- <div class="dropdown icon-dropdown setting-menu">
-                            <button class="btn dropdown-toggle" id="userdropdown3" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <svg>
-                                    <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#setting"></use>
-                                </svg>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userdropdown3">
-                                <a class="dropdown-item" href="#">Weekly</a>
-                                <a class="dropdown-item" href="#">Monthly</a>
-                                <a class="dropdown-item" href="#">Yearly</a>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
                 <div class="card-body pt-0">
@@ -167,18 +165,14 @@
                                             </a>
 
                                             <!-- download -->
-                                            <!-- <a href="#" class="btn btn-outline-secondary btn-sm"
+                                            <?php if (isset($data['sumber']) && $data['sumber'] == 'Penambahan'): ?>
+                                            <a href="<?= base_url('Kelola_saldo/downloadLaporan?jenis=' . $data['jenis_saldo'] . '&no=' . urlencode($data['no_pc_asal'] ?: $data['no_pettycash'])) ?>"
+                                                class="btn btn-outline-secondary btn-sm"
                                                 style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                title="Download">
+                                                title="Download" target="_blank">
                                                 <i data-feather="download" style="width:12px; height:12px;"></i>
-                                            </a> -->
-
-                                            <!-- <a href="<?= base_url('uploads/BPKK/' . $data['upload_file_cab']) ?>"
-                                                download class="btn btn-outline-secondary btn-sm"
-                                                style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                title="Download">
-                                                <i data-feather="download" style="width:12px; height:12px;"></i>
-                                            </a> -->
+                                            </a>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>
@@ -383,6 +377,29 @@
     </div>
 </div>
 
+<div class="modal fade" id="viewdokumenbpkkrembesment" tabindex="-1" role="dialog"
+    aria-labelledby="viewdokumenbpkkrembesment" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-toggle-wrapper social-profile text-start dark-sign-up">
+                <h3 class="modal-header justify-content-center border-0 txt-dark">Dokumen Bukti Pengeluaran Kas Kecil
+                </h3>
+                <div class="modal-body">
+                    <div class="card-body">
+                        <div class="form-group" id="pratinjauGambardok5"></div>
+                    </div>
+                    <br>
+                    <div class="col-md-12">
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -534,6 +551,17 @@ $(document).on('click', '.view-saldorembesment', function() {
                                     ${row.status}
                                 </span>
                             </td>
+                            <td class="text-center align-middle">
+                        <a href="#" 
+                           class="btn btn-outline-info btn-sm view-dokumen d-flex align-items-center justify-content-center mx-auto"
+                           style="width:24px; height:24px; padding:0;"
+                           title="Lihat Dokumen"
+                           data-jenis="${row.jenis_saldo}"
+                           data-file="${row.upload_file_cab}"
+                           data-bs-toggle="modal"
+                           data-bs-target="#viewdokumenbpkkrembesment">
+                           <i data-feather="eye" style="width:12px; height:12px;"></i>
+                        </a>
                         </tr>`;
                     });
                 } else {
@@ -541,6 +569,10 @@ $(document).on('click', '.view-saldorembesment', function() {
                         `<tr><td colspan="6" class="text-center text-muted">Tidak ada data pengeluaran BPKK.</td></tr>`;
                 }
                 modal.find('#viewpermintaan tbody').html(tbody);
+
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                }
             }
         });
     } else {
@@ -619,6 +651,57 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.disabled = false;
             }
         }
+    });
+});
+
+$(document).ready(function() {
+    // Ketika tombol View Dokumen BPKK Rembesment diklik
+    $(document).on('click', '.view-dokumen', function() {
+        var fileName = $(this).data('file'); // nama dokumen
+        var jenisSaldo = $(this).data('jenis'); // jenis saldo
+
+        // Elemen tempat preview
+        var previewContainer = $('#pratinjauGambardok5');
+        previewContainer.empty();
+
+        // Jika file kosong/null
+        if (!fileName || fileName === 'null' || fileName.trim() === '') {
+            previewContainer.html(
+                '<p class="text-center text-danger mt-3">Dokumen tidak tersedia.</p>');
+            return;
+        }
+
+        // Path file
+        var fileUrl = "<?= base_url('uploads/bpkk/'); ?>" + jenisSaldo + "/" + fileName;
+
+        // Cek apakah file ada
+        $.ajax({
+            url: fileUrl,
+            type: 'HEAD',
+            success: function() {
+                // Tampilkan pratinjau sesuai ekstensi
+                var ext = fileName.split('.').pop().toLowerCase();
+                if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+                    previewContainer.html(
+                        `<img src="${fileUrl}" alt="Dokumen" class="img-fluid rounded shadow">`
+                    );
+                } else if (ext === 'pdf') {
+                    previewContainer.html(
+                        `<iframe src="${fileUrl}" width="100%" height="700px" style="border:none;"></iframe>`
+                    );
+                } else {
+                    previewContainer.html(`
+                        <p class="text-center text-muted">Tidak dapat menampilkan pratinjau untuk file ini.</p>
+                        <a href="${fileUrl}" target="_blank" class="btn btn-primary btn-sm">Download Dokumen</a>
+                    `);
+                }
+            },
+            error: function() {
+                previewContainer.html(
+                    '<p class="text-center text-danger mt-3">File tidak ditemukan di server.</p>'
+                );
+            }
+        });
     });
 });
 </script>
