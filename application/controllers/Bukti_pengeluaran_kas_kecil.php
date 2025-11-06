@@ -1,6 +1,11 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+
 class Bukti_pengeluaran_kas_kecil extends CI_Controller
 {
     function __construct()
@@ -491,12 +496,166 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
         $pdf->Output('I', $nama_file);
     }
 
+    public function export_excel()
+    {
+        ob_end_clean();
+        $this->load->model('M_bpkk');
 
+        $awal  = $this->input->get('awal');
+        $akhir = $this->input->get('akhir');
+        $jenis_saldo = $this->input->get('jenis_saldo');
 
+        // Ambil data BPKK
+        if ($awal && $akhir) {
+            $data_bpkk = $this->M_bpkk->filterBpkkByDate($awal, $akhir);
+        } else {
+            $data_bpkk = $this->db->get('tb_bpkk_cab')->result_array();
+        }
 
+        // Mapping address_user ke kode saldo
+        $user_address = $this->fungsi->user_login()->address_user ?? '';
+        $kode_saldo = 'BMG';
+        switch ($user_address) {
+            case 'jakarta':
+                $kode_saldo = 'JKT';
+                break;
+            case 'balikpapan':
+                $kode_saldo = 'BPP';
+                break;
+            case 'karimun':
+                $kode_saldo = 'TBK';
+                break;
+            case 'galang':
+                $kode_saldo = 'LU';
+                break;
+            case 'sekupang':
+                $kode_saldo = 'PA_BBM';
+                break;
+        }
 
+        // Ambil nama perusahaan
+        $perusahaan = 'Bias Mandiri Group';
+        $pj = $this->db->get_where('tb_penanggung_jawab', ['jenis_saldo' => $kode_saldo])->row_array();
+        if ($pj && isset($pj['perusahaan'])) {
+            $perusahaan = $pj['perusahaan'];
+        }
 
+        require_once APPPATH . 'third_party/PhpSpreadsheet/autoload.php';
+        $excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $excel->getActiveSheet();
+        $sheet->setTitle('Rekapan BPKK');
 
+        // HEADER UTAMA
+        $sheet->mergeCells('A1:F1');
+        $sheet->setCellValue('A1', 'REKAP PENGELUARAN');
+        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
+
+        $sheet->mergeCells('A2:F2');
+        $sheet->setCellValue('A2', $perusahaan);
+        $sheet->getStyle('A2')->getFont()->setBold(true)->setSize(12);
+        $sheet->getStyle('A2')->getAlignment()->setHorizontal('center');
+
+        if ($awal && $akhir) {
+            $firstDate = new DateTime($awal);
+            $lastDate = new DateTime($akhir);
+            $periode = $firstDate->format('d M') . ' - ' . $lastDate->format('d M Y');
+
+            $sheet->mergeCells('E4:F4');
+            $sheet->setCellValue('E4', 'Periode ' . $periode);
+            $sheet->getStyle('E4')->getFont()->setBold(true)->setSize(11);
+            $sheet->getStyle('E4')->getAlignment()->setHorizontal('left');
+        }
+
+        // HEADER TABEL
+        $sheet->setCellValue('A6', 'No');
+        $sheet->setCellValue('B6', 'Tanggal');
+        $sheet->setCellValue('C6', 'No BPKK');
+        $sheet->setCellValue('D6', 'Keterangan');
+        $sheet->setCellValue('E6', 'Total Pengeluaran');
+        $sheet->setCellValue('F6', 'Sisa Saldo');
+
+        $headerStyle = [
+            'font' => ['bold' => true, 'size' => 11],
+            'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
+            'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]],
+            'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => 'D9D9D9']],
+        ];
+        $sheet->getStyle('A6:F6')->applyFromArray($headerStyle);
+
+        // DATA BPKK
+        $row_excel = 7;
+        $no = 1;
+        $first_data_row = $row_excel;
+
+        foreach ($data_bpkk as $row) {
+            $sheet->setCellValue("A{$row_excel}", $no++);
+            $sheet->setCellValue("B{$row_excel}", date('d/m/Y', strtotime($row['tgl_kredit_cab'])));
+            $sheet->setCellValue("C{$row_excel}", $row['no_bpkk_cab']);
+            $sheet->setCellValue("D{$row_excel}", $row['ket_bpkk_cab']);
+            $sheet->setCellValue("E{$row_excel}", $row['total_kredit_cab']);
+            $sheet->setCellValue("F{$row_excel}", $row['sisa_saldo']);
+
+            // Rata tengah untuk No & No BPKK
+            $sheet->getStyle("A{$row_excel}:A{$row_excel}")
+                ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle("C{$row_excel}:C{$row_excel}")
+                ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+            // Format Rupiah untuk Total Pengeluaran & Sisa Saldo
+            $sheet->getStyle("E{$row_excel}")->getNumberFormat()->setFormatCode('"Rp"#,##0');
+            $sheet->getStyle("F{$row_excel}")->getNumberFormat()->setFormatCode('"Rp"#,##0');
+
+            // Border per baris
+            $sheet->getStyle("A{$row_excel}:F{$row_excel}")
+                ->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            $row_excel++;
+        }
+
+        // TOTAL PENGELUARAN DI BAWAH TABEL
+        $sheet->mergeCells("A{$row_excel}:D{$row_excel}");
+        $sheet->setCellValue("A{$row_excel}", "Total Pengeluaran");
+        $sheet->getStyle("A{$row_excel}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+        $sheet->getStyle("A{$row_excel}")->getFont()->setBold(true);
+
+        // Merge kolom E dan F dan isi dengan rumus SUM
+        $sheet->mergeCells("E{$row_excel}:F{$row_excel}");
+        $sheet->setCellValue("E{$row_excel}", "=SUM(E{$first_data_row}:E" . ($row_excel - 1) . ")");
+        $sheet->getStyle("E{$row_excel}")->getNumberFormat()->setFormatCode('"Rp"#,##0');
+        $sheet->getStyle("E{$row_excel}")->getFont()->setBold(true);
+        $sheet->getStyle("E{$row_excel}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+        // Border untuk seluruh baris
+        $sheet->getStyle("A{$row_excel}:F{$row_excel}")
+            ->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+        // Auto size kolom
+        foreach (range('A', 'F') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // --- Nama file dengan format tanggal awal - akhir ---
+        if ($awal && $akhir) {
+            $firstDate = new DateTime($awal);
+            $lastDate = new DateTime($akhir);
+            $awal_format = $firstDate->format('d-m-Y');
+            $akhir_format = $lastDate->format('d-m-Y');
+
+            $filename = "Rekapan BPKK_{$awal_format}_s.d._{$akhir_format}.xls";
+        } else {
+            $filename = 'Rekapan_BPKK_' . date('Ymd') . '.xls';
+        }
+
+        // Kirim header dan download
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($excel);
+        $writer->save('php://output');
+        exit;
+    }
 
 
     // public function editpengeluaranbpkkold()

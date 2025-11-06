@@ -275,4 +275,17 @@ $('#exportPdf').on('click', function(e) {
     let pdfUrl = "<?= site_url('Bukti_pengeluaran_kas_kecil/export_pdf'); ?>?awal=" + awal + "&akhir=" + akhir;
     window.open(pdfUrl, "_blank");
 });
+
+$('#exportExcel').on('click', function(e) {
+    e.preventDefault();
+
+    let dateText = $('#reportrange span').text();
+    let dates = dateText.split(' - ');
+    let awal = moment(dates[0], 'DD/MM/YYYY').format('YYYY-MM-DD');
+    let akhir = moment(dates[1], 'DD/MM/YYYY').format('YYYY-MM-DD');
+
+    let excelUrl = "<?= site_url('Bukti_pengeluaran_kas_kecil/export_excel'); ?>?awal=" + awal + "&akhir=" +
+        akhir;
+    window.location.href = excelUrl;
+});
 </script>
