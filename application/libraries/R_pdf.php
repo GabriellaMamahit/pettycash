@@ -162,7 +162,7 @@ class R_pdf extends FPDF
         if ($this->isRekap) return;
 
         // HEADER TABEL
-        $this->Ln(5);
+        $this->Ln(10);
         $this->SetFont('Arial', 'B', 10);
         $this->Cell(9, 6, 'No', 1, 0, 'C');
         $this->Cell(20, 6, 'Date', 1, 0, 'C');
