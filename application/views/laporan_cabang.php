@@ -45,6 +45,16 @@
                         </div> -->
                     </div>
                 </div>
+                <div class="px-3 d-flex justify-content-end mb-2">
+                    <div class="col-12 col-md-3 d-flex justify-content-end">
+                        <button id="reportrange1"
+                            class="btn btn-primary w-100 d-flex align-items-center justify-content-center"
+                            type="button">
+                            <i data-feather="calendar" style="width:16px; height:16px; margin-right:10px;"></i>
+                            <span>Pilih Rentang Tanggal</span>
+                        </button>
+                    </div>
+                </div>
                 <div class="card-body pt-0">
                     <!-- Table -->
                     <div class="table-responsive">
@@ -58,7 +68,6 @@
                                     <th></th>
                                     <th>Total Kredit</th>
                                     <th>Sisa Saldo</th>
-                                    <!-- <th>Status</th> -->
                                     <th></th>
                                     <th class="text-center">Action </th>
                                 </tr>
@@ -66,63 +75,63 @@
                             <tbody>
                                 <?php $no = 1;
                                 foreach ($rowpengeluaranbpkk as $data) { ?>
-                                    <tr>
-                                        <td class="text-center"><?= $no++ ?>.</td>
-                                        <td><?= date('d/m/Y', strtotime(str_replace('/', '-', $data['tanggal']))); ?></td>
-                                        <td>
-                                            <div class="user-data">
-                                                <div><a href="javascript:void(0)" class="text-dark text-decoration-none">
-                                                        <p><?= $data['keterangan']; ?></p>
-                                                    </a><span
-                                                        class="<?= $data['jenis_transaksi'] === 'Kredit' ? 'text-warning' : 'text-success' ?>"
-                                                        style="font-size:12px;">
-                                                        <?= $data['jenis_transaksi'] === 'Kredit' ? $data['no_bpkk_cab'] : $data['no_pettycash']; ?>
-                                                    </span>
-                                                </div>
+                                <tr>
+                                    <td class="text-center"><?= $no++ ?>.</td>
+                                    <td><?= date('d/m/Y', strtotime(str_replace('/', '-', $data['tanggal']))); ?></td>
+                                    <td>
+                                        <div class="user-data">
+                                            <div><a href="javascript:void(0)" class="text-dark text-decoration-none">
+                                                    <p><?= $data['keterangan']; ?></p>
+                                                </a><span
+                                                    class="<?= $data['jenis_transaksi'] === 'Kredit' ? 'text-warning' : 'text-success' ?>"
+                                                    style="font-size:12px;">
+                                                    <?= $data['jenis_transaksi'] === 'Kredit' ? $data['no_bpkk_cab'] : $data['no_pettycash']; ?>
+                                                </span>
                                             </div>
-                                        </td>
-                                        <td><?= isset($data['total_debet_cab']) && $data['total_debet_cab'] !== null
+                                        </div>
+                                    </td>
+                                    <td><?= isset($data['total_debet_cab']) && $data['total_debet_cab'] !== null
                                                 ? 'Rp. ' . number_format($data['total_debet_cab'], 0, ',', '.')
                                                 : '-'; ?></td>
-                                        <td></td>
-                                        <td><?= isset($data['total_kredit_cab']) && $data['total_kredit_cab'] !== null
+                                    <td></td>
+                                    <td><?= isset($data['total_kredit_cab']) && $data['total_kredit_cab'] !== null
                                                 ? 'Rp. ' . number_format($data['total_kredit_cab'], 0, ',', '.')
                                                 : '-'; ?></td>
-                                        <td>
-                                            <?= isset($data['sisa_saldo']) && $data['sisa_saldo'] !== null
+                                    <td>
+                                        <?= isset($data['sisa_saldo']) && $data['sisa_saldo'] !== null
                                                 ? 'Rp. ' . number_format($data['sisa_saldo'], 0, ',', '.')
                                                 : '-'; ?>
-                                        </td>
+                                    </td>
 
-                                        <td></td>
-                                        <td class="text-center">
-                                            <div class="d-flex justify-content-center gap-1 mb-1">
-                                                <!-- Lihat -->
-                                                <a href="#" class="btn btn-outline-info btn-sm"
-                                                    style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                    title="Lihat"
-                                                    data-jenistransaksi="<?= $data['jenis_transaksi'] ?? ''; ?>"
-                                                    data-nobpkk="<?= $data['no_bpkk_cab'] ?? ''; ?>"
-                                                    data-nodebet="<?= $data['no_pettycash'] ?? ''; ?>"
-                                                    data-tanggalbpkk="<?= $data['tanggal'] ?? '-'; ?>"
-                                                    data-keteranganbpkk="<?= $data['keterangan'] ?? '-'; ?>"
-                                                    data-totalkredit="<?= $data['total_kredit_cab'] ?? 0; ?>"
-                                                    data-totaldebet="<?= $data['total_debet_cab'] ?? 0; ?>"
-                                                    data-file="<?= $data['file'] ?? ''; ?>"
-                                                    data-jenissaldo="<?= $data['jenis_saldo'] ?? ''; ?>"
-                                                    data-bs-toggle="modal" data-bs-target="#viewdatatransaksi">
-                                                    <i data-feather="eye" style="width:12px; height:12px;"></i>
-                                                </a>
-                                            </div>
-                                            <div class="d-flex justify-content-center gap-1">
-                                                <!-- <a href="#" class="btn btn-outline-primary btn-sm"
+                                    <td></td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-1 mb-1">
+                                            <!-- Lihat -->
+                                            <a href="#" class="btn btn-outline-info btn-sm"
+                                                style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
+                                                title="Lihat"
+                                                data-jenistransaksi="<?= $data['jenis_transaksi'] ?? ''; ?>"
+                                                data-nobpkk="<?= $data['no_bpkk_cab'] ?? ''; ?>"
+                                                data-nodebet="<?= $data['no_pettycash'] ?? ''; ?>"
+                                                data-tanggalbpkk="<?= $data['tanggal'] ?? '-'; ?>"
+                                                data-keteranganbpkk="<?= $data['keterangan'] ?? '-'; ?>"
+                                                data-totalkredit="<?= $data['total_kredit_cab'] ?? 0; ?>"
+                                                data-totaldebet="<?= $data['total_debet_cab'] ?? 0; ?>"
+                                                data-file="<?= $data['file'] ?? ''; ?>"
+                                                data-jenissaldo="<?= $data['jenis_saldo'] ?? ''; ?>"
+                                                data-bs-toggle="modal" data-bs-target="#viewdatatransaksi">
+                                                <i data-feather="eye" style="width:12px; height:12px;"></i>
+                                            </a>
+                                        </div>
+                                        <div class="d-flex justify-content-center gap-1">
+                                            <!-- <a href="#" class="btn btn-outline-primary btn-sm"
                                                 style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
                                                 title="Print">
                                                 <i data-feather="printer" style="width:12px; height:12px;"></i>
                                             </a> -->
-                                            </div>
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </td>
+                                </tr>
                                 <?php } ?>
                             </tbody>
                         </table>
@@ -188,192 +197,192 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    const BASE_URL = "<?= base_url(); ?>";
+const BASE_URL = "<?= base_url(); ?>";
 </script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const bsGroupForm = document.getElementById('bs_group_form');
-        const bdpForm = document.getElementById('bdp_form');
-        const totalDebet = document.getElementById('totalDebet');
-        const saldoAlert = document.getElementById('saldoAlert');
-        const submitBtn = document.getElementById('submitBtn');
-        const addressCab = document.getElementById('address_cab');
+document.addEventListener('DOMContentLoaded', () => {
+    const bsGroupForm = document.getElementById('bs_group_form');
+    const bdpForm = document.getElementById('bdp_form');
+    const totalDebet = document.getElementById('totalDebet');
+    const saldoAlert = document.getElementById('saldoAlert');
+    const submitBtn = document.getElementById('submitBtn');
+    const addressCab = document.getElementById('address_cab');
 
-        // === Toggle Form (BS Group / BDP) ===
-        document.getElementById('optionsRadios1')?.addEventListener('change', () => {
-            bsGroupForm.style.display = 'block';
-            bdpForm.style.display = 'none';
-        });
-        document.getElementById('optionsRadios2')?.addEventListener('change', () => {
-            bsGroupForm.style.display = 'none';
-            bdpForm.style.display = 'block';
-        });
+    // === Toggle Form (BS Group / BDP) ===
+    document.getElementById('optionsRadios1')?.addEventListener('change', () => {
+        bsGroupForm.style.display = 'block';
+        bdpForm.style.display = 'none';
+    });
+    document.getElementById('optionsRadios2')?.addEventListener('change', () => {
+        bsGroupForm.style.display = 'none';
+        bdpForm.style.display = 'block';
+    });
 
-        // === Modal View Data BPKK ===
-        $(document).on('click', '[data-bs-target="#viewdatatransaksi"]', function() {
-            const modal = $('#viewdatatransaksi');
-            const badge = modal.find('#jenisTransaksiBadge');
+    // === Modal View Data BPKK ===
+    $(document).on('click', '[data-bs-target="#viewdatatransaksi"]', function() {
+        const modal = $('#viewdatatransaksi');
+        const badge = modal.find('#jenisTransaksiBadge');
 
-            const data = {
-                jenisTransaksi: $(this).data('jenistransaksi') || '',
-                noBpkk: $(this).data('nobpkk') || '-',
-                noDebet: $(this).data('nodebet') || '-',
-                tanggal: $(this).data('tanggalbpkk') || '-',
-                keterangan: $(this).data('keteranganbpkk') || '-',
-                totalKredit: $(this).data('totalkredit') || '0',
-                totalDebet: $(this).data('totaldebet') || '0',
-                file: $(this).data('file') || '',
-                jenisSaldo: $(this).data('jenissaldo') || ''
-            };
+        const data = {
+            jenisTransaksi: $(this).data('jenistransaksi') || '',
+            noBpkk: $(this).data('nobpkk') || '-',
+            noDebet: $(this).data('nodebet') || '-',
+            tanggal: $(this).data('tanggalbpkk') || '-',
+            keterangan: $(this).data('keteranganbpkk') || '-',
+            totalKredit: $(this).data('totalkredit') || '0',
+            totalDebet: $(this).data('totaldebet') || '0',
+            file: $(this).data('file') || '',
+            jenisSaldo: $(this).data('jenissaldo') || ''
+        };
 
-            // Tentukan No Transaksi & Total berdasarkan jenis transaksi
-            let noTransaksi = '-';
-            let totalTransaksi = '-';
+        // Tentukan No Transaksi & Total berdasarkan jenis transaksi
+        let noTransaksi = '-';
+        let totalTransaksi = '-';
 
-            if (data.jenisTransaksi === 'Debet') {
-                noTransaksi = data.noDebet;
-                totalTransaksi = data.totalDebet ? 'Rp. ' + Number(data.totalDebet).toLocaleString(
-                    'id-ID') : '-';
-                badge.removeClass().addClass(
-                        'badge bg-success d-block w-100 text-white text-center fw-bold')
-                    .text('TRANSAKSI DEBET');
-            } else if (data.jenisTransaksi === 'Kredit') {
-                noTransaksi = data.noBpkk;
-                totalTransaksi = data.totalKredit ? 'Rp. ' + Number(data.totalKredit).toLocaleString(
-                    'id-ID') : '-';
-                badge.removeClass().addClass('badge bg-warning d-block w-100 text-dark text-center fw-bold')
-                    .text('TRANSAKSI KREDIT');
-            } else {
-                badge.removeClass().addClass(
-                        'badge bg-secondary d-block w-100 text-white text-center fw-bold')
-                    .text('TRANSAKSI TIDAK DIKETAHUI');
+        if (data.jenisTransaksi === 'Debet') {
+            noTransaksi = data.noDebet;
+            totalTransaksi = data.totalDebet ? 'Rp. ' + Number(data.totalDebet).toLocaleString(
+                'id-ID') : '-';
+            badge.removeClass().addClass(
+                    'badge bg-success d-block w-100 text-white text-center fw-bold')
+                .text('TRANSAKSI DEBET');
+        } else if (data.jenisTransaksi === 'Kredit') {
+            noTransaksi = data.noBpkk;
+            totalTransaksi = data.totalKredit ? 'Rp. ' + Number(data.totalKredit).toLocaleString(
+                'id-ID') : '-';
+            badge.removeClass().addClass('badge bg-warning d-block w-100 text-dark text-center fw-bold')
+                .text('TRANSAKSI KREDIT');
+        } else {
+            badge.removeClass().addClass(
+                    'badge bg-secondary d-block w-100 text-white text-center fw-bold')
+                .text('TRANSAKSI TIDAK DIKETAHUI');
+        }
+
+        // Isi field di tabel modal
+        const infoFields = {
+            'NO TRANSAKSI': noTransaksi,
+            'TANGGAL': data.tanggal,
+            'KETERANGAN': data.keterangan,
+            'TOTAL': totalTransaksi
+        };
+
+        modal.find('td').each(function() {
+            const label = $(this).text().trim();
+            if (infoFields[label] !== undefined) {
+                $(this).next().text(': ' + infoFields[label]);
             }
+        });
 
-            // Isi field di tabel modal
-            const infoFields = {
-                'NO TRANSAKSI': noTransaksi,
-                'TANGGAL': data.tanggal,
-                'KETERANGAN': data.keterangan,
-                'TOTAL': totalTransaksi
-            };
-
-            modal.find('td').each(function() {
-                const label = $(this).text().trim();
-                if (infoFields[label] !== undefined) {
-                    $(this).next().text(': ' + infoFields[label]);
-                }
-            });
-
-            // Tampilkan dokumen
-            const preview = $('#pratinjauGambar2');
-            if (!data.file.trim()) {
-                preview.html(
-                    '<p style="color:red;font-weight:bold;text-align:center;">Dokumen Pendukung belum di-upload.</p>'
-                );
-            } else {
-                const folder = data.jenisTransaksi === 'Debet' ? 'finance' : `BPKK/${data.jenisSaldo}`;
-                preview.html(`
+        // Tampilkan dokumen
+        const preview = $('#pratinjauGambar2');
+        if (!data.file.trim()) {
+            preview.html(
+                '<p style="color:red;font-weight:bold;text-align:center;">Dokumen Pendukung belum di-upload.</p>'
+            );
+        } else {
+            const folder = data.jenisTransaksi === 'Debet' ? 'finance' : `BPKK/${data.jenisSaldo}`;
+            preview.html(`
         <p style="font-weight:bold;text-align:center;">Dokumen: ${data.file}</p>
         <iframe src="${BASE_URL}/uploads/${folder}/${data.file}" 
                 width="100%" height="450px" style="border:1px solid #ccc;"></iframe>
     `);
-            }
-        });
-
-        $('#viewdatatransaksi').on('hidden.bs.modal', () => $('#pratinjauGambar2').empty());
-
-        // === Format Rupiah Input ===
-        window.formatRupiah = el => {
-            let num = el.value.replace(/[^,\d]/g, '');
-            const parts = num.split(',');
-            const sisa = parts[0].length % 3;
-            let rupiah = parts[0].substr(0, sisa);
-            const ribuan = parts[0].substr(sisa).match(/\d{3}/g);
-            if (ribuan) rupiah += (sisa ? '.' : '') + ribuan.join('.');
-            el.value = 'Rp. ' + (parts[1] ? rupiah + ',' + parts[1] : rupiah);
-            const rawInput = document.getElementById(
-                el.id === 'edit-totalDebet' ? 'edit-totalDebetRaw' : 'totalDebetRaw'
-            );
-            if (rawInput) rawInput.value = num.replace(/\./g, '');
-        };
-
-        const formatRupiahText = angka => {
-            if (!angka) return 'Rp. 0';
-            angka = angka.toString().replace(/[^,\d]/g, '');
-            const parts = angka.split(',');
-            const sisa = parts[0].length % 3;
-            let rupiah = parts[0].substring(0, sisa);
-            const ribuan = parts[0].substring(sisa).match(/\d{3}/g);
-            if (ribuan) rupiah += (sisa ? '.' : '') + ribuan.join('.');
-            return 'Rp. ' + (parts[1] ? rupiah + ',' + parts[1] : rupiah);
-        };
-
-        // Helper untuk update text tanpa trigger reflow berulang
-        function updateTextContent(el, text) {
-            window.requestAnimationFrame(() => {
-                el.textContent = text;
-            });
         }
-
-        function checkSaldoCukup() {
-            const rawValue = parseInt(document.getElementById('totalDebetRaw').value || 0);
-            const addressUser = totalDebet.getAttribute('data-address_user');
-            let saldo = 0;
-
-            if (addressUser === 'sekupang') {
-                const selected = document.querySelector('input[name="jenis_bpkk"]:checked');
-                if (!selected) {
-                    saldoAlert.style.display = 'block';
-                    updateTextContent(saldoAlert, 'Silakan pilih jenis petty cash terlebih dahulu.');
-                    totalDebet.disabled = true;
-                    submitBtn.disabled = true;
-                    return;
-                }
-                saldo = parseInt(selected.getAttribute('data-saldo') || 0);
-                totalDebet.disabled = false;
-            } else {
-                saldo = parseInt(totalDebet.getAttribute('data-saldo') || 0);
-            }
-
-            if (rawValue > saldo) {
-                saldoAlert.style.display = 'block';
-                updateTextContent(saldoAlert, 'Saldo petty cash tidak mencukupi.');
-                submitBtn.disabled = true;
-            } else {
-                saldoAlert.style.display = 'none';
-                submitBtn.disabled = false;
-            }
-        }
-        // **Tambahkan ini supaya bisa dipanggil dari HTML (oninput)**
-        window.checkSaldoCukup = checkSaldoCukup;
-
-        // Listener jenis_bpkk
-        $(document).on('change', 'input[name="jenis_bpkk"]', () => {
-            const selected = document.querySelector('input[name="jenis_bpkk"]:checked');
-            totalDebet.disabled = !selected;
-            if (selected) addressCab.value = selected.value;
-            checkSaldoCukup();
-        });
-
-        // === Tambahkan Class Wrapper ===
-        const wrapper = document.querySelector('.summary-wrapper');
-        if (wrapper) {
-            const count = wrapper.querySelectorAll('.card-inner').length;
-            const classMap = {
-                1: 'one-card',
-                2: 'two-card',
-                3: 'three-card',
-                4: 'four-card',
-                5: 'five-card',
-                6: 'six-card',
-                7: 'seven-card'
-            };
-            if (classMap[count]) wrapper.classList.add(classMap[count]);
-        }
-
-        // Hilangkan warning Chrome (passive listener)
-        window.addEventListener('wheel', () => {}, {
-            passive: true
-        });
     });
+
+    $('#viewdatatransaksi').on('hidden.bs.modal', () => $('#pratinjauGambar2').empty());
+
+    // === Format Rupiah Input ===
+    window.formatRupiah = el => {
+        let num = el.value.replace(/[^,\d]/g, '');
+        const parts = num.split(',');
+        const sisa = parts[0].length % 3;
+        let rupiah = parts[0].substr(0, sisa);
+        const ribuan = parts[0].substr(sisa).match(/\d{3}/g);
+        if (ribuan) rupiah += (sisa ? '.' : '') + ribuan.join('.');
+        el.value = 'Rp. ' + (parts[1] ? rupiah + ',' + parts[1] : rupiah);
+        const rawInput = document.getElementById(
+            el.id === 'edit-totalDebet' ? 'edit-totalDebetRaw' : 'totalDebetRaw'
+        );
+        if (rawInput) rawInput.value = num.replace(/\./g, '');
+    };
+
+    const formatRupiahText = angka => {
+        if (!angka) return 'Rp. 0';
+        angka = angka.toString().replace(/[^,\d]/g, '');
+        const parts = angka.split(',');
+        const sisa = parts[0].length % 3;
+        let rupiah = parts[0].substring(0, sisa);
+        const ribuan = parts[0].substring(sisa).match(/\d{3}/g);
+        if (ribuan) rupiah += (sisa ? '.' : '') + ribuan.join('.');
+        return 'Rp. ' + (parts[1] ? rupiah + ',' + parts[1] : rupiah);
+    };
+
+    // Helper untuk update text tanpa trigger reflow berulang
+    function updateTextContent(el, text) {
+        window.requestAnimationFrame(() => {
+            el.textContent = text;
+        });
+    }
+
+    function checkSaldoCukup() {
+        const rawValue = parseInt(document.getElementById('totalDebetRaw').value || 0);
+        const addressUser = totalDebet.getAttribute('data-address_user');
+        let saldo = 0;
+
+        if (addressUser === 'sekupang') {
+            const selected = document.querySelector('input[name="jenis_bpkk"]:checked');
+            if (!selected) {
+                saldoAlert.style.display = 'block';
+                updateTextContent(saldoAlert, 'Silakan pilih jenis petty cash terlebih dahulu.');
+                totalDebet.disabled = true;
+                submitBtn.disabled = true;
+                return;
+            }
+            saldo = parseInt(selected.getAttribute('data-saldo') || 0);
+            totalDebet.disabled = false;
+        } else {
+            saldo = parseInt(totalDebet.getAttribute('data-saldo') || 0);
+        }
+
+        if (rawValue > saldo) {
+            saldoAlert.style.display = 'block';
+            updateTextContent(saldoAlert, 'Saldo petty cash tidak mencukupi.');
+            submitBtn.disabled = true;
+        } else {
+            saldoAlert.style.display = 'none';
+            submitBtn.disabled = false;
+        }
+    }
+    // **Tambahkan ini supaya bisa dipanggil dari HTML (oninput)**
+    window.checkSaldoCukup = checkSaldoCukup;
+
+    // Listener jenis_bpkk
+    $(document).on('change', 'input[name="jenis_bpkk"]', () => {
+        const selected = document.querySelector('input[name="jenis_bpkk"]:checked');
+        totalDebet.disabled = !selected;
+        if (selected) addressCab.value = selected.value;
+        checkSaldoCukup();
+    });
+
+    // === Tambahkan Class Wrapper ===
+    const wrapper = document.querySelector('.summary-wrapper');
+    if (wrapper) {
+        const count = wrapper.querySelectorAll('.card-inner').length;
+        const classMap = {
+            1: 'one-card',
+            2: 'two-card',
+            3: 'three-card',
+            4: 'four-card',
+            5: 'five-card',
+            6: 'six-card',
+            7: 'seven-card'
+        };
+        if (classMap[count]) wrapper.classList.add(classMap[count]);
+    }
+
+    // Hilangkan warning Chrome (passive listener)
+    window.addEventListener('wheel', () => {}, {
+        passive: true
+    });
+});
 </script>

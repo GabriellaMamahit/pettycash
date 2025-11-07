@@ -648,6 +648,32 @@
 
         });
     });
+
+    $(function() {
+        $('#reportrange1').daterangepicker({
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment(),
+            ranges: {
+                'Hari ini': [moment(), moment()],
+                'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Bulan ini': [moment().startOf('month'), moment().endOf('month')],
+                'Bulan Kemarin': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1,
+                    'month').endOf('month')]
+            },
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        }, function(start, end) {
+            $('#reportrange1 span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'));
+
+            // reload page with date query
+            let awal = start.format('YYYY-MM-DD');
+            let akhir = end.format('YYYY-MM-DD');
+            window.location = "<?= site_url('Laporan_cabang/riwayat_mutasi'); ?>?awal=" +
+                awal + "&akhir=" + akhir;
+
+        });
+    });
     </script>
 
 </body>
