@@ -77,6 +77,30 @@ class Kelola_saldo extends CI_Controller
     //     $this->template->load('template', 'keuangan/detail_saldo', $data);
     // }
 
+    public function editbudgetsaldo()
+    {
+        $id_saldo = $this->input->post('idbudgetsaldo');
+        $total_budget = $this->input->post('total_budget');
+
+        if (!$id_saldo || $total_budget === null) {
+            $this->session->set_flashdata('error', 'Data tidak lengkap!');
+            redirect('kelola_saldo');
+            return;
+        }
+
+        // panggil model untuk update
+        $update = $this->M_finance->updatebudget_cab($id_saldo, $total_budget);
+
+        if ($update) {
+            $this->session->set_flashdata('success', 'Budget saldo berhasil diupdate!');
+        } else {
+            $this->session->set_flashdata('error', 'Gagal mengupdate budget saldo!');
+        }
+
+        redirect('kelola_saldo');
+    }
+
+
     public function get_data_bpkk_by_nopettycash()
     {
         $no_pettycash = $this->input->post('no_pettycash');

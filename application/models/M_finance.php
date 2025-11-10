@@ -6,10 +6,48 @@ class M_finance extends CI_Model
 
     public function getsaldocabang()
     {
-        $this->db->select('*');
+        $level = $this->fungsi->user_login()->level;
+        $address_user = strtolower($this->fungsi->user_login()->address_user);
+
+        $akses = [];
+        if (in_array($level, ['super_admin', 'direktur_finance', 'development', 'finance_bmg'])) {
+            $akses = ['JKT', 'BPP', 'TBK', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
+        } elseif ($level == 'finance_bdp') {
+            $akses = ['LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
+        } elseif ($level == 'finance_bsgroup') {
+            $akses = ['JKT', 'BPP', 'TBK'];
+        } elseif ($level == 'user' && $address_user == 'sekupang') {
+            $akses = ['PA_BBM', 'PA_SB', 'PA_RTK'];
+        }
+
+        $this->db->select('
+    tb_saldo.id_saldopc,
+    tb_saldo.jenis_saldo,
+    tb_saldo.nama_saldo,
+    tb_saldo.saldo_pettycash,
+    tb_saldo_cabang.id_saldo,
+    tb_saldo_cabang.kantor_cabang,
+    tb_saldo_cabang.saldo_cabang,
+    tb_saldo_cabang.perusahaan
+');
         $this->db->from('tb_saldo');
-        $data = $this->db->get();
-        return $data->result_array();
+        $this->db->join('tb_saldo_cabang', 'tb_saldo.jenis_saldo = tb_saldo_cabang.jenis_saldo', 'left');
+
+        if (!empty($akses)) {
+            $this->db->where_in('tb_saldo.jenis_saldo', $akses);
+        } else {
+            $this->db->where('tb_saldo.id_saldopc', 0);
+        }
+
+        return $this->db->get()->result_array();
+    }
+
+    public function updatebudget_cab($id_saldo, $total_budget)
+    {
+        $this->db->where('id_saldo', $id_saldo);
+        return $this->db->update('tb_saldo_cabang', [
+            'saldo_cabang' => $total_budget
+        ]);
     }
 
     public function apprvpermintaansaldo($id_pettycash = NULL)

@@ -39,17 +39,46 @@
                         <button class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                             <i class="fa fa-filter"></i> Filter
                         </button>
+                        <?php
+                        $level = $this->fungsi->user_login()->level;
+                        $address_user = strtolower($this->fungsi->user_login()->address_user);
+
+                        // Tentukan akses sesuai level
+                        $akses = [];
+
+                        if (in_array($level, ['super_admin', 'direktur_finance', 'development', 'finance_bmg'])) {
+                            $akses = ['JKT', 'BPP', 'TBK', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
+                        } elseif ($level == 'finance_bdp') {
+                            $akses = ['LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
+                        } elseif ($level == 'finance_bsgroup') {
+                            $akses = ['JKT', 'BPP', 'TBK'];
+                        } elseif ($level == 'user') {
+                            if ($address_user == 'sekupang') {
+                                $akses = ['PA_BBM', 'PA_SB', 'PA_RTK'];
+                            } else {
+                                $akses = ['JKT', 'BPP', 'TBK', 'LU']; // default user non-Sekupang
+                            }
+                        }
+
+                        // Mapping kode => label
+                        $labelCabang = [
+                            'JKT' => 'Jakarta',
+                            'BPP' => 'Balikpapan',
+                            'TBK' => 'Karimun',
+                            'LU' => 'Galang',
+                            'PA_BBM' => 'Sekupang - BBM Pilot Boat',
+                            'PA_SB' => 'Sekupang - Service Boat',
+                            'PA_RTK' => 'Sekupang - RTK/ATK',
+                        ];
+                        ?>
+
                         <div class="dropdown-menu dropdown-menu-end p-2" style="width:220px;">
                             <label class="fw-bold mb-1">Pilih Cabang</label>
                             <select class="form-control" id="filterCabang" onchange="filterWidget()">
                                 <option value="all">Semua Cabang</option>
-                                <option value="JKT">Jakarta</option>
-                                <option value="BPP">Balikpapan</option>
-                                <option value="TBK">Karimun</option>
-                                <option value="LU">Galang</option>
-                                <option value="PA_BBM">Sekupang - BBM Pilot Boat</option>
-                                <option value="PA_SB">Sekupang - Service Boat</option>
-                                <option value="PA_RTK">Sekupang - RTK/ATK</option>
+                                <?php foreach ($akses as $kode) : ?>
+                                <option value="<?= $kode ?>"><?= $labelCabang[$kode] ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
@@ -290,20 +319,16 @@ function filterWidget() {
                                             <!-- Edit -->
                                             <a href="#" class="btn btn-outline-secondary btn-sm edit-databpkk"
                                                 style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                title="Edit Budget Saldo" data-bs-toggle="modal"
+                                                title="Edit Budget Saldo"
+                                                data-kantorcab="<?= $data['kantor_cabang']; ?>"
+                                                data-perusahan="<?= $data['perusahaan']; ?>"
+                                                data-idcabang="<?= $data['id_saldo']; ?>"
+                                                data-saldocabang="<?= $data['saldo_cabang']; ?>" data-bs-toggle="modal"
                                                 data-bs-target="#editbudgetsaldocabang">
                                                 <i data-feather="edit" style="width:12px; height:12px;"></i>
                                             </a>
 
                                     </td>
-                                    <!-- <td class="text-center">
-                                        <a href="<?= site_url('kelola_saldo/detail_saldo/' . $data['id_saldopc'] . '/' . $data['jenis_saldo']) ?>"
-                                            class="btn btn-outline-info btn-sm"
-                                            style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                            title="Lihat">
-                                            <i data-feather="eye" style="width:12px; height:12px;"></i>
-                                        </a>
-                                    </td> -->
                                 </tr>
                                 <?php } ?>
                             </tbody>
@@ -349,11 +374,12 @@ function filterWidget() {
                         <div class="card-wrapper">
                             <div class="row mb-3">
                                 <div class="col-md-12">
-                                    <label class="form-label txt-dark" for="edit-totalbudget">Total Kredit :</label>
+                                    <label class="form-label txt-dark" for="edit-totalbudget">Total Budget Saldo
+                                        :</label>
                                     <input class="form-control" id="edit-totalbudget" name="totalbudget" type="text"
                                         placeholder="Rp. 0" oninput="formatRupiah(this); checkSaldoCukup();">
                                     <input type="hidden" id="edit-totalbudgetRaw" name="total_budget">
-                                    <input type="hidden" id="edit-totalbudgetOld" value="">
+                                    <input type="hidden" id="idbudgetsaldo" name="idbudgetsaldo">
                                     <small id="saldo-warning" class="mt-2 text-danger" style="display:none;"></small>
                                 </div>
                             </div>
@@ -370,3 +396,78 @@ function filterWidget() {
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).on('click', '[data-bs-target="#editbudgetsaldocabang"]', function() {
+    const modal = $('#editbudgetsaldocabang');
+
+    // ambil data dari tombol edit
+    const kantorcabang = $(this).data('perusahan') || '-';
+    const lokasikantor = $(this).data('kantorcab') || '-';
+    const saldoCabang = $(this).data('saldocabang') || 0;
+    const idCabang = $(this).data('idcabang') || '';
+
+    // isi tabel kantor & lokasi
+    modal.find('td').each(function() {
+        const label = $(this).text().trim();
+        if (label.includes('KANTOR CABANG')) $(this).next().text(': ' + kantorcabang);
+        if (label.includes('LOKASI KANTOR')) $(this).next().text(': ' + lokasikantor);
+    });
+
+    // isi input total budget & hidden fields
+    modal.find('#edit-totalbudget').val(formatRupiahString(saldoCabang));
+    modal.find('#edit-totalbudgetRaw').val(saldoCabang);
+    modal.find('#idbudgetsaldo').val(idCabang);
+    // modal.find('#edit-totalbudgetOld').val(saldoCabang);
+
+    // simpan ID cabang di hidden field
+    if (modal.find('#edit-idcabang').length === 0) {
+        $('<input>').attr({
+            type: 'hidden',
+            id: 'edit-idcabang',
+            name: 'id_saldo',
+            value: idCabang
+        }).appendTo(modal.find('form'));
+    } else {
+        modal.find('#edit-idcabang').val(idCabang);
+    }
+});
+
+// auto-format input dan update hidden field saat user mengetik
+$(document).on('input', '#edit-totalbudget', function() {
+    let cursorPosition = this.selectionStart;
+    let originalLength = $(this).val().length;
+
+    // ambil angka murni
+    let value = $(this).val().replace(/[^0-9]/g, '');
+
+    // update hidden field
+    $('#edit-totalbudgetRaw').val(value);
+
+    // format Rupiah
+    $(this).val(formatRupiahString(value));
+
+    // jaga posisi cursor agar tidak loncat
+    let newLength = $(this).val().length;
+    this.selectionEnd = cursorPosition + (newLength - originalLength);
+});
+
+// fungsi untuk format rupiah tampil di input
+function formatRupiahString(angka) {
+    if (!angka) return '';
+    let number_string = angka.toString().replace(/[^,\d]/g, ''),
+        split = number_string.split(','),
+        sisa = split[0].length % 3,
+        rupiah = split[0].substr(0, sisa),
+        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    if (ribuan) {
+        let separator = sisa ? '.' : '';
+        rupiah += separator + ribuan.join('.');
+    }
+
+    rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+    return 'Rp. ' + rupiah;
+}
+</script>
