@@ -156,7 +156,10 @@
                                     </td>
                                     <td>Rp. <?= number_format($data['saldo_pettycash'], 0, ',', '.'); ?></td>
                                     <td></td>
-                                    <td>Rp. <?= number_format($data['sisa_saldo'], 0, ',', '.') ?></td>
+                                    <td>
+                                        Rp.
+                                        <?= number_format($data['sisa_saldo'] ?? $data['sisasaldo_remb'] ?? 0, 0, ',', '.') ?>
+                                    </td>
                                     <td>
                                         <?php if ($data['status_permintaan'] == 'Waiting') : ?>
                                         <span class="badge badge-warning">Waiting</span>
