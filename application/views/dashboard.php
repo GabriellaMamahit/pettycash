@@ -133,6 +133,39 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="card p-3">
+                <?php
+                $level = $this->fungsi->user_login()->level;
+                $address_user = strtolower($this->fungsi->user_login()->address_user);
+
+                // Tentukan akses sesuai level
+                $akses = [];
+
+                if (in_array($level, ['super_admin', 'direktur_finance', 'development', 'finance_bmg'])) {
+                    $akses = ['JKT', 'BPP', 'TBK', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
+                } elseif ($level == 'finance_bdp') {
+                    $akses = ['LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
+                } elseif ($level == 'finance_bsgroup') {
+                    $akses = ['JKT', 'BPP', 'TBK'];
+                } elseif ($level == 'user') {
+                    if ($address_user == 'sekupang') {
+                        $akses = ['PA_BBM', 'PA_SB', 'PA_RTK'];
+                    } else {
+                        $akses = ['JKT', 'BPP', 'TBK', 'LU']; // default user non-Sekupang
+                    }
+                }
+
+                // Mapping kode => label
+                $labelCabang = [
+                    'JKT' => 'Jakarta',
+                    'BPP' => 'Balikpapan',
+                    'TBK' => 'Karimun',
+                    'LU' => 'Galang',
+                    'PA_BBM' => 'Sekupang - BBM Pilot Boat',
+                    'PA_SB' => 'Sekupang - Service Boat',
+                    'PA_RTK' => 'Sekupang - RTK/ATK',
+                ];
+                ?>
+
                 <div class="card-header d-flex justify-content-between align-items-center pb-0">
                     <h4 class="mb-0">Status Pengeluaran Kas Kecil</h4>
 
@@ -144,17 +177,14 @@
                             <label class="fw-bold mb-1">Pilih Cabang</label>
                             <select class="form-control" id="filterCabang" onchange="filterWidget()">
                                 <option value="all">Semua Cabang</option>
-                                <option value="JKT">Jakarta</option>
-                                <option value="BPP">Balikpapan</option>
-                                <option value="TBK">Karimun</option>
-                                <option value="LU">Galang</option>
-                                <option value="PA_BBM">Sekupang - BBM Pilot Boat</option>
-                                <option value="PA_SB">Sekupang - Service Boat</option>
-                                <option value="PA_RTK">Sekupang - RTK/ATK</option>
+                                <?php foreach ($akses as $kode) : ?>
+                                <option value="<?= $kode ?>"><?= $labelCabang[$kode] ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
                 </div>
+
 
 
                 <!-- CARD DI DALAM CARD -->
