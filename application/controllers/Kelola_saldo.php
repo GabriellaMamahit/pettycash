@@ -500,7 +500,7 @@ class Kelola_saldo extends CI_Controller
             'file'            => $filename,
             'jenis_transaksi' => 'Debet',
             'status_mutasi'   => 'Open',
-            'sisa_saldo'      => $sisa_saldo // ⬅️ Tambahkan dari tb_sisasaldo_rembes
+            'sisa_saldo'      => $sisa_saldo + $total_debet
         ];
 
         // === tb_permintaan_saldo ===

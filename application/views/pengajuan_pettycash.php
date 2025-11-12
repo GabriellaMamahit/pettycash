@@ -118,7 +118,7 @@
                                     <th>Permintaan </th>
                                     <th>Keterangan </th>
                                     <!-- <th>No Petty Cash</th> -->
-                                    <th>Total</th>
+                                    <th>Total Reimbursement</th>
                                     <th></th>
                                     <th>sisa Saldo</th>
                                     <th>Status</th>
@@ -181,14 +181,14 @@
                                                 <i data-feather="eye" style="width:12px; height:12px;"></i>
                                             </a>
                                             <!-- pdf aprroval -->
-                                            <a href="#" class="btn btn-outline-secondary btn-sm"
+                                            <!-- <a href="#" class="btn btn-outline-secondary btn-sm"
                                                 style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
                                                 title="View Pdf Approval"
                                                 data-nama_dok="<?= $data['nama_dokumenremb']; ?>"
                                                 data-jenissaldo_dok="<?= $data['jenis_saldo']; ?>"
                                                 data-bs-toggle="modal" data-bs-target="#viewpdfapproval">
                                                 <i data-feather="file" style="width:12px; height:12px;"></i>
-                                            </a>
+                                            </a> -->
 
                                             <a href="<?= base_url('pengajuan_pettycash/export_excel?no_pettycash=' . urlencode($data['no_pettycash'])); ?>"
                                                 class="btn btn-outline-success btn-sm"
