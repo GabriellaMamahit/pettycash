@@ -209,6 +209,8 @@
                                                 data-pettycashnumber="<?= $data['no_pettycash']; ?>"
                                                 data-totalbpkk="<?= $data['total_kredit_cab']; ?>"
                                                 data-saldo="<?= $data['saldo_pettycash'] ?? 0; ?>"
+                                                data-kreditsaldopending="<?= $data['total_kredit_cab'] ?? 0; ?>"
+                                                data-sisasaldo_pending="<?= $data['sisa_saldo'] ?? 0; ?>"
                                                 data-filebpkk="<?= $data['upload_file_cab']; ?>" data-bs-toggle="modal"
                                                 data-bs-target="#editdatabpkk">
                                                 <i data-feather="edit" style="width:12px; height:12px;"></i>
@@ -298,6 +300,10 @@
                                         placeholder="Rp. 0" oninput="formatRupiah(this); checkSaldoCukup();">
                                     <input type="hidden" id="edit-totalDebetRaw" name="total_debet">
                                     <input type="hidden" id="edit-totalDebetOld" value="">
+                                    <input type="hidden" id="edit-totalkreditpending" name="totalkreditpending"
+                                        value="">
+                                    <input type="hidden" id="edit-totalsisasaldopending" name="totalsisasaldopending"
+                                        value="">
                                     <small id="saldo-warning" class="mt-2 text-danger" style="display:none;"></small>
                                 </div>
                             </div>
@@ -414,6 +420,12 @@
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    feather.replace();
+});
+</script>
 <script>
 // === VIEW DATA BPKK ===
 $(document).on('click', '[data-bs-target="#viewdatabpkk"]', function() {
@@ -580,6 +592,8 @@ $(document).on('click', '.edit-databpkk', function() {
     const modal = $("#editdatabpkk");
     const saldo = parseInt($(this).data('saldo')) || 0;
     const total = parseInt($(this).data('totalbpkk')) || 0;
+    const kreditpending = parseInt($(this).data('kreditsaldopending')) || 0;
+    const sisasaldopending = parseInt($(this).data('sisasaldo_pending')) || 0;
 
     modal.find("#idbpkk").val($(this).data('idbpkk'));
     modal.find("#no-permintaan_bpkk-display").val($(this).data('nobpkk'));
@@ -591,6 +605,8 @@ $(document).on('click', '.edit-databpkk', function() {
     modal.find("#edit-totalDebet").val(formatRupiahText(total)).attr('data-saldo', saldo);
     modal.find("#edit-totalDebetRaw").val(total);
     modal.find("#edit-totalDebetOld").val(total);
+    modal.find("#edit-totalkreditpending").val(kreditpending);
+    modal.find("#edit-totalsisasaldopending").val(sisasaldopending);
 
     const fileName = $(this).data('filebpkk');
     const jenisSaldo = $(this).data('jenissaldo');

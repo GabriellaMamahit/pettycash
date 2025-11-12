@@ -161,7 +161,8 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
             'tanggal_notifikasi' => date('Y-m-d H:i:s')
         ];
         $data3 = [
-            'status_mutasi' => 'Revisi'
+            'status_mutasi' => 'Close',
+            'status_cab' => 'Revisi',
         ];
 
         $updated = $this->M_bpkk->updateStatusBpkk($id_bpkk, $data, 'tb_bpkk_cab');
@@ -301,6 +302,8 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
         $no_rembesment   = $this->input->post('no_pc_rembes');
         $no_pettycash    = $this->input->post('nopettycash');
         $totalBaru       = (int)$this->input->post('total_debet');
+        $kreditpending       = (int)$this->input->post('totalkreditpending');
+        $sisasaldopending    = (int)$this->input->post('totalsisasaldopending');
 
         // Ambil data lama
         $pengeluaran = $this->M_bpkk->getPengeluaranById($idbpkk);
@@ -347,6 +350,8 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
 
             if (!empty($no_rembesment)) {
                 $this->M_bpkk->adjustPermintaanSaldo($no_rembesment, $selisih);
+                $this->M_bpkk->adjustsaldoremb($no_rembesment, $selisih);
+                $this->M_bpkk->adjustSisaPermintaanSaldo($no_rembesment, $selisih);
             }
         }
 
@@ -426,9 +431,22 @@ class Bukti_pengeluaran_kas_kecil extends CI_Controller
         $this->M_bpkk->updatebpkkmutasi($nobpkk, $data2, 'tb_data_mutasi');
         $this->M_bpkk->updatetotalkreditpending($nobpkk, $data3, 'tb_sisasaldo');
 
+        $saldo_awal = $kreditpending + $sisasaldopending;
+
         if (!empty($no_pettycash) && !empty($nobpkk)) {
-            $this->M_bpkk->updateSisaSaldoBerantai($no_pettycash, $nobpkk);
+            // echo "CALLING updateSisaSaldoBerantai<BR>";
+            // echo "NO PC = $no_pettycash | NO BPKK = $nobpkk<BR>";
+            $this->M_bpkk->updateSisaSaldoBerantai($no_pettycash, $nobpkk, $saldo_awal);
+            // exit;
         }
+        // else {
+        //     echo "NO PC ATAU NO BPKK KOSONG<BR>";
+        //     exit;
+        // }
+
+        // if (!empty($no_pettycash) && !empty($nobpkk)) {
+        //     $this->M_bpkk->updateSisaSaldoBerantai($no_pettycash, $nobpkk);
+        // }
 
         $this->session->set_flashdata('success', 'Data Petty Cash berhasil diperbarui.');
         redirect('Bukti_pengeluaran_kas_kecil');
