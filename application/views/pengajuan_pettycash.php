@@ -181,10 +181,16 @@
                                                 <i data-feather="eye" style="width:12px; height:12px;"></i>
                                             </a>
                                             <!-- pdf aprroval -->
+                                            <a href="<?= base_url('pengajuan_pettycash/cetak_approval?id=' . $data['id_pettycash'] . '&jenis_saldo=' . $data['jenis_saldo']); ?>"
+                                                class="btn btn-outline-secondary btn-sm" target="_blank"
+                                                style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
+                                                title="View Pdf Approval">
+                                                <i data-feather="file" style="width:12px; height:12px;"></i>
+                                            </a>
                                             <!-- <a href="#" class="btn btn-outline-secondary btn-sm"
                                                 style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
                                                 title="View Pdf Approval"
-                                                data-nama_dok="<?= $data['nama_dokumenremb']; ?>"
+                                                data-no_pettycash="<?= $data['no_pettycash']; ?>"
                                                 data-jenissaldo_dok="<?= $data['jenis_saldo']; ?>"
                                                 data-bs-toggle="modal" data-bs-target="#viewpdfapproval">
                                                 <i data-feather="file" style="width:12px; height:12px;"></i>
@@ -491,7 +497,7 @@
 </div>
 
 <!-- modal view Dokumen pendukung -->
-<div class="modal fade" id="viewpdfapproval" tabindex="-1" role="dialog" aria-labelledby="viewpdfapproval"
+<!-- <div class="modal fade" id="viewpdfapproval" tabindex="-1" role="dialog" aria-labelledby="viewpdfapproval"
     aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
@@ -512,7 +518,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- modal view Dokumen pendukung bpkk -->
 <div class="modal fade" id="viewdokumenbpkkrembesment" tabindex="-1" role="dialog"
@@ -913,42 +919,42 @@ $(document).ready(function() {
     });
 });
 
-$(document).ready(function() {
-    // Ketika tombol View PDF Approval diklik
-    $(document).on('click', '.btn-outline-secondary[data-bs-target="#viewpdfapproval"]', function() {
-        var namaDok = $(this).data('nama_dok');
-        var jenisSaldo = $(this).data('jenissaldo_dok');
+// $(document).ready(function() {
+//     // Ketika tombol View PDF Approval diklik
+//     $(document).on('click', '.btn-outline-secondary[data-bs-target="#viewpdfapproval"]', function() {
+//         var namaDok = $(this).data('nama_dok');
+//         var jenisSaldo = $(this).data('jenissaldo_dok');
 
-        // Elemen tempat preview
-        var previewContainer = $('#pratinjauGambardok4');
-        previewContainer.empty();
+//         // Elemen tempat preview
+//         var previewContainer = $('#pratinjauGambardok4');
+//         previewContainer.empty();
 
-        // Jika nama dokumen kosong/null
-        if (!namaDok || namaDok === 'null' || namaDok.trim() === '') {
-            previewContainer.html('<p class="text-center text-danger mt-3">File tidak tersedia.</p>');
-            return;
-        }
+//         // Jika nama dokumen kosong/null
+//         if (!namaDok || namaDok === 'null' || namaDok.trim() === '') {
+//             previewContainer.html('<p class="text-center text-danger mt-3">File tidak tersedia.</p>');
+//             return;
+//         }
 
-        // Path file-nya
-        var fileUrl = "<?= base_url('uploads/approve/'); ?>" + jenisSaldo + "/" + namaDok;
+//         // Path file-nya
+//         var fileUrl = "<?= base_url('uploads/approve/'); ?>" + jenisSaldo + "/" + namaDok;
 
-        // Cek dulu apakah file-nya benar-benar ada
-        $.ajax({
-            url: fileUrl,
-            type: 'HEAD',
-            success: function() {
-                var iframe = '<iframe src="' + fileUrl +
-                    '" width="100%" height="700px" style="border:none;"></iframe>';
-                previewContainer.html(iframe);
-            },
-            error: function() {
-                previewContainer.html(
-                    '<p class="text-center text-danger mt-3">File tidak ditemukan di server.</p>'
-                );
-            }
-        });
-    });
-});
+//         // Cek dulu apakah file-nya benar-benar ada
+//         $.ajax({
+//             url: fileUrl,
+//             type: 'HEAD',
+//             success: function() {
+//                 var iframe = '<iframe src="' + fileUrl +
+//                     '" width="100%" height="700px" style="border:none;"></iframe>';
+//                 previewContainer.html(iframe);
+//             },
+//             error: function() {
+//                 previewContainer.html(
+//                     '<p class="text-center text-danger mt-3">File tidak ditemukan di server.</p>'
+//                 );
+//             }
+//         });
+//     });
+// });
 
 $(document).ready(function() {
     // Ketika tombol View Dokumen BPKK Rembesment diklik

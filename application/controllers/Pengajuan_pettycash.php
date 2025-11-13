@@ -614,4 +614,166 @@ class Pengajuan_pettycash extends CI_Controller
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xls($excel);
         $writer->save('php://output');
     }
+
+    public function cetak_approval()
+    {
+        // Mulai buffer output (hindari PDF corrupt)
+        ob_start();
+
+        $id = $this->input->get('id');
+        $jenis_saldo = $this->input->get('jenis_saldo');
+
+        // Ambil data berdasarkan id
+        $this->db->where('id_pettycash', $id);
+        $data = $this->db->get('tb_permintaan_saldo')->row();
+
+        if (!$data) {
+            show_error("Data petty cash tidak ditemukan berdasarkan ID $id", 400);
+            return;
+        }
+
+        // Ambil no_pettycash dari database
+        $no_pettycash = $data->no_pettycash;
+
+        if (empty($no_pettycash) || empty($jenis_saldo)) {
+            show_error("No pettycash atau jenis saldo tidak ditemukan", 400);
+            return;
+        }
+
+        $this->load->library('A_pdf');
+        $this->load->model('M_pettycash');
+
+        $pdf = new A_pdf('L', 'mm', 'A4');
+
+        // ✅ Set data petty cash ke PDF (penting!)
+        $pdf->setDataPetty($jenis_saldo, $no_pettycash);
+
+        // ✅ Ambil Data
+        $rows       = $this->M_pettycash->getByNoPettycash($no_pettycash, $jenis_saldo);
+        $rows_all   = $this->M_pettycash->getByNoPettycash_All($no_pettycash, $jenis_saldo);
+        $saldo_awal = $this->M_pettycash->getSaldoAwalByNoPetty($jenis_saldo);
+
+        if (!$saldo_awal) {
+            show_error("Saldo awal petty cash tidak ditemukan", 400);
+            return;
+        }
+
+        $debetsaldo = $saldo_awal->saldo_debet;
+
+        // ✅ Hitung total pengeluaran
+        $total_pengeluaran = 0;
+        foreach ($rows as $row) {
+            $total_pengeluaran += $row->total_kredit_cab ?? 0;
+        }
+
+        // ✅ Hitung running saldo
+        $running_saldo_list = [];
+        $sisa_saldo = $debetsaldo;
+        foreach ($rows_all as $row) {
+            $sisa_saldo -= $row->total_kredit_cab;
+            $running_saldo_list[$row->id_bpkk_cab] = $sisa_saldo;
+        }
+
+        // =============================
+        //  HALAMAN UTAMA
+        // =============================
+        $pdf->AddPage();
+        $pdf->SetWidths([9, 20, 45, 113, 30, 30, 30]);
+        $pdf->SetAligns(['C', 'C', 'L', 'L', 'C', 'R', 'R']);
+        $pdf->SetFont('Arial', '', 9);
+
+        $count = 0;
+        $rowsPerPage = 10;
+
+        foreach ($rows as $i => $row) {
+            $pdf->Row([
+                $i + 1,
+                date('d/m/Y', strtotime($row->tgl_kredit_cab)),
+                $row->no_bpkk_cab,
+                $row->ket_bpkk_cab,
+                '-',
+                "Rp " . number_format($row->total_kredit_cab, 0, ',', '.'),
+                "Rp " . number_format($running_saldo_list[$row->id_bpkk_cab] ?? 0, 0, ',', '.')
+            ]);
+
+            $count++;
+            if ($count == $rowsPerPage && $i < count($rows) - 1) {
+                $pdf->AddPage();
+                $count = 0;
+            }
+        }
+
+        // ✅ Total & sisa saldo
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(217, 6, 'Total Pengeluaran', 1, 0, 'L');
+        $pdf->Cell(30, 6, 'Rp ' . number_format($total_pengeluaran, 0, ',', '.'), 1, 0, 'C');
+        $pdf->Cell(30, 6, '', 1, 1, 'C');
+
+        $pdf->Cell(217, 6, 'Sisa Saldo', 1, 0, 'L');
+        $pdf->Cell(30, 6, '', 1, 0, 'C');
+        $pdf->Cell(30, 6, 'Rp ' . number_format($sisa_saldo, 0, ',', '.'), 1, 1, 'C');
+
+        // =============================
+        //  HALAMAN REKAP
+        // =============================
+        $pdf->isRekap = true;
+        $pdf->AddPage();
+
+        $totalWidth = 9 + 80 + 60; // 149
+        $marginLeft = ($pdf->GetPageWidth() - $totalWidth) / 2;
+
+        // Judul
+        $pdf->Ln(7);
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->Cell(0, 10, 'LAPORAN PENGAJUAN PETTY CASH', 0, 1, 'C');
+
+        $pdf->Ln(7);
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->SetX($marginLeft);
+        $pdf->Cell(9, 6, 'No', 1, 0, 'C');
+        $pdf->Cell(80, 6, 'Nama Item', 1, 0, 'C');
+        $pdf->Cell(60, 6, 'Total Pengeluaran Item', 1, 1, 'C');
+
+        // --- Rekap data berdasarkan jenis_pengeluaran_cab ---
+        $rekap = [];
+        foreach ($rows as $row) {
+            $jenis = $row->jenis_pengeluaran_cab;
+            if (!isset($rekap[$jenis])) {
+                $rekap[$jenis] = 0;
+            }
+            $rekap[$jenis]++;
+        }
+
+        // Isi tabel dari hasil rekap
+        $pdf->SetFont('Arial', '', 11);
+        $no = 1;
+        foreach ($rekap as $jenis => $jumlah) {
+            $namaItem = ucwords(str_replace('_', ' ', $jenis));
+            $pdf->SetX($marginLeft);
+            $pdf->Cell(9, 6, $no++, 1, 0, 'C');   // No urut
+            $pdf->Cell(80, 6, $namaItem, 1, 0, 'L'); // Nama Item
+            $pdf->Cell(60, 6, $jumlah, 1, 1, 'C'); // Total Pengeluaran Item
+        }
+
+        // =============================
+        //  SIMPAN & TAMPILKAN PDF
+        // =============================
+        $filename = 'Approve-' . str_replace(['/', ' '], '_', $no_pettycash) . '.pdf';
+        $folderPath = FCPATH . 'uploads/approve/' . $jenis_saldo . '/';
+        $savePath   = $folderPath . $filename;
+
+        if (!file_exists($folderPath)) {
+            mkdir($folderPath, 0777, true);
+        }
+
+        $pdf->SetTitle($filename);
+        $pdf->Output($savePath, 'F');
+
+        // ✅ Bersihkan buffer sebelum output PDF
+        if (ob_get_length()) ob_end_clean();
+
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: inline; filename="' . $filename . '"');
+        $pdf->Output('I', $filename);
+    }
 }

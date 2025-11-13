@@ -273,4 +273,64 @@ class M_pettycash extends CI_Model
             ->get()
             ->result_array();
     }
+
+    public function getByNoPettycash($no_pettycash, $jenis_saldo)
+    {
+        $this->db->select('*');
+        $this->db->from('tb_bpkk_cab');
+        $this->db->where('jenis_saldo', $jenis_saldo);
+        $this->db->where('no_pc_saldo', $no_pettycash);
+        $data = $this->db->get();
+        return $data->result();
+    }
+
+
+    public function getByNoPettycash_All($no_pettycash, $jenis_saldo)
+    {
+        $this->db->select('*');
+        $this->db->from('tb_bpkk_cab');
+        $this->db->where('jenis_saldo', $jenis_saldo);
+        $this->db->where('no_pc_saldo', $no_pettycash);
+        $data = $this->db->get();
+        return $data->result();
+    }
+
+
+    public function getSaldoAwalByNoPetty($jenis_saldo)
+    {
+        $this->db->select('*');
+        $this->db->from('tb_saldo');
+        $this->db->where('jenis_saldo', $jenis_saldo);
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
+    public function getpenanggungjawabpc($kode_cabang)
+    {
+        $this->db->select('*');
+        $this->db->from('tb_penanggung_jawab');
+        $this->db->where('jenis_saldo', $kode_cabang);
+        $data = $this->db->get();
+        return $data->row();
+    }
+
+    public function getbudgetcabang($kode_cabang)
+    {
+        $this->db->select('*');
+        $this->db->from('tb_saldo_cabang');
+        $this->db->where('jenis_saldo', $kode_cabang);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getSaldoCabangjkt($jenis_saldo)
+    {
+        $this->db->select('*');
+        $this->db->from('tb_saldo');
+        $this->db->where('jenis_saldo', $jenis_saldo);
+        $query = $this->db->get();
+
+        return $query->row(); // <-- return objek saldo
+    }
 }
