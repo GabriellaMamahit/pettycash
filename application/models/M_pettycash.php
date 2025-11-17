@@ -26,6 +26,34 @@ class M_pettycash extends CI_Model
         return "{$new_number}/{$prefix}/{$bulan}/{$tahun}";
     }
 
+    public function detail_reimbursement($id_remb = NULL)
+    {
+        $query = $this->db->get_where('tb_permintaan_saldo', array('id_pettycash' => $id_remb))->row();
+        return $query;
+    }
+
+    public function getdetailremb($no_pettycash)
+    {
+        $this->db->select('*');
+        $this->db->from('tb_bpkk_cab');
+        $this->db->where('no_pc_saldo', $no_pettycash);
+        $this->db->order_by('id_bpkk_cab', 'ASC');
+        return $this->db->get()->result_array();
+    }
+
+    public function getDetail($id)
+    {
+        return $this->db->get_where('tb_permintaan_saldo', ['id_pettycash' => $id])->row();
+    }
+
+    public function updateDokumen($id, $data)
+    {
+        $this->db->where('id_pettycash', $id);
+        return $this->db->update('tb_permintaan_saldo', $data);
+    }
+
+
+
     // public function getlistbpkkwaiting()
     // {
     //     $this->db->select('*');

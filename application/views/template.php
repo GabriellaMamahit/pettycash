@@ -307,7 +307,7 @@
                                             <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#fill-sample-page">
                                             </use>
                                         </svg>
-                                        <span>Pengajuan Petty Cash</span></a>
+                                        <span>Reimbursement</span></a>
                                 </li>
                                 <?php endif; ?>
 

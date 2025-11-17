@@ -96,6 +96,34 @@ class Pengajuan_pettycash extends CI_Controller
         $this->template->load('template', 'pengajuan_pettycash', $data);
     }
 
+    public function detail_reimbursement($id_remb)
+    {
+        $this->session->set_userdata('id_pettycash', $id_remb);
+
+        $detail_reimb = $this->M_pettycash->detail_reimbursement($id_remb);
+        $no_pettycash = $detail_reimb->no_pettycash;
+
+        // $no_petty_cash = $this->M_finance->generatePettycashNumber($jenis_saldo);
+        // $saldo_cabang = $this->M_finance->saldocabang($jenis_saldo);
+        // $saldo_pettycash = $this->M_finance->saldopettycash($jenis_saldo);
+
+        // $is_low_saldo = ($saldo_cabang >= 0 && $saldo_cabang <= 10000);
+
+        $data = array(
+            'judul'   => "Petty Cash | Detail Saldo Petty Cash",
+            // 'no_petty_cash' => $no_petty_cash,
+            'id_saldo'      => $id_remb,
+            // 'jenis_saldo'   => $jenis_saldo,
+            // 'saldo_cabang'   => $saldo_cabang,
+            // 'saldo_pettycash'   => $saldo_pettycash,
+            // 'is_low_saldo'  => $is_low_saldo,
+            'detail_reimbursement'  => $detail_reimb,
+            'rowdetailremb' => $this->M_pettycash->getdetailremb($no_pettycash)
+        );
+
+        $this->template->load('template', 'detail_reimbursement', $data);
+    }
+
     public function get_tabel_bpkk_by_jenis()
     {
         $jenis_saldo = $this->input->post('jenis_saldo');
@@ -164,6 +192,132 @@ class Pengajuan_pettycash extends CI_Controller
         echo json_encode(['saldo_pettycash' => $saldo]);
     }
 
+    // public function tambahpengajuanpettycash()
+    // {
+    //     $namauser               = $this->fungsi->user_login()->nama_user;
+    //     $no_petty_cash          = $this->input->post('no_pettycash');
+    //     $keterangan             = $this->input->post('keterangan');
+    //     $total_debet            = $this->input->post('totalDebetRaw');
+    //     $sisasaldo_rembesment   = $this->input->post('sisaSaldoRaw');
+    //     $jenis_petty_cash       = $this->input->post('jenis_petty_cash');
+    //     $sbu                    = $this->input->post('sbu');
+    //     $sbu_unit               = $this->input->post('sbu_unit');
+    //     $kantor_cabang          = $this->input->post('kantor_cab');
+    //     $kode_kantorcab         = $this->input->post('kode_kantorcab');
+
+    //     $cleaned_filename = str_replace('/', '_', $no_petty_cash);
+    //     $upload_folder    = './uploads/ppt/';
+    //     $file_name        = 'PPT_' . $cleaned_filename . '.pdf';
+
+    //     $config['upload_path']   = $upload_folder;
+    //     $config['allowed_types'] = 'pdf';
+    //     $config['max_size']      = 1048;
+    //     $config['encrypt_name']  = FALSE;
+    //     $config['file_name']     = $file_name;
+
+    //     $this->load->library('upload', $config);
+    //     $filename = null;
+
+    //     if (!$this->upload->do_upload('formFile')) {
+    //         $error = $this->upload->display_errors('', ''); // ambil pesan tanpa <p></p>
+
+    //         // cek tipe error biar bisa kasih pesan custom
+    //         if (strpos($error, 'filetype') !== false) {
+    //             $error_message = 'File harus dalam format PDF.';
+    //         } elseif (strpos($error, 'exceeds the maximum allowed size') !== false) {
+    //             $error_message = 'Ukuran file terlalu besar, maksimal 1 MB.';
+    //         } else {
+    //             $error_message = 'Ukuran file terlalu besar, maksimal 1 MB.';
+    //         }
+
+    //         $this->session->set_flashdata('error', $error_message);
+    //         redirect('pengajuan_pettycash');
+    //         return;
+    //     } else {
+    //         $filename = $file_name;
+    //     }
+
+    //     // database tb_nopettycash
+    //     $data = [
+    //         'no_petty_cash'          => $no_petty_cash,
+    //         'jenis_saldo'           => $jenis_petty_cash,
+    //         'kantor_cab'            => $kantor_cabang,
+    //     ];
+
+    //     // database tb_permintaan_saldo
+    //     $data2 = [
+    //         'no_pettycash'          => $no_petty_cash,
+    //         'tanggal_pettycash'     => date('Y-m-d H:i:s'),
+    //         'ket_pettycash'         => $keterangan,
+    //         'saldo_pettycash'       => $total_debet,
+    //         'jenis_saldo'           => $jenis_petty_cash,
+    //         'direktorat_pettycash'  => $sbu,
+    //         'sbu_pettycash'         => $sbu_unit,
+    //         'kantor_cab'            => $kantor_cabang,
+    //         'dokumen_pettycash'     => $filename,
+    //         'status_permintaan'     => 'Waiting'
+    //     ];
+
+    //     // update status dan no pettycash baru di tb_bpkk_cab
+    //     $data3 = [
+    //         'no_pc_saldo'          => $no_petty_cash,
+    //         'rembesment'          => 'Close',
+    //     ];
+
+    //     // update status dan no pettycash baru di tb_data_mutasi
+    //     $data4 = [
+    //         'status_mutasi'          => 'Close',
+    //     ];
+
+    //     // database tb_notifikasi
+    //     $data5 = [
+    //         'jenis_saldo'           => $jenis_petty_cash,
+    //         'no_pettycash'          => $no_petty_cash,
+    //         'tanggal_notifikasi'    => date('Y-m-d H:i:s'),
+    //         'jenis_notifikasi'      => 'Permintaan',
+    //         'nama_penanggung_jwb'   => $namauser,
+    //         'judul_notifikasi'      => 'Permintaan Reimbursement',
+    //         'ket_notifikasi'        => 'Pemintaan reimbursement petty cash ' . $kantor_cabang,
+    //         'status_notifikasi'     => '0',
+    //         'id_data'               => $kode_kantorcab,
+    //     ];
+
+    //     // database tb_sisasaldo_rembes
+    //     $data6 = [
+    //         'no_pettycash'              => $no_petty_cash,
+    //         'ket_pettycash'             => $keterangan,
+    //         'saldo_pettycash_remb'      => $total_debet,
+    //         'sisasaldo_remb'            => $sisasaldo_rembesment,
+    //         'jenis_saldo'               => $jenis_petty_cash,
+    //         'sbu_pettycash'             => $sbu_unit,
+    //         'status_sisasaldo_remb'     => 'Pending'
+    //     ];
+
+    //     // update no pettycash baru di tb_sisasaldo
+    //     $data7 = [
+    //         'no_pc_saldo'          => $no_petty_cash,
+    //     ];
+
+    //     // database tb_dokumen_remb
+    //     $data8 = [
+    //         'no_pettycash'          => $no_petty_cash,
+    //         'nama_dokumenremb'     => 'Approve-' . $filename,
+    //         'jenis_saldo'           => $jenis_petty_cash,
+    //     ];
+
+    //     $this->M_pettycash->simpan_no_pettycash('tb_nopettycash', $data);
+    //     $this->M_pettycash->simpan_pengajuan_pettycash('tb_permintaan_saldo', $data2);
+    //     $this->M_pettycash->updatebpkkcab($jenis_petty_cash, $data3);
+    //     $this->M_pettycash->updatestatusmutasi($jenis_petty_cash, $data4);
+    //     $this->M_pettycash->simpan_notifikasi('tb_notifikasi', $data5);
+    //     $this->M_pettycash->tambahrembespending('tb_sisasaldo_rembes', $data6);
+    //     $this->M_pettycash->updatesisasaldopending($jenis_petty_cash, $data7);
+    //     $this->M_pettycash->simpandokumenapprove('tb_dokumen_remb', $data8);
+    //     // $this->M_pettycash->update_no_pc_saldo_bpkk($jenis_petty_cash, $no_petty_cash);
+    //     $this->session->set_flashdata('success', 'Pengajuan reimbursement saldo petty cash berhasil diajukan.');
+    //     redirect('pengajuan_pettycash');
+    // }
+
     public function tambahpengajuanpettycash()
     {
         $namauser               = $this->fungsi->user_login()->nama_user;
@@ -177,29 +331,60 @@ class Pengajuan_pettycash extends CI_Controller
         $kantor_cabang          = $this->input->post('kantor_cab');
         $kode_kantorcab         = $this->input->post('kode_kantorcab');
 
+        // ============================
+        // CEK DUPLIKAT NOMOR PETTY CASH
+        // ============================
+        $cek_duplikat = $this->db->get_where('tb_permintaan_saldo', [
+            'no_pettycash' => $no_petty_cash,
+            'jenis_saldo'  => $jenis_petty_cash
+        ])->num_rows();
+
+        if ($cek_duplikat > 0) {
+            $this->session->set_flashdata('error', 'Nomor petty cash ini sudah pernah diajukan sebelumnya.');
+            redirect('pengajuan_pettycash');
+            return;
+        }
+
+        // ============================
+        // CEK FILE YANG DIUPLOAD
+        // ============================
+        if (empty($_FILES['formFile']['name'])) {
+            $this->session->set_flashdata('error', 'File dokumen wajib diunggah.');
+            redirect('pengajuan_pettycash');
+            return;
+        }
+
+        // ============================
+        // SETTING UPLOAD FILE
+        // ============================
         $cleaned_filename = str_replace('/', '_', $no_petty_cash);
         $upload_folder    = './uploads/ppt/';
-        $file_name        = 'PPT_' . $cleaned_filename . '.pdf';
+
+        // Tambahkan timestamp agar nama file unik (hindari tertimpa)
+        $timestamp        = time();
+        $file_name        = 'PPT_' . $cleaned_filename . '_' . $timestamp . '.pdf';
 
         $config['upload_path']   = $upload_folder;
         $config['allowed_types'] = 'pdf';
-        $config['max_size']      = 1048;
+        $config['max_size']      = 1048; // 1MB
         $config['encrypt_name']  = FALSE;
         $config['file_name']     = $file_name;
 
         $this->load->library('upload', $config);
         $filename = null;
 
+        // ============================
+        // PROSES UPLOAD
+        // ============================
         if (!$this->upload->do_upload('formFile')) {
-            $error = $this->upload->display_errors('', ''); // ambil pesan tanpa <p></p>
+            $error = $this->upload->display_errors('', '');
 
-            // cek tipe error biar bisa kasih pesan custom
             if (strpos($error, 'filetype') !== false) {
                 $error_message = 'File harus dalam format PDF.';
             } elseif (strpos($error, 'exceeds the maximum allowed size') !== false) {
                 $error_message = 'Ukuran file terlalu besar, maksimal 1 MB.';
             } else {
-                $error_message = 'Ukuran file terlalu besar, maksimal 1 MB.';
+                $error_message = 'Gagal mengunggah dokumen. Pastikan file PDF tidak lebih dari 1 MB.';
             }
 
             $this->session->set_flashdata('error', $error_message);
@@ -209,74 +394,81 @@ class Pengajuan_pettycash extends CI_Controller
             $filename = $file_name;
         }
 
+        // ============================
+        // DATA UNTUK DATABASE
+        // ============================
+
         // database tb_nopettycash
         $data = [
-            'no_petty_cash'          => $no_petty_cash,
-            'jenis_saldo'           => $jenis_petty_cash,
-            'kantor_cab'            => $kantor_cabang,
+            'no_petty_cash' => $no_petty_cash,
+            'jenis_saldo'   => $jenis_petty_cash,
+            'kantor_cab'    => $kantor_cabang,
         ];
 
         // database tb_permintaan_saldo
         $data2 = [
-            'no_pettycash'          => $no_petty_cash,
-            'tanggal_pettycash'     => date('Y-m-d H:i:s'),
-            'ket_pettycash'         => $keterangan,
-            'saldo_pettycash'       => $total_debet,
-            'jenis_saldo'           => $jenis_petty_cash,
-            'direktorat_pettycash'  => $sbu,
-            'sbu_pettycash'         => $sbu_unit,
-            'kantor_cab'            => $kantor_cabang,
-            'dokumen_pettycash'     => $filename,
-            'status_permintaan'     => 'Waiting'
+            'no_pettycash'         => $no_petty_cash,
+            'tanggal_pettycash'    => date('Y-m-d H:i:s'),
+            'ket_pettycash'        => $keterangan,
+            'saldo_pettycash'      => $total_debet,
+            'jenis_saldo'          => $jenis_petty_cash,
+            'direktorat_pettycash' => $sbu,
+            'sbu_pettycash'        => $sbu_unit,
+            'kantor_cab'           => $kantor_cabang,
+            'dokumen_pettycash'    => $filename,
+            'status_permintaan'    => 'Waiting'
         ];
 
         // update status dan no pettycash baru di tb_bpkk_cab
         $data3 = [
-            'no_pc_saldo'          => $no_petty_cash,
-            'rembesment'          => 'Close',
+            'no_pc_saldo' => $no_petty_cash,
+            'rembesment'  => 'Close',
         ];
 
         // update status dan no pettycash baru di tb_data_mutasi
         $data4 = [
-            'status_mutasi'          => 'Close',
+            'status_mutasi' => 'Close',
         ];
 
         // database tb_notifikasi
         $data5 = [
-            'jenis_saldo'           => $jenis_petty_cash,
-            'no_pettycash'          => $no_petty_cash,
-            'tanggal_notifikasi'    => date('Y-m-d H:i:s'),
-            'jenis_notifikasi'      => 'Permintaan',
-            'nama_penanggung_jwb'   => $namauser,
-            'judul_notifikasi'      => 'Permintaan Reimbursement',
-            'ket_notifikasi'        => 'Pemintaan reimbursement petty cash ' . $kantor_cabang,
-            'status_notifikasi'     => '0',
-            'id_data'               => $kode_kantorcab,
+            'jenis_saldo'         => $jenis_petty_cash,
+            'no_pettycash'        => $no_petty_cash,
+            'tanggal_notifikasi'  => date('Y-m-d H:i:s'),
+            'jenis_notifikasi'    => 'Permintaan',
+            'nama_penanggung_jwb' => $namauser,
+            'judul_notifikasi'    => 'Permintaan Reimbursement',
+            'ket_notifikasi'      => 'Permintaan reimbursement petty cash ' . $kantor_cabang,
+            'status_notifikasi'   => '0',
+            'id_data'             => $kode_kantorcab,
         ];
 
         // database tb_sisasaldo_rembes
         $data6 = [
-            'no_pettycash'              => $no_petty_cash,
-            'ket_pettycash'             => $keterangan,
-            'saldo_pettycash_remb'      => $total_debet,
-            'sisasaldo_remb'            => $sisasaldo_rembesment,
-            'jenis_saldo'               => $jenis_petty_cash,
-            'sbu_pettycash'             => $sbu_unit,
-            'status_sisasaldo_remb'     => 'Pending'
+            'no_pettycash'          => $no_petty_cash,
+            'ket_pettycash'         => $keterangan,
+            'saldo_pettycash_remb'  => $total_debet,
+            'sisasaldo_remb'        => $sisasaldo_rembesment,
+            'jenis_saldo'           => $jenis_petty_cash,
+            'sbu_pettycash'         => $sbu_unit,
+            'status_sisasaldo_remb' => 'Pending'
         ];
 
         // update no pettycash baru di tb_sisasaldo
         $data7 = [
-            'no_pc_saldo'          => $no_petty_cash,
+            'no_pc_saldo' => $no_petty_cash,
         ];
 
         // database tb_dokumen_remb
         $data8 = [
-            'no_pettycash'          => $no_petty_cash,
-            'nama_dokumenremb'     => 'Approve-' . $filename,
-            'jenis_saldo'           => $jenis_petty_cash,
+            'no_pettycash'       => $no_petty_cash,
+            'nama_dokumenremb'   => 'Approve-' . $filename,
+            'jenis_saldo'        => $jenis_petty_cash,
         ];
 
+        // ============================
+        // SIMPAN KE DATABASE
+        // ============================
         $this->M_pettycash->simpan_no_pettycash('tb_nopettycash', $data);
         $this->M_pettycash->simpan_pengajuan_pettycash('tb_permintaan_saldo', $data2);
         $this->M_pettycash->updatebpkkcab($jenis_petty_cash, $data3);
@@ -285,11 +477,106 @@ class Pengajuan_pettycash extends CI_Controller
         $this->M_pettycash->tambahrembespending('tb_sisasaldo_rembes', $data6);
         $this->M_pettycash->updatesisasaldopending($jenis_petty_cash, $data7);
         $this->M_pettycash->simpandokumenapprove('tb_dokumen_remb', $data8);
-        // $this->M_pettycash->update_no_pc_saldo_bpkk($jenis_petty_cash, $no_petty_cash);
+
+        // ============================
+        // SELESAI
+        // ============================
         $this->session->set_flashdata('success', 'Pengajuan reimbursement saldo petty cash berhasil diajukan.');
         redirect('pengajuan_pettycash');
     }
 
+
+    public function editDokumenApproval()
+    {
+        $id = $this->input->post('idremb'); // Ambil id dari hidden input
+        $detail_reimbursement = $this->M_pettycash->getDetail($id);
+
+        if (!$detail_reimbursement) {
+            $this->session->set_flashdata('error', 'Data tidak ditemukan.');
+            redirect('pengajuan_pettycash/detail_reimbursement/' . $id);
+        }
+
+        $old_file = $detail_reimbursement->dokumen_pettycash;
+
+        // Cek apakah ada file baru
+        if (!empty($_FILES['file_dokumen']['name'])) {
+
+            // Ambil no petty cash dan bersihkan
+            // Perhatikan nama kolom sesuai database
+            $no_petty_cash = trim($detail_reimbursement->no_pettycash);
+            $cleaned_filename = str_replace('/', '_', $no_petty_cash);
+
+            // Bulan, Tahun, Timestamp
+            $bulan  = date('m');
+            $tahun  = date('Y');
+            $timestamp = time();
+
+            // Nama file final
+            $filename = 'PPT_' . $cleaned_filename . '_' . $timestamp . '.pdf';
+
+            $config['upload_path']   = './uploads/ppt/';
+            $config['allowed_types'] = 'pdf';
+            $config['max_size']      = 1048; // 1MB
+            $config['encrypt_name']  = FALSE;
+            $config['file_name']     = $filename;
+
+            $this->load->library('upload', $config);
+
+            if (!$this->upload->do_upload('file_dokumen')) {
+                $this->session->set_flashdata('error', $this->upload->display_errors('', ''));
+                redirect('pengajuan_pettycash/detail_reimbursement/' . $id);
+            }
+
+            // Upload sukses, hapus file lama jika ada
+            if (!empty($old_file)) {
+                $old_path = './uploads/ppt/' . $old_file;
+                if (file_exists($old_path)) unlink($old_path);
+            }
+
+            // Update database dengan file baru
+            $this->M_pettycash->updateDokumen($id, ['dokumen_pettycash' => $filename]);
+
+            $this->session->set_flashdata('success', 'Dokumen berhasil diperbarui.');
+            redirect('pengajuan_pettycash/detail_reimbursement/' . $id);
+        } else {
+            // Tidak upload file baru
+            $this->session->set_flashdata('info', 'Tidak ada dokumen baru diupload.');
+            redirect('pengajuan_pettycash/detail_reimbursement/' . $id);
+        }
+    }
+
+    // public function update_dokumen()
+    // {
+    //     $no_pettycash = $this->input->post('no_pettycash');
+    //     $upload_path = './uploads/ppt/';
+    //     $file_name = $_FILES['dokumen_pettycash']['name'];
+
+    //     if (!empty($file_name)) {
+    //         $config['upload_path'] = $upload_path;
+    //         $config['allowed_types'] = 'pdf';
+    //         $config['max_size'] = 2048; // 2MB
+    //         $config['file_name'] = 'dokumen_' . time() . '.pdf';
+
+    //         $this->load->library('upload', $config);
+
+    //         if ($this->upload->do_upload('dokumen_pettycash')) {
+    //             $upload_data = $this->upload->data();
+    //             $new_file_name = $upload_data['file_name'];
+
+    //             // Update di database
+    //             $this->db->where('no_pettycash', $no_pettycash);
+    //             $this->db->update('tb_permintaan_saldo', [
+    //                 'dokumen_pettycash' => $new_file_name
+    //             ]);
+
+    //             echo json_encode(['status' => 'success', 'new_file' => $new_file_name]);
+    //         } else {
+    //             echo json_encode(['status' => 'error', 'message' => $this->upload->display_errors()]);
+    //         }
+    //     } else {
+    //         echo json_encode(['status' => 'error', 'message' => 'Tidak ada file yang dipilih']);
+    //     }
+    // }
 
     public function get_data_bpkk_by_nopettycash()
     {
