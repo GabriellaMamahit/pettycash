@@ -167,6 +167,21 @@
     </div>
 
     <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="w-100">
+                    <a id="btnDokumenPendukung" class="btn btn-outline-primary d-block w-100 view-dokumen-pendukung"
+                        data-idrembes="<?= $detail_permintaansaldo->id_pettycash ?>"
+                        data-file="<?= $detail_permintaansaldo->dokumen_pettycash ?>" data-bs-toggle="modal"
+                        data-bs-target="#viewdokumenpendukungremb">
+                        Dokumen Pendukung
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-xl-12 col-md-12 box-col-12">
             <div class="card">
                 <div class="card-header card-no-border">
@@ -198,8 +213,8 @@
                                     <!-- <th>Tanggal</th> -->
                                     <th>Keterangan </th>
                                     <th>Total Pengeluaran</th>
-                                    <th></th>
                                     <th>Status</th>
+                                    <th></th>
                                     <th class="text-center">Action </th>
                                 </tr>
                             </thead>
@@ -231,9 +246,6 @@
                                     </td>
                                     <td><?= 'Rp. ' . number_format($data['total_kredit_cab'], 0, ',', '.'); ?></td>
                                     <td>
-
-                                    </td>
-                                    <td>
                                         <?php if ($data['status_cab'] === 'In progress'): ?>
                                         <span class="badge bg-warning text-dark">In progress</span>
                                         <?php elseif ($data['status_cab'] === 'Approved'): ?>
@@ -245,6 +257,9 @@
                                         <?php else: ?>
                                         <span class="badge bg-secondary"><?= ucfirst($data['status_cab']); ?></span>
                                         <?php endif; ?>
+                                    </td>
+                                    <td>
+
                                     </td>
                                     <td class="text-center">
                                         <!-- Lihat -->
@@ -294,6 +309,32 @@
     </div>
 </div>
 
+<div class="modal fade" id="viewdokumenpendukungremb" tabindex="-1" role="dialog"
+    aria-labelledby="viewdokumenpendukungremb" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-toggle-wrapper social-profile text-start dark-sign-up">
+                <h3 class="modal-header justify-content-center border-0 txt-dark">Dokumen Pendukung (PPT & Approval
+                    Atasan)
+                </h3>
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <div class="card-body mt-3">
+                            <div class="form-group" id="pratinjauGambardok3"></div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="col-md-12">
+                        <div class="modal-footer">
+                            <!-- <button type="submit" class="btn btn-primary">Simpan</button> -->
+                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal Approve Proses Permintaan Saldo -->
 <div class="modal fade" id="viewbpkkrembes" tabindex="-1" role="dialog" aria-labelledby="viewbpkkrembes"
@@ -810,6 +851,52 @@ $(document).ready(function() {
                     })
                     .attr('title', 'Tunggu data sebelumnya di-approve');
             }
+        }
+    });
+});
+
+$(document).on('click', '.view-dokumen-pendukung', function() {
+
+    var fileName = $(this).data('file'); // nama dokumen pendukung
+    var idRemb = $(this).data('idrembes'); // ambil id petty cash
+    var previewContainer = $('#pratinjauGambardok3');
+    previewContainer.empty();
+
+    // SET ID di input hidden
+    $('#idremb').val(idRemb);
+
+    // Jika tidak ada file
+    if (!fileName || fileName === 'null' || fileName.trim() === '') {
+        previewContainer.html('<p class="text-center text-danger mt-3">Dokumen tidak tersedia.</p>');
+        return;
+    }
+
+    // Lokasi file
+    var fileUrl = "<?= base_url('uploads/ppt/'); ?>" + fileName;
+
+    // Cek apakah file ada
+    $.ajax({
+        url: fileUrl,
+        type: 'HEAD',
+        success: function() {
+            var ext = fileName.split('.').pop().toLowerCase();
+
+            if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+                previewContainer.html(`<img src="${fileUrl}" class="img-fluid rounded shadow">`);
+            } else if (ext === 'pdf') {
+                previewContainer.html(
+                    `<iframe src="${fileUrl}" width="100%" height="700px" style="border:none;"></iframe>`
+                );
+            } else {
+                previewContainer.html(`
+                    <p class="text-center text-muted">Tidak dapat menampilkan pratinjau file ini.</p>
+                    <a href="${fileUrl}" target="_blank" class="btn btn-primary btn-sm">Download Dokumen</a>
+                `);
+            }
+        },
+        error: function() {
+            previewContainer.html(
+                '<p class="text-center text-danger mt-3">File tidak ditemukan di server.</p>');
         }
     });
 });
