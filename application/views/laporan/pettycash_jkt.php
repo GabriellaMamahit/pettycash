@@ -97,7 +97,7 @@
         <div class="col-xl-8 col-md-12 box-col-6">
             <div class="card">
                 <div class="card-header pb-0">
-                    <h4 class="text-center">Bukti Pengeluaran Kas Kecil Jakarta</h4>
+                    <h4 class="text-center">Trend Pengeluaran Kas Kecil Jakarta</h4>
                 </div>
                 <div class="card-body chart-block">
                     <canvas id="bpkkBarGraph"></canvas>
@@ -108,7 +108,7 @@
         <div class="col-xl-4 col-md-12">
             <div class="card">
                 <div class="card-header pb-0">
-                    <h4 class="text-center">Debet & Kredit</h4>
+                    <h4 class="text-center">Petty Cash Summary</h4>
                 </div>
                 <div class="card-body chart-block">
                     <canvas id="pieChart"></canvas>
@@ -264,8 +264,8 @@ new Chart(document.getElementById('pieChart'), {
     type: 'pie',
     data: {
         labels: [
-            `Total Debet : Rp ${totalDebet.toLocaleString('id-ID')}`,
-            `Total Kredit : Rp ${totalKredit.toLocaleString('id-ID')}`,
+            `Total Pemasukan : Rp ${totalDebet.toLocaleString('id-ID')}`,
+            `Total Pengeluaran : Rp ${totalKredit.toLocaleString('id-ID')}`,
             `Saldo Akhir : Rp ${saldoAkhir.toLocaleString('id-ID')}`
         ],
         datasets: [{
