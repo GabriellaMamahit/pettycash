@@ -325,7 +325,8 @@ function filterWidget() {
                                                 data-idcabang="<?= $data['id_saldo']; ?>"
                                                 data-saldocabang="<?= $data['saldo_cabang']; ?>" data-bs-toggle="modal"
                                                 data-bs-target="#editbudgetsaldocabang">
-                                                <i data-feather="edit" style="width:12px; height:12px;"></i>
+                                                <i data-feather="settings" style="width:12px; height:12px;"></i>
+                                                <!-- <i class="fa fa-credit-card-alt" style="width:12px; height:12px;"></i> -->
                                             </a>
 
                                     </td>
