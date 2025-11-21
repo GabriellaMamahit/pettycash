@@ -58,6 +58,14 @@ class Dashboard_cab extends CI_Controller
         $jumlahstatusapproved = $this->M_bpkk->hitungStatusApproved('TBK');
         $jumlahstatusrejected = $this->M_bpkk->hitungStatusRejected('TBK');
 
+        foreach ($transaksikarimun as &$data) {
+            $data['sisa_saldo_pending'] = $this->M_bpkk->get_sisa_saldo_pending_by_bpkk(
+                $data['no_bpkk_cab'],
+                $data['jenis_saldo']
+            );
+        }
+        unset($data);
+
         $data_saldokarimun = [[
             'saldokarimun'       => $rowkarimun->saldo_pettycash ?? 0,
             'saldodebetkarimun'  => $rowkarimun->saldo_debet ?? 0,
