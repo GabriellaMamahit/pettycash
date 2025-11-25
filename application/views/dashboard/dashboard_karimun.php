@@ -184,7 +184,7 @@
                     <?php endforeach; ?>
                     <button class="btn btn-pill btn-primary btn-air-primary mt-3 btn-exp" type="button"
                         style="width: 50%;" data-bs-toggle="modal" data-bs-target="#tambahbpkk"
-                        <?= ($saldo['saldokarimun'] <= 15000) ? 'disabled' : '' ?>>Tambah Belanja</button>
+                        <?= ($saldo['saldokarimun'] <= 15000) ? 'disabled' : '' ?>>Tambah Pengeluaran</button>
                 </div>
             </div>
         </div>

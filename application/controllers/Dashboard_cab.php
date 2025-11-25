@@ -127,6 +127,14 @@ class Dashboard_cab extends CI_Controller
         $jumlahstatusapproved = $this->M_bpkk->hitungStatusApproved('LU');
         $jumlahstatusrejected = $this->M_bpkk->hitungStatusRejected('LU');
 
+        foreach ($transaksilayupgalang as &$data) {
+            $data['sisa_saldo_pending'] = $this->M_bpkk->get_sisa_saldo_pending_by_bpkk(
+                $data['no_bpkk_cab'],
+                $data['jenis_saldo']
+            );
+        }
+        unset($data);
+
         $data_saldolayupgalang = [[
             'saldolayupgalang'       => $rowlayupgalang->saldo_pettycash ?? 0,
             'saldodebetlayupgalang'  => $rowlayupgalang->saldo_debet ?? 0,
@@ -156,6 +164,14 @@ class Dashboard_cab extends CI_Controller
         $jumlahstatusinprogress = $this->M_bpkk->hitungStatusInprogress('PA_BBM');
         $jumlahstatusapproved = $this->M_bpkk->hitungStatusApproved('PA_BBM');
         $jumlahstatusrejected = $this->M_bpkk->hitungStatusRejected('PA_BBM');
+
+        foreach ($transaksibbmsekupang as &$data) {
+            $data['sisa_saldo_pending'] = $this->M_bpkk->get_sisa_saldo_pending_by_bpkk(
+                $data['no_bpkk_cab'],
+                $data['jenis_saldo']
+            );
+        }
+        unset($data);
 
         $data_saldobbmsekupang = [[
             'saldobbmsekupang'       => $rowbbmsekupang->saldo_pettycash ?? 0,
@@ -188,6 +204,14 @@ class Dashboard_cab extends CI_Controller
         $jumlahstatusapproved = $this->M_bpkk->hitungStatusApproved('PA_SB');
         $jumlahstatusrejected = $this->M_bpkk->hitungStatusRejected('PA_SB');
 
+        foreach ($transaksiserviceboatsekupang as &$data) {
+            $data['sisa_saldo_pending'] = $this->M_bpkk->get_sisa_saldo_pending_by_bpkk(
+                $data['no_bpkk_cab'],
+                $data['jenis_saldo']
+            );
+        }
+        unset($data);
+
         $data_saldoservicesekupang = [[
             'saldoservicesekupang'       => $rowservicesekupang->saldo_pettycash ?? 0,
             'saldodebetservicesekupang'  => $rowservicesekupang->saldo_debet ?? 0,
@@ -217,6 +241,14 @@ class Dashboard_cab extends CI_Controller
         $jumlahstatusinprogress = $this->M_bpkk->hitungStatusInprogress('PA_RTK');
         $jumlahstatusapproved = $this->M_bpkk->hitungStatusApproved('PA_RTK');
         $jumlahstatusrejected = $this->M_bpkk->hitungStatusRejected('PA_RTK');
+
+        foreach ($transaksirtksekupang as &$data) {
+            $data['sisa_saldo_pending'] = $this->M_bpkk->get_sisa_saldo_pending_by_bpkk(
+                $data['no_bpkk_cab'],
+                $data['jenis_saldo']
+            );
+        }
+        unset($data);
 
         $data_saldortksekupang = [[
             'saldortksekupang'       => $rowrtksekupang->saldo_pettycash ?? 0,
