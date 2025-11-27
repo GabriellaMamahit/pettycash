@@ -15,12 +15,17 @@ class M_users extends CI_Model
     public function get($id = null)
     {
         $this->db->from('tb_users');
+
         if ($id != null) {
             $this->db->where('id_user', $id);
+        } else {
+            $this->db->where('id_user !=', 1);
         }
+
         $query = $this->db->get();
         return $query;
     }
+
 
     public function addUser($table, $data)
     {
