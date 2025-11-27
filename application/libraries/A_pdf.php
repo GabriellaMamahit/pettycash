@@ -9,8 +9,8 @@ class A_pdf extends FPDF
     var $widths;
     var $aligns;
 
-    public $jenis_saldo; // property untuk kode cabang
-    public $no_pettycash; // property untuk nomor petty cash
+    public $jenis_saldo;
+    public $no_pettycash;
 
     // ============================
     // Setter untuk data petty cash
@@ -142,7 +142,6 @@ class A_pdf extends FPDF
 
         $this->Line(5, 28, 292, 28);
 
-        // Jika halaman rekap, jangan tampilkan saldo dan tabel
         if ($this->isRekap) return;
 
         // Budget saldo
@@ -151,7 +150,7 @@ class A_pdf extends FPDF
         $this->Cell(5, 6, ':', 0, 0, 'L');
         $this->Cell(40, 6, 'Rp ' . number_format($budgetcabang->saldo_cabang ?? 0, 0, ',', '.'), 1, 1, 'L');
 
-        // ✅ Menampilkan No Petty Cash
+        // Menampilkan No Petty Cash
         $this->SetXY(210, 32);
         $this->SetFont('Arial', 'B', 10);
         $this->SetTextColor(255, 0, 0);
@@ -185,7 +184,6 @@ class A_pdf extends FPDF
         $CI = &get_instance();
         $CI->load->model('M_pettycash');
 
-        // Ambil data penyetuju sesuai cabang
         $penyetuju = $CI->M_pettycash->getpenanggungjawabpc($this->jenis_saldo);
 
         $this->SetY(-50);

@@ -8,7 +8,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('jenis_pengeluaran_cab, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_bpkk', 'approve')
             ->group_by('jenis_pengeluaran_cab')
             ->get()
             ->result_array();
@@ -19,7 +18,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('SUM(total_debet_cab) as total_debet, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_data_mutasi')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status', 'approve')
             ->get()
             ->row_array();
     }
@@ -28,7 +26,6 @@ class M_laporanpc extends CI_Model
     {
         return $this->db->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_cab', 'approve')
             ->get()
             ->result_array();
     }
@@ -38,7 +35,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('jenis_pengeluaran_cab, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_bpkk', 'approve')
             ->group_by('jenis_pengeluaran_cab')
             ->get()
             ->result_array();
@@ -49,7 +45,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('SUM(total_debet_cab) as total_debet, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_data_mutasi')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status', 'approve')
             ->get()
             ->row_array();
     }
@@ -58,7 +53,6 @@ class M_laporanpc extends CI_Model
     {
         return $this->db->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_cab', 'approve')
             ->get()
             ->result_array();
     }
@@ -68,7 +62,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('jenis_pengeluaran_cab, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_bpkk', 'approve')
             ->group_by('jenis_pengeluaran_cab')
             ->get()
             ->result_array();
@@ -79,7 +72,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('SUM(total_debet_cab) as total_debet, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_data_mutasi')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status', 'approve')
             ->get()
             ->row_array();
     }
@@ -88,7 +80,6 @@ class M_laporanpc extends CI_Model
     {
         return $this->db->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_cab', 'approve')
             ->get()
             ->result_array();
     }
@@ -98,7 +89,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('jenis_pengeluaran_cab, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_bpkk', 'approve')
             ->group_by('jenis_pengeluaran_cab')
             ->get()
             ->result_array();
@@ -109,7 +99,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('SUM(total_debet_cab) as total_debet, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_data_mutasi')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status', 'approve')
             ->get()
             ->row_array();
     }
@@ -118,7 +107,6 @@ class M_laporanpc extends CI_Model
     {
         return $this->db->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_cab', 'approve')
             ->get()
             ->result_array();
     }
@@ -128,7 +116,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('jenis_pengeluaran_cab, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_bpkk', 'approve')
             ->group_by('jenis_pengeluaran_cab')
             ->get()
             ->result_array();
@@ -139,7 +126,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('SUM(total_debet_cab) as total_debet, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_data_mutasi')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status', 'approve')
             ->get()
             ->row_array();
     }
@@ -148,7 +134,6 @@ class M_laporanpc extends CI_Model
     {
         return $this->db->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_cab', 'approve')
             ->get()
             ->result_array();
     }
@@ -158,7 +143,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('jenis_pengeluaran_cab, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_bpkk', 'approve')
             ->group_by('jenis_pengeluaran_cab')
             ->get()
             ->result_array();
@@ -169,7 +153,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('SUM(total_debet_cab) as total_debet, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_data_mutasi')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status', 'approve')
             ->get()
             ->row_array();
     }
@@ -178,7 +161,6 @@ class M_laporanpc extends CI_Model
     {
         return $this->db->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_cab', 'approve')
             ->get()
             ->result_array();
     }
@@ -188,7 +170,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('jenis_pengeluaran_cab, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_bpkk', 'approve')
             ->group_by('jenis_pengeluaran_cab')
             ->get()
             ->result_array();
@@ -199,7 +180,6 @@ class M_laporanpc extends CI_Model
         return $this->db->select('SUM(total_debet_cab) as total_debet, SUM(total_kredit_cab) as total_kredit')
             ->from('tb_data_mutasi')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status', 'approve')
             ->get()
             ->row_array();
     }
@@ -208,7 +188,6 @@ class M_laporanpc extends CI_Model
     {
         return $this->db->from('tb_bpkk_cab')
             ->where('jenis_saldo', $jenis_saldo)
-            // ->where('status_cab', 'approve')
             ->get()
             ->result_array();
     }

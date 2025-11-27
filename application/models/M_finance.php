@@ -3,7 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class M_finance extends CI_Model
 {
-
     public function getsaldocabang()
     {
         $level = $this->fungsi->user_login()->level;
@@ -20,16 +19,7 @@ class M_finance extends CI_Model
             $akses = ['PA_BBM', 'PA_SB', 'PA_RTK'];
         }
 
-        $this->db->select('
-    tb_saldo.id_saldopc,
-    tb_saldo.jenis_saldo,
-    tb_saldo.nama_saldo,
-    tb_saldo.saldo_pettycash,
-    tb_saldo_cabang.id_saldo,
-    tb_saldo_cabang.kantor_cabang,
-    tb_saldo_cabang.saldo_cabang,
-    tb_saldo_cabang.perusahaan
-');
+        $this->db->select('tb_saldo.id_saldopc, tb_saldo.jenis_saldo, tb_saldo.nama_saldo, tb_saldo.saldo_pettycash, tb_saldo_cabang.id_saldo, tb_saldo_cabang.kantor_cabang, tb_saldo_cabang.saldo_cabang, tb_saldo_cabang.perusahaan');
         $this->db->from('tb_saldo');
         $this->db->join('tb_saldo_cabang', 'tb_saldo.jenis_saldo = tb_saldo_cabang.jenis_saldo', 'left');
 
@@ -66,9 +56,8 @@ class M_finance extends CI_Model
     {
         $bulan = date('m');
         $tahun = date('Y');
-        $prefix = "PC-{$jenis_saldo}"; // langsung pakai jenis_saldo (JKT, PA_BBM, dll)
+        $prefix = "PC-{$jenis_saldo}";
 
-        // Cari nomor terakhir sesuai prefix + bulan + tahun
         $this->db->like('no_petty_cash', "/{$prefix}/{$bulan}/{$tahun}", 'both');
         $this->db->order_by('no_petty_cash', 'DESC');
         $query = $this->db->get('tb_nopettycash', 1);
@@ -96,7 +85,7 @@ class M_finance extends CI_Model
         if ($query->num_rows() > 0) {
             return $query->row()->saldo_cabang;
         }
-        return 0; // default kalau tidak ada data
+        return 0;
     }
 
     public function saldopettycash($jenis_saldo)
@@ -109,7 +98,7 @@ class M_finance extends CI_Model
         if ($query->num_rows() > 0) {
             return $query->row()->saldo_pettycash;
         }
-        return 0; // default kalau tidak ada data
+        return 0;
     }
     public function tambahdatadebet($table, $data)
     {
@@ -141,16 +130,6 @@ class M_finance extends CI_Model
         $this->db->where('jenis_saldo', $jenissaldo);
         return $this->db->update('tb_saldo', $data4);
     }
-
-    // public function getdatasaldo($jenis_saldo)
-    // {
-    //     $this->db->select('tb_permintaan_saldo.*');
-    //     $this->db->from('tb_permintaan_saldo');
-    //     $this->db->join('tb_saldo', 'tb_saldo.jenis_saldo = tb_permintaan_saldo.jenis_saldo');
-    //     $this->db->where('tb_permintaan_saldo.jenis_saldo', $jenis_saldo);
-    //     $query = $this->db->get();
-    //     return $query->result_array(); // Karena bisa banyak permintaan saldo
-    // }
 
     public function getdatasaldo($jenis_saldo)
     {
@@ -230,7 +209,6 @@ class M_finance extends CI_Model
 
     public function getWidgetData($status, $jenis_saldo)
     {
-        // Hitung jumlah data
         $this->db->from('tb_bpkk_cab');
         $this->db->where('status_cab', $status);
         $this->db->where('MONTH(tgl_kredit_cab)', date('m'));
@@ -240,7 +218,6 @@ class M_finance extends CI_Model
         }
         $count = $this->db->count_all_results();
 
-        // Hitung total nominal
         $this->db->select_sum('total_kredit_cab');
         $this->db->from('tb_bpkk_cab');
         $this->db->where('status_cab', $status);
@@ -261,28 +238,7 @@ class M_finance extends CI_Model
     public function getDataByNoPettycash($no_pettycash)
     {
         return $this->db->where('no_pc_saldo', $no_pettycash)
-            ->get('tb_bpkk_cab') // sesuaikan nama tabel
+            ->get('tb_bpkk_cab')
             ->result();
     }
-
-    // public function getdatasaldo($id_saldo)
-    // {
-    //     // Ambil jenis_saldo berdasarkan ID saldo
-    //     $this->db->select('jenis_saldo');
-    //     $this->db->from('tb_saldo');
-    //     $this->db->where('id_saldo', $id_saldo);
-    //     $result = $this->db->get()->row();
-
-    //     if ($result) {
-    //         $jenis_saldo = $result->jenis_saldo;
-
-    //         // Ambil data dari tb_permintaan_saldo sesuai jenis_saldo
-    //         $this->db->select('*');
-    //         $this->db->from('tb_permintaan_saldo');
-    //         $this->db->where('jenis_saldo', $jenis_saldo);
-    //         return $this->db->get()->result_array();
-    //     } else {
-    //         return []; // kosong jika id_saldo tidak ditemukan
-    //     }
-    // }
 }

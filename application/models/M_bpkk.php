@@ -3,53 +3,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class M_bpkk extends CI_Model
 {
-    // public function get_saldo_by_cabang($cabang)
-    // {
-    //     $this->db->select('*');
-    //     $this->db->from('tb_saldo');
-    //     $this->db->where('jenis_saldo', $cabang);
-    //     $query = $this->db->get();
-    //     return $query->row();
-    // }
-
-    // public function get_total_kredit_by_jenis_saldo($jenis_saldo)
-    // {
-    //     $this->db->select_sum('total_kredit_cab', 'total_kredit');
-    //     $this->db->from('tb_bpkk_cab');
-    //     $this->db->where('jenis_saldo', $jenis_saldo);
-    //     $this->db->where('status_cab', 'In progress'); // atau kondisi lain sesuai kebutuhan
-    //     return $this->db->get()->row();
-    // }
-
-    // public function generateNoBpkk($kode_cabang)
-    // {
-    //     $bulan = date('m');
-    //     $tahun = date('Y');
-
-    //     $this->db->like('no_bpkk', '-BPKK/' . $kode_cabang . '/' . $bulan . '/' . $tahun, 'both');
-    //     $this->db->order_by('no_bpkk', 'DESC');
-    //     $query = $this->db->get('tb_nobpkk', 1);
-
-    //     $last_number = 0;
-
-    //     if ($query->num_rows() > 0) {
-    //         $last_no = $query->row()->no_bpkk;
-
-    //         if (preg_match('/^(\d{4})\-BPKK\/' . preg_quote($kode_cabang, '/') . '\/' . $bulan . '\/' . $tahun . '$/', $last_no, $matches)) {
-    //             $last_number = (int) $matches[1];
-    //         }
-    //     }
-
-    //     $new_number = str_pad($last_number + 1, 4, '0', STR_PAD_LEFT);
-    //     return "{$new_number}-BPKK/{$kode_cabang}/{$bulan}/{$tahun}";
-    // }
-
     public function getMutasiCabang($address_user, $level)
     {
-        // Tentukan akses cabang/jenis saldo sesuai level user
         $akses = [];
         if (in_array($level, ['super_admin', 'direktur_finance', 'development', 'finance_bmg'])) {
-            $akses = ['JKT', 'BPP', 'TBK', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK']; // Semua
+            $akses = ['JKT', 'BPP', 'TBK', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
         } elseif ($level == 'finance_bdp') {
             $akses = ['LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
         } elseif ($level == 'finance_bsgroup') {
@@ -86,10 +44,9 @@ class M_bpkk extends CI_Model
 
     public function getbpkk_cab($address_user, $level)
     {
-        // Mapping untuk akses cabang berdasarkan level user
         $akses = [];
         if (in_array($level, ['super_admin', 'direktur_finance', 'development', 'finance_bmg'])) {
-            $akses = ['JKT', 'BPP', 'TBK', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK']; // Semua
+            $akses = ['JKT', 'BPP', 'TBK', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
         } elseif ($level == 'finance_bdp') {
             $akses = ['LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
         } elseif ($level == 'finance_bsgroup') {
@@ -120,8 +77,6 @@ class M_bpkk extends CI_Model
         if (!empty($akses)) {
             $this->db->where_in('jenis_saldo', $akses);
         }
-        // Urutkan berdasarkan tanggal terbaru (atau bisa id_bpkk DESC jika ada)
-        // $this->db->order_by('id_bpkk_cab', 'DESC');
 
         $query = $this->db->get();
         return $query->result_array();
@@ -132,7 +87,6 @@ class M_bpkk extends CI_Model
         $level = $this->fungsi->user_login()->level;
         $address_user = strtolower($this->fungsi->user_login()->address_user);
 
-        // Tentukan hak akses
         $akses = [];
         if (in_array($level, ['super_admin', 'direktur_finance', 'development', 'finance_bmg'])) {
             $akses = ['JKT', 'BPP', 'TBK', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK']; // Semua cabang dan saldo
@@ -160,75 +114,17 @@ class M_bpkk extends CI_Model
             }
         }
 
-        // Query
         return $this->db
             ->from('tb_bpkk_cab')
             ->where("DATE(tgl_kredit_cab) >=", $awal)
             ->where("DATE(tgl_kredit_cab) <=", $akhir)
-            ->where_in("jenis_saldo", $akses) // Pembatasan disini
+            ->where_in("jenis_saldo", $akses)
             ->get()
             ->result_array();
     }
 
-    //     public function getbpkk($address_user, $level)
-    //     {
-    //         // Menentukan cabang/jenis_saldo mana saja yang boleh diakses user
-    //         $akses = [];
-    //         if (in_array($level, ['super_admin', 'direktur_finance', 'development', 'finance_bmg'])) {
-    //             $akses = ['JKT', 'BPP', 'TBK', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
-    //         } elseif ($level == 'finance_bdp') {
-    //             $akses = ['LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
-    //         } elseif ($level == 'finance_bsgroup') {
-    //             $akses = ['JKT', 'BPP', 'TBK'];
-    //         } elseif ($level == 'user') {
-    //             switch (strtolower($address_user)) {
-    //                 case 'jakarta':
-    //                     $akses = ['JKT'];
-    //                     break;
-    //                 case 'balikpapan':
-    //                     $akses = ['BPP'];
-    //                     break;
-    //                 case 'karimun':
-    //                     $akses = ['TBK'];
-    //                     break;
-    //                 case 'galang':
-    //                     $akses = ['LU'];
-    //                     break;
-    //                 case 'sekupang':
-    //                     $akses = ['PA_BBM', 'PA_SB', 'PA_RTK'];
-    //                     break;
-    //             }
-    //         }
-
-    //         $this->db->select('tb_bpkk_cab.*, tb_saldo.saldo_pettycash, tb_notifikasi.ket_notifikasi');
-    //         $this->db->from('tb_bpkk_cab');
-    //         $this->db->join('tb_saldo', 'tb_saldo.jenis_saldo = tb_bpkk_cab.jenis_saldo', 'left');
-    //         $this->db->join('tb_notifikasi', 'tb_notifikasi.no_pettycash = tb_bpkk_cab.no_bpkk_cab AND tb_bpkk_cab.status_cab = "Rejected"', 'left');
-
-    //         // HAPUS filter status supaya ambil semua status
-    //         // $this->db->where_in('tb_bpkk_cab.status_cab', ['In Progress', 'Rejected']);
-
-    //         if (!empty($akses)) {
-    //             $this->db->where_in('tb_bpkk_cab.jenis_saldo', $akses);
-    //         }
-    //         // $this->db->order_by('tb_bpkk_cab.id_bpkk_cab', 'DESC');
-    //         $this->db->order_by("
-    //     CASE 
-    //         WHEN tb_bpkk_cab.status_cab IN ('Revisi', 'Rejected') THEN 1
-    //         WHEN tb_bpkk_cab.status_cab = 'In progress' THEN 2
-    //         WHEN tb_bpkk_cab.status_cab = 'Approved' THEN 3
-    //         ELSE 4
-    //     END
-    // ", "ASC", FALSE);
-
-    //         // Urutan tambahan dalam tiap grup status: terbaru dulu
-    //         $this->db->order_by('tb_bpkk_cab.id_bpkk_cab', 'DESC');
-    //         return $this->db->get()->result_array();
-    //     }
-
     public function getbpkk($address_user, $level)
     {
-        // Menentukan cabang/jenis_saldo yang boleh diakses user
         $akses = [];
         if (in_array($level, ['super_admin', 'direktur_finance', 'development', 'finance_bmg'])) {
             $akses = ['JKT', 'BPP', 'TBK', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
@@ -256,7 +152,6 @@ class M_bpkk extends CI_Model
             }
         }
 
-        // Query utama
         $this->db->select('tb_bpkk_cab.*, tb_saldo.saldo_pettycash, tb_sisasaldo.sisa_saldo, tb_notifikasi.ket_notifikasi');
         $this->db->from('tb_bpkk_cab');
         $this->db->join('tb_saldo', 'tb_saldo.jenis_saldo = tb_bpkk_cab.jenis_saldo', 'left');
@@ -278,16 +173,11 @@ class M_bpkk extends CI_Model
         END
     ", "ASC", FALSE);
 
-        // Urutan tambahan: terbaru dulu
         $this->db->order_by('tb_bpkk_cab.id_bpkk_cab', 'DESC');
-
-        // **GROUP BY untuk menghindari duplicate akibat JOIN**
         $this->db->group_by('tb_bpkk_cab.id_bpkk_cab');
 
         return $this->db->get()->result_array();
     }
-
-
 
     public function getLastNoPettyCashBySaldo($jenis_saldo)
     {
@@ -352,7 +242,6 @@ class M_bpkk extends CI_Model
         $this->db->update('tb_saldo');
     }
 
-    // Ambil data pengeluaran berdasarkan ID
     public function getPengeluaranById($idbpkk)
     {
         return $this->db->get_where('tb_bpkk_cab', ['id_bpkk_cab' => $idbpkk])->row();
@@ -374,7 +263,6 @@ class M_bpkk extends CI_Model
         return $result ? (int)$result->saldo_pettycash : 0;
     }
 
-    // Sesuaikan saldo berdasarkan selisih
     public function adjustSaldoCabang($jenis_saldo, $selisih)
     {
         $this->db->set('saldo_pettycash', 'saldo_pettycash - ' . (float)$selisih, FALSE);
@@ -385,7 +273,6 @@ class M_bpkk extends CI_Model
     public function adjustPermintaanSaldo($no_rembesment, $selisih)
     {
         $selisih = (int) $selisih;
-        // pakai + bukan -, supaya selisih positif nambah, selisih negatif ngurang
         $this->db->set('saldo_pettycash', 'saldo_pettycash + (' . $selisih . ')', FALSE);
         $this->db->where('no_pettycash', $no_rembesment);
         $this->db->update('tb_permintaan_saldo');
@@ -427,19 +314,10 @@ class M_bpkk extends CI_Model
 
     public function updateSisaSaldoBerantai($no_pettycash, $nobpkk, $saldo_awal)
     {
-        // echo "<b>CALLING updateSisaSaldoBerantai</b><br>";
-        // echo "NO PC = $no_pettycash | NO BPKK = $nobpkk<br><br>";
-
         $this->db->where('no_pettycash', $no_pettycash);
         $this->db->order_by('id_sisasaldo', 'ASC');
         $rows = $this->db->get('tb_sisasaldo')->result();
 
-        // if (empty($rows)) {
-        //     echo "DATA KOSONG - STOP<br>";
-        //     return;
-        // }
-
-        // Cari index baris yang diedit
         $startIndex = null;
         foreach ($rows as $i => $row) {
             if (trim($row->no_bpkk_cab) == trim($nobpkk)) {
@@ -449,10 +327,6 @@ class M_bpkk extends CI_Model
         }
         if ($startIndex === null) return;
 
-        // echo "JUMLAH DATA: " . count($rows) . "<br>";
-        // echo "SALDO AWAL SISTEM = $saldo_awal<br><br>";
-        // echo "<b>MULAI UPDATE BERANTAI</b><br>";
-
         $saldo = $saldo_awal;
         for ($i = $startIndex; $i < count($rows); $i++) {
             $kredit = (float)$rows[$i]->total_kredit_cab;
@@ -460,18 +334,13 @@ class M_bpkk extends CI_Model
 
             $this->db->where('id_sisasaldo', $rows[$i]->id_sisasaldo);
             $this->db->update('tb_sisasaldo', ['sisa_saldo' => $saldo]);
-
-            // echo "UPDATE ID {$rows[$i]->id_sisasaldo} | BPKK={$rows[$i]->no_bpkk_cab} | kredit=$kredit -> SISA BARU = $saldo<br>";
-            // echo "SQL: " . $this->db->last_query() . "<br><br>";
         }
-
-        // echo "<b>SELESAI UPDATE</b><br>";
     }
 
 
     public function updateStatusBpkk($id_bpkk, $data)
     {
-        $this->db->where('id_bpkk_cab', $id_bpkk); // pakai ID sesuai kebutuhan
+        $this->db->where('id_bpkk_cab', $id_bpkk);
         return $this->db->update('tb_bpkk_cab', $data);
     }
 
@@ -496,7 +365,6 @@ class M_bpkk extends CI_Model
         $this->db->select('*');
         $this->db->from('tb_data_mutasi');
         $this->db->where('jenis_saldo', $kode_cabang);
-        // $this->db->where('status_mutasi', 'Open');
         $this->db->group_start();
         $this->db->where('status_mutasi', 'Open');
         $this->db->or_where('status_cab', 'Rejected');
@@ -505,19 +373,6 @@ class M_bpkk extends CI_Model
         $data = $this->db->get();
         return $data->result_array();
     }
-
-    // public function getMutasiByCabang($kode_cabang)
-    // {
-    //     $this->db->select('*');
-    //     $this->db->from('tb_data_mutasi');
-    //     $this->db->join('tb_bpkk_cab', 'tb_bpkk_cab.jenis_saldo = tb_data_mutasi.jenis_saldo', 'left');
-    //     $this->db->where('jenis_saldo', $kode_cabang);
-    //     $this->db->where('status_mutasi', 'Open');
-    //     $this->db->where('m.status_mutasi', 'Open');
-    //     $this->db->order_by('tanggal', 'ASC');
-    //     $data = $this->db->get();
-    //     return $data->result_array();
-    // }
 
     public function generateNoBpkk($kode_cabang)
     {
@@ -554,7 +409,7 @@ class M_bpkk extends CI_Model
         $this->db->group_by('jenis_saldo');
         $query = $this->db->get();
 
-        return $query->result_array(); // langsung balikin hasil
+        return $query->result_array();
     }
 
     public function get_rekap_tahunan_per_cabang()
@@ -568,13 +423,12 @@ class M_bpkk extends CI_Model
         $query = $this->db->get();
         $result = $query->result_array();
 
-        // susun data: jenis_saldo -> bulan (1-12) -> total
         $all_saldo = ['JKT', 'TBK', 'BPP', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
 
         $rekap = [];
         foreach ($all_saldo as $saldo) {
             for ($i = 1; $i <= 12; $i++) {
-                $rekap[$saldo][$i] = 0; // default 0
+                $rekap[$saldo][$i] = 0;
             }
         }
 
@@ -632,19 +486,9 @@ class M_bpkk extends CI_Model
         $this->db->from('tb_bpkk_cab');
         $this->db->where('jenis_saldo', $jenis_saldo);
         $this->db->where('rembesment', 'Open');
-        $this->db->where('status_cab', 'In progress'); // atau kondisi lain sesuai kebutuhan
+        $this->db->where('status_cab', 'In progress');
         return $this->db->get()->row();
     }
-
-    // public function get_total_kredit_open_by_cabang($jenis_saldo)
-    // {
-    //     $this->db->select_sum('total_kredit_cab', 'total_kredit_open');
-    //     $this->db->from('tb_bpkk_cab');
-    //     $this->db->where('jenis_saldo', $jenis_saldo);
-    //     $this->db->where('rembesment', 'Close');
-    //     $query = $this->db->get();
-    //     return $query->row();
-    // }
 
     public function hitungStatusInprogress($jenis_saldo)
     {
@@ -658,7 +502,6 @@ class M_bpkk extends CI_Model
 
     public function hitungStatusApproved($jenis_saldo)
     {
-        // 1. Ambil no_pettycash terakhir dari tb_data_mutasi
         $this->db->select('no_pettycash');
         $this->db->from('tb_data_mutasi');
         $this->db->where('jenis_transaksi', 'Debet');
@@ -673,27 +516,17 @@ class M_bpkk extends CI_Model
 
         $last_no_pettycash = $query->no_pettycash;
 
-        // ✅ Debug sementara
-        // echo "Last PC: " . $last_no_pettycash;
-        // exit;
-
-        // 2. Hitung status Approved di tb_bpkk_cab
         $this->db->from('tb_bpkk_cab');
         $this->db->where('no_pettycash', $last_no_pettycash);
         $this->db->where('jenis_saldo', $jenis_saldo);
         $this->db->where('status_cab', 'Approved');
         $count = $this->db->count_all_results();
 
-        // ✅ Debug query
-        // echo $this->db->last_query();
-        // exit;
-
         return $count;
     }
 
     public function hitungStatusRejected($jenis_saldo)
     {
-        // 1. Ambil no_pettycash terakhir dari tb_data_mutasi
         $this->db->select('no_pettycash');
         $this->db->from('tb_data_mutasi');
         $this->db->where('jenis_transaksi', 'Debet');
@@ -708,20 +541,11 @@ class M_bpkk extends CI_Model
 
         $last_no_pettycash = $query->no_pettycash;
 
-        // ✅ Debug sementara
-        // echo "Last PC: " . $last_no_pettycash;
-        // exit;
-
-        // 2. Hitung status Rejected di tb_bpkk_cab
         $this->db->from('tb_bpkk_cab');
         $this->db->where('no_pettycash', $last_no_pettycash);
         $this->db->where('jenis_saldo', $jenis_saldo);
         $this->db->where('status_cab', 'Rejected');
         $count = $this->db->count_all_results();
-
-        // ✅ Debug query
-        // echo $this->db->last_query();
-        // exit;
 
         return $count;
     }
@@ -742,7 +566,6 @@ class M_bpkk extends CI_Model
         $this->db->where('jenis_saldo', $kode_cabang);
         $this->db->where('status_cab', 'In progress');
         $this->db->where('status_bpkk', 'Done');
-        // tidak pakai filter no_pc_saldo
         $data = $this->db->get();
         return $data->result();
     }
@@ -766,22 +589,8 @@ class M_bpkk extends CI_Model
         $this->db->where('jenis_saldo', $jenis_saldo);
         $query = $this->db->get();
 
-        return $query->row(); // <-- return objek saldo
+        return $query->row();
     }
-
-    // public function getnopettycash($jenis_saldo)
-    // {
-    //     $this->db->select('*');
-    //     $this->db->from('tb_nopettycash');
-    //     $this->db->where('jenis_saldo', $jenis_saldo);
-    //     $this->db->order_by('id_nopettycash', 'DESC'); // atau 'nomor_pettycash' DESC jika ada
-    //     $this->db->limit(1);
-
-    //     $query = $this->db->get();
-
-    //     // Return seluruh row data (object) atau null jika tidak ada
-    //     return $query->num_rows() > 0 ? $query->row() : null;
-    // }
 
     public function getnopettycash($kode_cabang)
     {
@@ -789,7 +598,6 @@ class M_bpkk extends CI_Model
         $tahun = date('Y');
         $prefix = "PC-{$kode_cabang}";
 
-        // Cari nomor terakhir hanya untuk cabang & bulan & tahun ini
         $this->db->like('no_petty_cash', "/{$prefix}/{$bulan}/{$tahun}", 'both');
         $this->db->order_by('no_petty_cash', 'DESC');
         $query = $this->db->get('tb_nopettycash', 1);
@@ -798,14 +606,12 @@ class M_bpkk extends CI_Model
         if ($query->num_rows() > 0) {
             $last_no = $query->row()->no_petty_cash;
 
-            // Ambil 4 digit pertama (nomor urut)
             $parts = explode('/', $last_no);
             if (count($parts) >= 4 && is_numeric($parts[0])) {
                 $last_number = (int) $parts[0];
             }
         }
 
-        // Tambah +1 atau mulai dari 0001 kalau belum ada
         $new_number = str_pad($last_number + 1, 4, '0', STR_PAD_LEFT);
 
         return "{$new_number}/{$prefix}/{$bulan}/{$tahun}";
@@ -822,7 +628,6 @@ class M_bpkk extends CI_Model
 
     public function getWidgetData($status, $jenis_saldo)
     {
-        // Hitung jumlah data
         $this->db->from('tb_bpkk_cab');
         $this->db->where('status_cab', $status);
         $this->db->where('MONTH(tgl_kredit_cab)', date('m'));
@@ -832,7 +637,6 @@ class M_bpkk extends CI_Model
         }
         $count = $this->db->count_all_results();
 
-        // Hitung total nominal
         $this->db->select_sum('total_kredit_cab');
         $this->db->from('tb_bpkk_cab');
         $this->db->where('status_cab', $status);

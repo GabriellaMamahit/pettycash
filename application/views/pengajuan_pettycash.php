@@ -25,7 +25,7 @@
             <div class="col-5 d-none d-xl-block"></div>
             <div class="col-xl-3 col-sm-5 box-col-4">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">
+                    <li class="breadcrumb-item"><a href="">
                             <svg class="stroke-icon">
                                 <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-home"></use>
                             </svg></a>
@@ -56,8 +56,6 @@
                         $popoverContent = '';
 
                         $alamat_user = strtolower($this->fungsi->user_login()->address_user);
-
-                        // ✅ Mapping langsung di sini tanpa fungsi luar
                         $jenis_saldo_login = null;
                         switch ($alamat_user) {
                             case 'jakarta':
@@ -74,10 +72,9 @@
                                 break;
                             case 'sekupang':
                                 $jenis_saldo_login = 'PA';
-                                break; // atau biarkan = null kalau tidak perlu
+                                break;
                         }
 
-                        // ✅ Jika Sekupang: tombol langsung aktif tanpa pengecekan
                         if ($alamat_user !== 'sekupang') {
 
                             if ($jenispettycashcek === 'BMG') {
@@ -114,10 +111,8 @@
                             <thead>
                                 <tr>
                                     <th class="text-center">No.</th>
-                                    <!-- <th>Tanggal</th> -->
                                     <th>Permintaan </th>
                                     <th>Keterangan </th>
-                                    <!-- <th>No Petty Cash</th> -->
                                     <th>Total Reimbursement</th>
                                     <th></th>
                                     <th>sisa Saldo</th>
@@ -176,16 +171,6 @@
                                                 title="Lihat">
                                                 <i data-feather="eye" style="width:12px; height:12px;"></i>
                                             </a>
-                                            <!-- <a href="#" class="btn btn-outline-info btn-sm view-permintaan-saldo"
-                                                style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                title="Lihat" data-no-pettycash="<?= $data['no_pettycash']; ?>"
-                                                data-tanggal="<?= $data['tanggal_pettycash']; ?>"
-                                                data-keterangan="<?= $data['ket_pettycash']; ?>"
-                                                data-saldo="<?= $data['saldo_pettycash']; ?>"
-                                                data-status="<?= $data['status_permintaan']; ?>" data-bs-toggle="modal"
-                                                data-bs-target="#viewdatapermintaansaldo">
-                                                <i data-feather="eye" style="width:12px; height:12px;"></i>
-                                            </a> -->
                                             <!-- pdf aprroval -->
                                             <a href="<?= base_url('pengajuan_pettycash/cetak_approval?id=' . $data['id_pettycash'] . '&jenis_saldo=' . $data['jenis_saldo']); ?>"
                                                 class="btn btn-outline-secondary btn-sm" target="_blank"
@@ -193,15 +178,6 @@
                                                 title="View Pdf Approval">
                                                 <i data-feather="file" style="width:12px; height:12px;"></i>
                                             </a>
-                                            <!-- <a href="#" class="btn btn-outline-secondary btn-sm"
-                                                style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                title="View Pdf Approval"
-                                                data-no_pettycash="<?= $data['no_pettycash']; ?>"
-                                                data-jenissaldo_dok="<?= $data['jenis_saldo']; ?>"
-                                                data-bs-toggle="modal" data-bs-target="#viewpdfapproval">
-                                                <i data-feather="file" style="width:12px; height:12px;"></i>
-                                            </a> -->
-
                                             <a href="<?= base_url('pengajuan_pettycash/export_excel?no_pettycash=' . urlencode($data['no_pettycash'])); ?>"
                                                 class="btn btn-outline-success btn-sm"
                                                 style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
@@ -310,20 +286,6 @@
                                 value="<?= $jenis_petty_cash_default ?>">
                             <?php endif; ?>
                             <input type="hidden" name="kode_kantorcab" id="kode_kantorcab" readonly>
-                            <!-- <div class="row mb-3">
-                                <div class="col-md-9">
-                                    <label class="form-label txt-dark" for="keterangan">Keterangan Permintaan Saldo
-                                        :</label>
-                                    <input class="form-control" name="keterangan" id="keterangan" type="text"
-                                        placeholder="Pengajuan Saldo ...." required>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="form-label txt-dark" for="totalDebet">Total Debet :</label>
-                                    <input class="form-control" id="totalDebet" type="text" placeholder="Rp. 0" readonly
-                                        oninput="formatRupiah(this)">
-                                    <input type="hidden" id="totalDebetRaw" name="totalDebetRaw">
-                                </div>
-                            </div> -->
                             <div class="col-md-12">
                                 <div class="mb-3">
                                     <label class="form-label txt-dark" for="keterangan">Keterangan Permintaan Saldo
@@ -395,151 +357,6 @@
     </div>
 </div>
 
-<!-- Modal View Permintaan Saldo -->
-<!-- <div class="modal fade" id="viewdatapermintaansaldo" tabindex="-1" role="dialog"
-    aria-labelledby="viewdatapermintaansaldo" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-toggle-wrapper social-profile text-start dark-sign-up">
-                <h3 class="modal-header justify-content-center border-0 txt-dark">Permintaan Penambahan Saldo Petty Cash
-                </h3>
-                <div class="modal-body">
-                    <div class="w-100">
-                        <span class="badge bg-warning d-block w-100 text-dark text-center"
-                            style="font-size: 14px;"></span>
-                    </div>
-                    <br>
-                    <div class="card-body">
-                        <table class="table">
-                            <tbody>
-                                <tr>
-                                    <td width="220px"><strong>NO PETTY CASH</strong></td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>TANGGAL</strong></td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>KETERANGAN</strong></td>
-                                    <td>:</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>TOTAL PERMINTAAN SALDO</strong></td>
-                                    <td>: </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <br>
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="w-100">
-                                <a id="btnDokumenPendukung" class="btn btn-outline-primary d-block w-100" type="button"
-                                    title="Lihat" data-bs-toggle="modal" data-bs-target="#viewdokumenpendukungsaldo"
-                                    data-file="<?= $data['dokumen_pettycash']; ?>">
-                                    Dokumen Pendukung
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <p><strong>PENGELUARAN BPKK</strong></p>
-                            </div>
-                            <div class="table-responsive custom-scrollbar signal-table">
-                                <table class="viewpermintaan-table table" id="viewpermintaan">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">No.</th>
-                                            <th>Tanggal</th>
-                                            <th>Keterangan</th>
-                                            <th>Total</th>
-                                            <th>Status</th>
-                                            <th class="text-center">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Tutup</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-
-<!-- modal view Dokumen pendukung -->
-<!-- <div class="modal fade" id="viewdokumenpendukungsaldo" tabindex="-1" role="dialog"
-    aria-labelledby="viewdokumenpendukungsaldo" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-toggle-wrapper social-profile text-start dark-sign-up">
-                <h3 class="modal-header justify-content-center border-0 txt-dark">Dokumen Pendukung
-                </h3>
-                <div class="modal-body">
-                    <div class="card-body">
-                        <div class="form-group" id="pratinjauGambardok3"></div>
-                        <form id="formGantiDokumen" enctype="multipart/form-data">
-                            <input type="hidden" name="no_pettycash" id="no_pettycash_dokumen">
-
-                            <div class="form-group mb-3">
-                                <label for="fileDokumenBaru"><strong>Ganti Dokumen (PDF)</strong></label>
-                                <input type="file" name="dokumen_pettycash" id="fileDokumenBaru"
-                                    accept="application/pdf" class="form-control" required>
-                            </div>
-
-                            <div class="d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary">Simpan Dokumen Baru</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <br>
-                    <div class="col-md-12">
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Tutup</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-
-<!-- modal view Dokumen pendukung -->
-<!-- <div class="modal fade" id="viewpdfapproval" tabindex="-1" role="dialog" aria-labelledby="viewpdfapproval"
-    aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-toggle-wrapper social-profile text-start dark-sign-up">
-                <h3 class="modal-header justify-content-center border-0 txt-dark">Dokumen Approval
-                </h3>
-                <div class="modal-body">
-                    <div class="card-body">
-                        <div class="form-group" id="pratinjauGambardok4"></div>
-                    </div>
-                    <br>
-                    <div class="col-md-12">
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Tutup</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 <!-- modal view Dokumen pendukung bpkk -->
 <div class="modal fade" id="viewdokumenbpkkrembesment" tabindex="-1" role="dialog"
     aria-labelledby="viewdokumenbpkkrembesment" aria-hidden="true">
@@ -574,23 +391,18 @@ function formatRupiah(el) {
         rupiah = split[0].substr(0, sisa),
         ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-    // tambahkan titik jika ada ribuan
     if (ribuan) {
         let separator = sisa ? '.' : '';
         rupiah += separator + ribuan.join('.');
     }
 
-    // hasil akhir
     el.value = 'Rp. ' + (split[1] !== undefined ? rupiah + ',' + split[1] : rupiah);
 
-    // simpan ke hidden input tanpa titik dan "Rp."
     const rawValue = number_string.replace(/\./g, '');
     document.getElementById('totalDebetRaw').value = rawValue;
 }
 
-// permintaan saldo
 $(document).ready(function() {
-    // Untuk Sekupang: trigger AJAX saat radio button dipilih
     $('input[name="jenis_petty_cash"]').on('change', function() {
         var jenis_saldo = $(this).val();
         fetchBpkkTable(jenis_saldo);
@@ -603,7 +415,6 @@ $(document).ready(function() {
         fetchBpkkTable(jenis_saldo_default);
         fetchSisaSaldo(jenis_saldo_default);
     } else {
-        // kosongkan dulu total debet jika belum ada pilihan jenis saldo
         $('#totalDebet').val('Rp. 0');
         $('#totalDebetRaw').val(0);
         $('#sisaSaldo').val('Rp. 0');
@@ -647,7 +458,6 @@ $(document).ready(function() {
 
                 $('#pengeluaran_bpkk_saldo tbody').html(html);
 
-                // Tampilkan total debet di input form
                 const formatted = new Intl.NumberFormat('id-ID', {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0
@@ -689,90 +499,6 @@ $(document).ready(function() {
     }
 });
 
-// view data permintaan saldo
-// $(document).on('click', '.view-permintaan-saldo', function() {
-//     const noPettyCash = $(this).data('no-pettycash');
-//     const tanggal = $(this).data('tanggal');
-//     const keterangan = $(this).data('keterangan');
-//     const saldo = $(this).data('saldo');
-//     const status = $(this).data('status');
-
-//     // Isi info permintaan saldo
-//     const modal = $('#viewdatapermintaansaldo');
-//     modal.find('td:contains("NO PETTY CASH")').next().text(': ' + noPettyCash);
-//     modal.find('td:contains("TANGGAL")').next().text(': ' + tanggal);
-//     modal.find('td:contains("KETERANGAN")').next().text(': ' + keterangan);
-//     modal.find('td:contains("TOTAL PERMINTAAN SALDO")').next().text(': Rp. ' + parseInt(saldo).toLocaleString(
-//         'id-ID'));
-//     const badge = modal.find('.badge');
-//     badge.text(status.toUpperCase()).removeClass('bg-warning bg-success bg-danger text-dark text-white');
-
-//     if (status.toLowerCase() === 'waiting') {
-//         badge.text('WAITING').addClass('bg-warning text-white fw-bold');
-//     } else if (status.toLowerCase() === 'done') {
-//         badge.text('SUCCESS').addClass('bg-success text-white fw-bold');
-//     } else {
-//         badge.addClass('bg-secondary text-white');
-//     }
-
-//     // Panggil AJAX untuk ambil data pengeluaran BPKK
-//     $.ajax({
-//         url: '<?= site_url("pengajuan_pettycash/get_data_bpkk_by_nopettycash") ?>',
-//         method: 'POST',
-//         data: {
-//             no_pettycash: noPettyCash
-//         },
-//         dataType: 'json',
-//         success: function(response) {
-//             let tbody = '';
-//             if (response.length > 0) {
-//                 $.each(response, function(i, row) {
-//                     tbody += `
-//                     <tr>
-//                         <td class="text-center">${i + 1}</td>
-//                         <td>${row.tanggal}</td>
-//                         <td>${row.keterangan}</td>
-//                         <td>${row.total}</td>
-//                         <td>
-//                             <span class="badge ${
-//                                 row.status === 'Approved' ? 'bg-success text-white' :
-//                                 row.status === 'In progress' ? 'bg-warning text-dark' :
-//                                 row.status === 'Rejected' ? 'bg-danger text-white' :
-//                                 'bg-secondary'}">
-//                                     ${row.status}
-//                             </span>
-//                         </td>
-//                         <td class="text-center align-middle">
-//                         <a href="#" 
-//                            class="btn btn-outline-info btn-sm view-dokumen d-flex align-items-center justify-content-center mx-auto"
-//                            style="width:24px; height:24px; padding:0;"
-//                            title="Lihat Dokumen"
-//                            data-jenis="${row.jenis_saldo}"
-//                            data-file="${row.upload_file_cab}"
-//                            data-bs-toggle="modal"
-//                            data-bs-target="#viewdokumenbpkkrembesment">
-//                            <i data-feather="eye" style="width:12px; height:12px;"></i>
-//                         </a>
-//                     </td>
-//                     </tr>
-//                 `;
-//                 });
-//             } else {
-//                 tbody =
-//                     `<tr><td colspan="6" class="text-center text-muted">Tidak ada data pengeluaran BPKK.</td></tr>`;
-//             }
-//             modal.find('#viewpermintaan tbody').html(tbody);
-
-//             if (typeof feather !== 'undefined') {
-//                 feather.replace();
-//             }
-//         },
-//         error: function() {
-//             alert('Gagal mengambil data pengeluaran BPKK.');
-//         }
-//     });
-// });
-
 document.addEventListener('DOMContentLoaded', () => {
     const fileInput = document.getElementById('formFile');
     const submitBtn = document.getElementById('submitBtn');
@@ -803,7 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'Maksimal ukuran file adalah 1 MB.',
                     confirmButtonColor: "#c06240"
                 });
-                this.value = ''; // reset input
+                this.value = '';
                 submitBtn.disabled = true;
             } else {
                 submitBtn.disabled = false;
@@ -825,14 +551,12 @@ const mapping = {
 document.addEventListener("DOMContentLoaded", function() {
     const kodeInput = document.getElementById("kode_kantorcab");
 
-    // Kalau hidden input ada (bukan sekupang)
     const hiddenJenis = document.getElementById("jenis_petty_cash_hidden");
     if (hiddenJenis) {
         let val = hiddenJenis.value;
         kodeInput.value = mapping[val] ?? "";
     }
 
-    // Kalau pakai radio button (sekupang)
     document.querySelectorAll(".jenis-petty").forEach(radio => {
         radio.addEventListener("change", function() {
             let val = this.value;
@@ -883,7 +607,6 @@ $(document).ready(function() {
                     }
                 }
 
-                // jika belum ada data BPKK selesai → disable pilihan
                 if (!res.allow) {
                     radio.prop('disabled', true);
                 }
@@ -903,179 +626,30 @@ $(document).ready(function() {
 $('input[name="jenis_petty_cash"]').on('change', function() {
     var jenis_saldo = $(this).val();
 
-    // Ambil tabel BPKK seperti biasa
     fetchBpkkTable(jenis_saldo);
-
-    // Ambil sisa saldo dari tb_saldo
     fetchSisaSaldo(jenis_saldo);
 });
 
-// $(document).ready(function() {
-//     // Saat tombol Dokumen Pendukung diklik
-//     $(document).on('click', '#btnDokumenPendukung', function() {
-//         var fileName = $(this).data('file');
-//         var baseUrl = '<?= base_url("uploads/ppt/"); ?>';
-//         console.log('File name:', fileName); // cek di console
-
-//         if (fileName) {
-//             var filePath = baseUrl + fileName;
-//             console.log('Full path:', filePath); // cek di console
-
-//             // tampilkan PDF di iframe
-//             var previewHtml = `
-//                 <div class="ratio ratio-16x9">
-//                     <iframe src="${filePath}" width="100%" height="600px"></iframe>
-//                 </div>
-//             `;
-//             $('#pratinjauGambardok3').html(previewHtml);
-//         } else {
-//             $('#pratinjauGambardok3').html(
-//                 '<p class="text-center text-danger">Tidak ada dokumen yang diunggah.</p>'
-//             );
-//         }
-
-//         // Tutup modal utama agar tidak tumpuk (optional)
-//         $('#viewdatapermintaansaldo').modal('hide');
-//     });
-// });
-
-// $(document).ready(function() {
-
-//     // Saat tombol Dokumen Pendukung diklik
-//     $(document).on('click', '#btnDokumenPendukung', function() {
-//         var fileName = $(this).data('file');
-//         var noPettycash = $(this).closest('tr').find('td:first').text()
-//             .trim(); // ambil no_pettycash dari row atau dataset lain
-//         var baseUrl = '<?= base_url("uploads/ppt/"); ?>';
-
-//         // simpan no_pettycash ke input hidden
-//         $('#no_pettycash_dokumen').val(noPettycash);
-
-//         if (fileName) {
-//             var filePath = baseUrl + fileName;
-//             var previewHtml = `
-//                 <div class="ratio ratio-16x9">
-//                     <iframe src="${filePath}" width="100%" height="600px"></iframe>
-//                 </div>
-//             `;
-//             $('#pratinjauGambardok3').html(previewHtml);
-//         } else {
-//             $('#pratinjauGambardok3').html(
-//                 '<p class="text-center text-danger">Tidak ada dokumen yang diunggah.</p>');
-//         }
-
-//         // Tutup modal utama agar tidak tumpuk
-//         $('#viewdatapermintaansaldo').modal('hide');
-//     });
-
-
-//     // Saat submit form ganti dokumen
-//     $('#formGantiDokumen').on('submit', function(e) {
-//         e.preventDefault();
-
-//         var formData = new FormData(this);
-
-//         $.ajax({
-//             url: '<?= base_url("pengajuan_pettycash/update_dokumen"); ?>', // buat endpoint ini di controller
-//             type: 'POST',
-//             data: formData,
-//             processData: false,
-//             contentType: false,
-//             beforeSend: function() {
-//                 Swal.fire({
-//                     title: 'Mengunggah...',
-//                     text: 'Harap tunggu sebentar.',
-//                     allowOutsideClick: false,
-//                     didOpen: () => Swal.showLoading()
-//                 });
-//             },
-//             success: function(response) {
-//                 Swal.close();
-//                 Swal.fire('Sukses', 'Dokumen berhasil diperbarui!', 'success');
-
-//                 // update preview PDF setelah upload
-//                 if (response.new_file) {
-//                     var baseUrl = '<?= base_url("uploads/ppt/"); ?>';
-//                     var newPreview = `
-//                         <div class="ratio ratio-16x9">
-//                             <iframe src="${baseUrl + response.new_file}" width="100%" height="600px"></iframe>
-//                         </div>
-//                     `;
-//                     $('#pratinjauGambardok3').html(newPreview);
-//                 }
-//             },
-//             error: function(xhr) {
-//                 Swal.close();
-//                 Swal.fire('Gagal', 'Terjadi kesalahan saat mengunggah dokumen.', 'error');
-//             }
-//         });
-//     });
-// });
-
-
-// $(document).ready(function() {
-//     // Ketika tombol View PDF Approval diklik
-//     $(document).on('click', '.btn-outline-secondary[data-bs-target="#viewpdfapproval"]', function() {
-//         var namaDok = $(this).data('nama_dok');
-//         var jenisSaldo = $(this).data('jenissaldo_dok');
-
-//         // Elemen tempat preview
-//         var previewContainer = $('#pratinjauGambardok4');
-//         previewContainer.empty();
-
-//         // Jika nama dokumen kosong/null
-//         if (!namaDok || namaDok === 'null' || namaDok.trim() === '') {
-//             previewContainer.html('<p class="text-center text-danger mt-3">File tidak tersedia.</p>');
-//             return;
-//         }
-
-//         // Path file-nya
-//         var fileUrl = "<?= base_url('uploads/approve/'); ?>" + jenisSaldo + "/" + namaDok;
-
-//         // Cek dulu apakah file-nya benar-benar ada
-//         $.ajax({
-//             url: fileUrl,
-//             type: 'HEAD',
-//             success: function() {
-//                 var iframe = '<iframe src="' + fileUrl +
-//                     '" width="100%" height="700px" style="border:none;"></iframe>';
-//                 previewContainer.html(iframe);
-//             },
-//             error: function() {
-//                 previewContainer.html(
-//                     '<p class="text-center text-danger mt-3">File tidak ditemukan di server.</p>'
-//                 );
-//             }
-//         });
-//     });
-// });
-
 $(document).ready(function() {
-    // Ketika tombol View Dokumen BPKK Rembesment diklik
     $(document).on('click', '.view-dokumen', function() {
-        var fileName = $(this).data('file'); // nama dokumen
-        var jenisSaldo = $(this).data('jenis'); // jenis saldo
+        var fileName = $(this).data('file');
+        var jenisSaldo = $(this).data('jenis');
 
-        // Elemen tempat preview
         var previewContainer = $('#pratinjauGambardok5');
         previewContainer.empty();
 
-        // Jika file kosong/null
         if (!fileName || fileName === 'null' || fileName.trim() === '') {
             previewContainer.html(
                 '<p class="text-center text-danger mt-3">Dokumen tidak tersedia.</p>');
             return;
         }
 
-        // Path file
         var fileUrl = "<?= base_url('uploads/bpkk/'); ?>" + jenisSaldo + "/" + fileName;
 
-        // Cek apakah file ada
         $.ajax({
             url: fileUrl,
             type: 'HEAD',
             success: function() {
-                // Tampilkan pratinjau sesuai ekstensi
                 var ext = fileName.split('.').pop().toLowerCase();
                 if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
                     previewContainer.html(

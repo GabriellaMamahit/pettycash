@@ -410,16 +410,13 @@ function formatRupiah(el) {
         rupiah = split[0].substr(0, sisa),
         ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-    // tambahkan titik jika ada ribuan
     if (ribuan) {
         let separator = sisa ? '.' : '';
         rupiah += separator + ribuan.join('.');
     }
 
-    // hasil akhir (tampilkan dengan "Rp.")
     el.value = 'Rp. ' + (split[1] !== undefined ? rupiah + ',' + split[1] : rupiah);
 
-    // simpan ke hidden input (angka murni, tanpa "Rp." dan titik)
     const rawValue = number_string.replace(/\./g, '');
     document.getElementById('totalDebetRaw').value = rawValue;
 }
@@ -442,14 +439,12 @@ function checkMaxSaldo() {
     }
 }
 
-// Supaya fungsi bisa dipanggil dari input HTML
 window.checkMaxSaldo = checkMaxSaldo;
 
 $(document).on('click', '.view-saldorembesment', function() {
     const data = $(this).data();
     const modal = $('#viewdatapermintaansaldorembesment');
 
-    // === isi modal permintaan saldo ===
     modal.find('td:contains("NO PETTY CASH")').next().text(': ' + data.noPettycash);
     modal.find('td:contains("TANGGAL")').next().text(': ' + data.tanggal);
     modal.find('td:contains("KETERANGAN")').next().text(': ' + data.keterangan);
@@ -468,26 +463,22 @@ $(document).on('click', '.view-saldorembesment', function() {
         badge.addClass('bg-secondary text-white');
     }
 
-    // === Tentukan no_pettycash untuk BPKK ===
     let noForBpkk = data.noPettycash;
     if (data.sumber.toLowerCase() === 'penambahan') {
         if (data.noPcAsal && data.noPcAsal.trim() !== "") {
             noForBpkk = data.noPcAsal;
         } else {
-            // kalau null, berarti penambahan awal
             noForBpkk = null;
         }
     }
 
-    // === Tentukan folder dokumen ===
     let folder = "";
     if (data.sumber.toLowerCase() === "permintaan") {
-        folder = "uploads/ppt/"; // ✅ pakai folder public
+        folder = "uploads/ppt/";
     } else if (data.sumber.toLowerCase() === "penambahan") {
-        folder = "uploads/finance/"; // ✅ pakai folder public
+        folder = "uploads/finance/";
     }
 
-    // === Tampilkan dokumen di modal viewdokumenpendukungsaldo ===
     $('#viewdokumenpendukungsaldo').one('shown.bs.modal', function() {
         const preview = $('#pratinjauGambardok2');
         preview.empty();
@@ -497,7 +488,6 @@ $(document).on('click', '.view-saldorembesment', function() {
                 Dokumen Pendukung belum di-upload.</p>`);
         } else {
             let fileUrl = "<?= base_url(); ?>" + folder + data.file;
-            // console.log("Preview dokumen:", fileUrl);
 
             let ext = data.file.split('.').pop().toLowerCase();
             let previewHtml = "";
@@ -516,12 +506,10 @@ $(document).on('click', '.view-saldorembesment', function() {
         }
     });
 
-    // Bersihkan pratinjau saat modal dokumen ditutup
     $('#viewdokumenpendukungsaldo').on('hidden.bs.modal', () => {
         $('#pratinjauGambardok2').empty();
     });
 
-    // === Ambil data BPKK ===
     if (noForBpkk) {
         $.ajax({
             url: '<?= site_url("kelola_saldo/get_data_bpkk_by_nopettycash") ?>',
@@ -576,7 +564,6 @@ $(document).on('click', '.view-saldorembesment', function() {
             }
         });
     } else {
-        // Kalau noForBpkk null (penambahan awal), tampilkan pesan kosong
         modal.find('#viewpermintaan tbody').html(
             `<tr><td colspan="6" class="text-center text-muted">Tidak ada data pengeluaran BPKK (Penambahan awal).</td></tr>`
         );
@@ -598,9 +585,7 @@ function updateKodeKantor() {
     const jenisSaldoEl = document.getElementById("jenis_saldo");
 
     if (jenisSaldoEl && kodeInput) {
-        // buang spasi & uppercase
         const val = jenisSaldoEl.value.trim().toUpperCase();
-        // console.log("Jenis Saldo (debug):", `"${val}"`);
         kodeInput.value = mapping[val] ?? "";
     }
 }
@@ -608,7 +593,6 @@ function updateKodeKantor() {
 document.addEventListener("DOMContentLoaded", function() {
     updateKodeKantor();
 
-    // kalau user edit manual field jenis_saldo
     const jenisSaldoEl = document.getElementById("jenis_saldo");
     if (jenisSaldoEl) {
         jenisSaldoEl.addEventListener("input", updateKodeKantor);
@@ -633,7 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'File harus dalam format PDF.',
                     confirmButtonColor: '#d33'
                 });
-                this.value = ''; // reset input
+                this.value = '';
                 submitBtn.disabled = true;
                 return;
             }
@@ -645,7 +629,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'Maksimal ukuran file adalah 1 MB.',
                     confirmButtonColor: '#d33'
                 });
-                this.value = ''; // reset input
+                this.value = '';
                 submitBtn.disabled = true;
             } else {
                 submitBtn.disabled = false;
@@ -655,31 +639,25 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 $(document).ready(function() {
-    // Ketika tombol View Dokumen BPKK Rembesment diklik
     $(document).on('click', '.view-dokumen', function() {
-        var fileName = $(this).data('file'); // nama dokumen
-        var jenisSaldo = $(this).data('jenis'); // jenis saldo
+        var fileName = $(this).data('file');
+        var jenisSaldo = $(this).data('jenis');
 
-        // Elemen tempat preview
         var previewContainer = $('#pratinjauGambardok5');
         previewContainer.empty();
 
-        // Jika file kosong/null
         if (!fileName || fileName === 'null' || fileName.trim() === '') {
             previewContainer.html(
                 '<p class="text-center text-danger mt-3">Dokumen tidak tersedia.</p>');
             return;
         }
 
-        // Path file
         var fileUrl = "<?= base_url('uploads/bpkk/'); ?>" + jenisSaldo + "/" + fileName;
 
-        // Cek apakah file ada
         $.ajax({
             url: fileUrl,
             type: 'HEAD',
             success: function() {
-                // Tampilkan pratinjau sesuai ekstensi
                 var ext = fileName.split('.').pop().toLowerCase();
                 if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
                     previewContainer.html(

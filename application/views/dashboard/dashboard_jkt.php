@@ -91,15 +91,14 @@
                         <div class="col">
                             <div class="progress progress-border-primary">
                                 <?php
-                                    $debet = $saldo['saldodebetjkt'];   // Pemasukan
-                                    $kredit = $saldo['saldokreditjkt']; // Pengeluaran
+                                    $debet = $saldo['saldodebetjkt'];
+                                    $kredit = $saldo['saldokreditjkt'];
 
                                     $persentase = 0;
                                     if ($debet > 0) {
                                         $persentase = ($kredit / $debet) * 100;
                                     }
 
-                                    // Biar gak lebih dari 100%
                                     if ($persentase > 100) {
                                         $persentase = 100;
                                     }
@@ -115,14 +114,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="progress-showcase row mt-3">
-                        <div class="col">
-                            <div class="progress progress-border-primary">
-                                <div class="progress-bar-animated bg-primary progress-bar-striped" role="progressbar"
-                                    style="width: 30%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-                    </div> -->
                     <div class="social-details">
                         <ul class="social-follow"
                             style="display: flex; justify-content: space-around; align-items: center; text-align: center; padding: 0; margin: 0; list-style: none; width: 100%;">
@@ -172,20 +163,17 @@
                         <?php
                         $hasRembesOpenDone = false;
 
-                        // 1. Hitung total data dengan status_cab = In progress (untuk JKT)
                         $total_inprogress = $this->db->where('jenis_saldo', 'JKT')
                             ->where('status_cab', 'In progress')
                             ->where('rembesment', 'Open')
                             ->count_all_results('tb_bpkk_cab');
 
-                        // 2. Hitung data In progress yang sudah rembesment=Open dan status_bpkk=Done
                         $total_inprogress_done = $this->db->where('jenis_saldo', 'JKT')
                             ->where('status_cab', 'In progress')
                             ->where('rembesment', 'Open')
                             ->where('status_bpkk', 'Done')
                             ->count_all_results('tb_bpkk_cab');
 
-                        // 3. Kondisi tombol
                         if ($total_inprogress > 0 && $total_inprogress == $total_inprogress_done) {
                             $hasRembesOpenDone = true;
                         }
@@ -271,48 +259,12 @@
                                                 ? 'Rp. ' . number_format($data['total_kredit_cab'], 0, ',', '.')
                                                 : '-'; ?></td>
 
-                                    <?php
-                                        // $sisa_saldo = '-';
-                                        // if ($data['status_cab'] != 'Rejected') {
-                                        //     // 1. Ambil saldo awal dari tb_saldo
-                                        //     $this->db->select('jenis_saldo, saldo_debet');
-                                        //     $this->db->from('tb_saldo');
-                                        //     $this->db->where('jenis_saldo', $data['jenis_saldo']);
-                                        //     $row_saldo = $this->db->get()->row();
-
-                                        //     $saldo_awal = $row_saldo->saldo_debet ?? 0;
-
-                                        //     // 2. Ambil semua mutasi by jenis_saldo (pakai models)
-                                        //     $all_mutasi = $this->M_bpkk->getAllMutasiByCabang($data['jenis_saldo']);
-
-                                        //     $saldo_berjalan = $saldo_awal;
-                                        //     $sisa_saldo = '-';
-
-                                        //     // 3. Loop transaksi
-                                        //     foreach ($all_mutasi as $row) {
-                                        //         // Hanya hitung transaksi Kredit dengan status_cab NULL atau kosong
-                                        //         if ($row['jenis_transaksi'] === 'Kredit' && (empty($row['status_cab']))) {
-                                        //             $saldo_berjalan -= $row['total_kredit_cab'] ?? 0;
-                                        //         }
-
-                                        //         // Saat ketemu id_mutasi aktif, catat sisa saldo
-                                        //         if ($row['id_mutasi'] == $data['id_mutasi']) {
-                                        //             $sisa_saldo = ($row['jenis_transaksi'] === 'Kredit')
-                                        //                 ? 'Rp. ' . number_format($saldo_berjalan, 0, ',', '.')
-                                        //                 : '-';
-                                        //             break;
-                                        //         }
-                                        //     }
-                                        // }
-                                        ?>
                                     <td>
                                         <?= $data['jenis_transaksi'] == 'Debet'
                                                 ? '-'
                                                 : number_format($data['sisa_saldo_pending'], 0, ',', '.') ?>
                                     </td>
-                                    <!-- <td><?= $sisa_saldo; ?></td> -->
                                     <td class="text-center">
-                                        <!-- Baris pertama: 3 tombol -->
                                         <div class="d-flex justify-content-center gap-1 mb-1">
                                             <!-- Lihat -->
                                             <a href="#" class="btn btn-outline-info btn-sm"
@@ -381,11 +333,6 @@
                                                 id="optionsRadios1" value="BS GROUP" required>
                                             <label class="form-check-label" for="optionsRadios1">BS GROUP</label>
                                         </div>
-                                        <!-- <div class="form-check radio radio-primary">
-                                            <input class="form-check-input" type="radio" name="optionsRadios"
-                                                id="optionsRadios2" value="BDP">
-                                            <label class="form-check-label" for="optionsRadios2">BDP</label>
-                                        </div> -->
                                     </div>
                                     <div style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
                                         <div id="bs_group_form" class="form-group"
@@ -443,8 +390,6 @@
                                         data-address_user="jakarta">
                                     <input type="hidden" id="totalDebetRaw" name="total_debet">
                                     <input type="hidden" id="address_cab" name="address_cab" value="JKT">
-
-                                    <!-- Notifikasi jika saldo tidak cukup -->
                                     <div id="saldoAlert" class="mt-2 text-danger" style="display:none;">Saldo petty cash
                                         tidak mencukupi.</div>
                                 </div>
@@ -561,7 +506,6 @@ document.addEventListener('DOMContentLoaded', () => {
             jenisSaldo: $(this).data('jenissaldo') || ''
         };
 
-        // Tentukan No Transaksi & Total berdasarkan jenis transaksi
         let noTransaksi = '-';
         let totalTransaksi = '-';
 
@@ -584,7 +528,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 .text('TRANSAKSI TIDAK DIKETAHUI');
         }
 
-        // Isi field di tabel modal
         const infoFields = {
             'NO TRANSAKSI': noTransaksi,
             'TANGGAL': data.tanggal,
@@ -599,7 +542,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Tampilkan dokumen
         const preview = $('#pratinjauGambar2');
         if (!data.file.trim()) {
             preview.html(
@@ -619,7 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === Format Rupiah Input ===
     window.formatRupiah = el => {
-        let angka = el.value.replace(/[^0-9]/g, ''); // hanya angka
+        let angka = el.value.replace(/[^0-9]/g, '');
         let hasil = '';
         let sisa = angka.length % 3;
         hasil = angka.substr(0, sisa);
@@ -633,7 +575,6 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         if (rawInput) rawInput.value = angka;
 
-        // Jalankan pengecekan saldo langsung tiap input
         checkSaldoCukup();
     };
 
@@ -645,7 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const saldo = parseInt(totalDebet.getAttribute('data-saldo') || 0);
 
-        if (isNaN(rawValue)) return; // kalau belum diisi, lewati saja
+        if (isNaN(rawValue)) return;
 
         if (rawValue > saldo) {
             saldoAlert.style.display = 'block';
@@ -666,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', function(e) {
         const checkboxes = form.querySelectorAll('input[name="check-box[]"]:checked');
         if (checkboxes.length === 0) {
-            e.preventDefault(); // stop submit
+            e.preventDefault();
             Swal.fire({
                 icon: 'warning',
                 title: 'Harus Pilih Sub Unit!',
@@ -684,7 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.addEventListener('change', function() {
         const file = this.files[0];
         if (file) {
-            const maxSize = 1 * 1024 * 1024; // 1 MB
+            const maxSize = 1 * 1024 * 1024;
             const fileName = file.name.toLowerCase();
             const isPDF = fileName.endsWith('.pdf');
 
@@ -695,7 +636,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'File harus dalam format PDF.',
                     confirmButtonColor: "#c06240"
                 });
-                this.value = ''; // reset input
+                this.value = '';
                 submitBtn.disabled = true;
                 return;
             }
@@ -707,7 +648,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'Maksimal ukuran file adalah 1 MB.',
                     confirmButtonColor: "#c06240"
                 });
-                this.value = ''; // reset input
+                this.value = '';
                 submitBtn.disabled = true;
             } else {
                 submitBtn.disabled = false;

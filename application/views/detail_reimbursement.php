@@ -25,7 +25,7 @@
             <div class="col-5 d-none d-xl-block"></div>
             <div class="col-xl-3 col-sm-5 box-col-4">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="<?= site_url('dashboard') ?>">
+                    <li class="breadcrumb-item"><a href="">
                             <svg class="stroke-icon">
                                 <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-home"></use>
                             </svg></a>
@@ -48,13 +48,6 @@
                     <div class="header-top">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h4 class="m-0">REIMBURSEMENT</h4>
-                            <!-- <a class="btn btn-primary btn-sm ms-3 d-flex align-items-center gap-1 <?= ($saldo_pettycash > 0) ? 'disabled' : '' ?>"
-                                title="<?= ($saldo_pettycash > 0) ? 'Tidak bisa tambah saldo karena masih ada saldo' : 'Tambah Saldo Awal' ?>"
-                                data-bs-toggle="modal" data-bs-target="#tambahsaldopettycash"
-                                data-jenis="<?= $jenis_saldo ?>"
-                                style="<?= ($saldo_pettycash > 0) ? 'pointer-events: none; opacity: 0.5;' : '' ?>">
-                                <i data-feather="plus" style="width:14px; height:14px;"></i> Tambah Saldo
-                            </a> -->
                         </div>
                         <div class="setting-menu">
                             <a class="btn btn-secondary btn-sm d-flex align-items-center gap-1"
@@ -165,9 +158,7 @@
                                         <?php endif; ?>
                                     </td>
                                     <td class="text-center">
-                                        <!-- Lihat -->
                                         <div class="d-flex justify-content-center gap-1 mb-1">
-                                            <!-- view data -->
                                             <a href="#" class="btn btn-outline-info btn-sm view-dokumen"
                                                 style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
                                                 title="Lihat" data-bs-toggle="modal"
@@ -260,31 +251,25 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    // Ketika tombol View Dokumen BPKK Rembesment diklik
     $(document).on('click', '.view-dokumen', function() {
-        var fileName = $(this).data('upload_file_cab'); // nama dokumen
-        var jenisSaldo = $(this).data('jenis_saldo'); // jenis saldo
+        var fileName = $(this).data('upload_file_cab');
+        var jenisSaldo = $(this).data('jenis_saldo');
 
-        // Elemen tempat preview
         var previewContainer = $('#pratinjauGambardok5');
         previewContainer.empty();
 
-        // Jika file kosong/null
         if (!fileName || fileName === 'null' || fileName.trim() === '') {
             previewContainer.html(
                 '<p class="text-center text-danger mt-3">Dokumen tidak tersedia.</p>');
             return;
         }
 
-        // Path file
         var fileUrl = "<?= base_url('uploads/bpkk/'); ?>" + jenisSaldo + "/" + fileName;
 
-        // Cek apakah file ada
         $.ajax({
             url: fileUrl,
             type: 'HEAD',
             success: function() {
-                // Tampilkan pratinjau sesuai ekstensi
                 var ext = fileName.split('.').pop().toLowerCase();
                 if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
                     previewContainer.html(
@@ -312,24 +297,20 @@ $(document).ready(function() {
 
 $(document).on('click', '.view-dokumen-pendukung', function() {
 
-    var fileName = $(this).data('file'); // nama dokumen pendukung
-    var idRemb = $(this).data('idrembes'); // ambil id petty cash
+    var fileName = $(this).data('file');
+    var idRemb = $(this).data('idrembes');
     var previewContainer = $('#pratinjauGambardok3');
     previewContainer.empty();
 
-    // SET ID di input hidden
     $('#idremb').val(idRemb);
 
-    // Jika tidak ada file
     if (!fileName || fileName === 'null' || fileName.trim() === '') {
         previewContainer.html('<p class="text-center text-danger mt-3">Dokumen tidak tersedia.</p>');
         return;
     }
 
-    // Lokasi file
     var fileUrl = "<?= base_url('uploads/ppt/'); ?>" + fileName;
 
-    // Cek apakah file ada
     $.ajax({
         url: fileUrl,
         type: 'HEAD',

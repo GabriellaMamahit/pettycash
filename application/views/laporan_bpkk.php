@@ -72,7 +72,7 @@
             <div class="col-5 d-none d-xl-block"></div>
             <div class="col-xl-3 col-sm-5 box-col-4">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">
+                    <li class="breadcrumb-item"><a href="">
                             <svg class="stroke-icon">
                                 <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-home"></use>
                             </svg></a>
@@ -628,7 +628,6 @@ $(document).on('click', '.edit-databpkk', function() {
             </p>`);
         }
 
-        // Panggil fungsi cek saldo, pastikan sudah didefinisikan sebelumnya
         if (typeof checkSaldoCukup === 'function') {
             checkSaldoCukup();
         } else {
@@ -639,7 +638,7 @@ $(document).on('click', '.edit-databpkk', function() {
 
 
 function checkSaldoCukup() {
-    const input = document.getElementById('edit-totalDebet'); // jangan dihapus
+    const input = document.getElementById('edit-totalDebet');
     const raw = parseInt(document.getElementById('edit-totalDebetRaw').value || 0);
     const old = parseInt(document.getElementById('edit-totalDebetOld').value || 0);
     const saldo = parseInt(input.getAttribute('data-saldo') || 0);
@@ -647,8 +646,8 @@ function checkSaldoCukup() {
     const submitBtn = document.getElementById('submitBtn');
 
     if (raw > old) {
-        const kebutuhan = raw - old; // total tambahan permintaan
-        const kekurangan = kebutuhan - saldo; // sisa kekurangan setelah dipotong saldo
+        const kebutuhan = raw - old;
+        const kekurangan = kebutuhan - saldo;
 
         if (kekurangan > 0) {
             alertBox.style.display = 'block';
@@ -664,7 +663,6 @@ function checkSaldoCukup() {
             submitBtn.disabled = false;
         }
     } else {
-        // Jika tidak ada tambahan (raw <= old) aman
         alertBox.style.display = 'none';
         alertBox.innerHTML = '';
         submitBtn.disabled = false;
@@ -721,16 +719,14 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // ✅ Event untuk checkbox "check all"
     checkAll.addEventListener("change", function() {
-        const checkItems = document.querySelectorAll(".checkItem"); // ambil ulang setiap kali
+        const checkItems = document.querySelectorAll(".checkItem");
         checkItems.forEach(item => {
             item.checked = checkAll.checked;
         });
         updateButtonState();
     });
 
-    // ✅ Delegasi event untuk setiap checkbox item
     document.addEventListener("change", function(e) {
         if (e.target.classList.contains("checkItem")) {
             const allItems = document.querySelectorAll(".checkItem");
@@ -740,7 +736,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // ✅ Klik tombol approve semua
     btnApprove.addEventListener("click", function(e) {
         e.preventDefault();
 
@@ -778,10 +773,6 @@ document.addEventListener("DOMContentLoaded", function() {
                             id_bpkk: item.value
                         },
                         dataType: "json",
-                        // success: function(res) {
-                        //     console.log(
-                        //         `BPKK ${item.value} -> ${res.status}`);
-                        // },
                         error: function() {
                             console.error(`BPKK ${item.value} -> ERROR`);
                         },
@@ -804,7 +795,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Set awal (disable tombol)
     disableApproveButton();
 });
 
@@ -826,7 +816,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'File harus dalam format PDF.',
                     confirmButtonColor: '#c06240'
                 });
-                this.value = ''; // reset input
+                this.value = '';
                 submitBtn.disabled = true;
                 return;
             }
@@ -838,7 +828,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'Maksimal ukuran file adalah 1 MB.',
                     confirmButtonColor: '#c06240'
                 });
-                this.value = ''; // reset input
+                this.value = '';
                 submitBtn.disabled = true;
             } else {
                 submitBtn.disabled = false;

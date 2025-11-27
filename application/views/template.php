@@ -41,7 +41,6 @@
     <!-- Bootstrap css-->
     <link rel="stylesheet" type="text/css" href="<?= base_url() ?>assets/css/vendors/bootstrap.css">
     <!-- Sweetalert -->
-    <!-- <link rel="stylesheet" href="<?= base_url() ?>assets/sweetalert2/sweetalert2.min.css" type="text/css"> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <!-- App css-->
@@ -98,7 +97,9 @@
                                 </svg>
                             </div>
                             <div class="form-group search-form">
-                                <input type="text" placeholder="Search here...">
+                                <label for="searchInput" class="visually-hidden">Search</label>
+                                <input type="text" id="searchInput" name="search" placeholder="Search here..."
+                                    class="form-control">
                             </div>
                         </li>
                         <li class="onhover-dropdown">
@@ -171,12 +172,12 @@
                 </div>
                 <script class="result-template" type="text/x-handlebars-template">
                     <div class="ProfileCard u-cf">              
-            <div class="ProfileCard-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-airplay m-0"><path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path><polygon points="12 15 17 21 7 21 12 15"></polygon></svg></div>
-            <div class="ProfileCard-details">
-            <div class="ProfileCard-realName">{{name}}</div>
-            </div>
-            </div>
-          </script>
+                    <div class="ProfileCard-avatar"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-airplay m-0"><path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"></path><polygon points="12 15 17 21 7 21 12 15"></polygon></svg></div>
+                    <div class="ProfileCard-details">
+                    <div class="ProfileCard-realName">{{name}}</div>
+                    </div>
+                    </div>
+                </script>
                 <script class="empty-template" type="text/x-handlebars-template">
                     <div class="EmptyMessage">Your search turned up 0 results. This most likely means the backend is down, yikes!</div>
                 </script>
@@ -432,9 +433,6 @@
                         </div>
                         <div class="col-md-6 p-0">
                             <p class="heart mb-0">Bias Mandiri Group
-                                <!-- <svg class="footer-icon">
-                                    <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#heart"></use>
-                                </svg> -->
                             </p>
                         </div>
                     </div>
@@ -456,43 +454,17 @@
     <script src="<?= base_url() ?>assets/js/config.js"></script>
     <!-- Plugins JS start-->
     <script src="<?= base_url() ?>assets/js/sidebar-menu.js"></script>
-    <!-- <script src="<?= base_url() ?>assets/js/sidebar-pin.js"></script> -->
-    <!-- <script src="<?= base_url() ?>assets/js/slick/slick.min.js"></script>
-    <script src="<?= base_url() ?>assets/js/slick/slick.js"></script>
-    <script src="<?= base_url() ?>assets/js/header-slick.js"></script> -->
-    <!-- <script src="<?= base_url() ?>assets/js/chart/morris-chart/raphael.js"></script>
-    <script src="<?= base_url() ?>assets/js/chart/morris-chart/morris.js"> </script>
-    <script src="<?= base_url() ?>assets/js/chart/morris-chart/prettify.min.js"></script> -->
-    <script src="<?= base_url() ?>assets/js/chart/apex-chart/apex-chart.js"></script>
-    <!-- <script src="<?= base_url() ?>assets/js/chart/apex-chart/stock-prices.js"></script>
-    <script src="<?= base_url() ?>assets/js/chart/apex-chart/moment.min.js"></script>
-    <script src="<?= base_url() ?>assets/js/notify/bootstrap-notify.min.js"></script> -->
-    <!-- <script src="<?= base_url() ?>assets/js/dashboard/default.js"></script> -->
-    <!-- <script src="<?= base_url() ?>assets/js/notify/index.js"></script> -->
+    <!-- <script src="<?= base_url() ?>assets/js/chart/apex-chart/apex-chart.js"></script> -->
     <script src="<?= base_url() ?>assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
     <script src="<?= base_url() ?>assets/js/datatable/datatables/datatable.custom.js"></script>
-    <!-- <script src="<?= base_url() ?>assets/js/datatable/datatables/datatable.custom1.js"></script>
-    <script src="<?= base_url() ?>assets/js/owlcarousel/owl.carousel.js"></script>
-    <script src="<?= base_url() ?>assets/js/owlcarousel/owl-custom.js"></script>
-    <script src="<?= base_url() ?>assets/js/typeahead/handlebars.js"></script>
-    <script src="<?= base_url() ?>assets/js/typeahead/typeahead.bundle.js"></script>
-    <script src="<?= base_url() ?>assets/js/typeahead/typeahead.custom.js"></script>
-    <script src="<?= base_url() ?>assets/js/typeahead-search/handlebars.js"></script>
-    <script src="<?= base_url() ?>assets/js/typeahead-search/typeahead-custom.js"></script> -->
-    <!-- <script src="<?= base_url() ?>assets/js/chart/chartjs/chart.min.js"></script>
-    <script src="<?= base_url() ?>assets/js/chart/chartjs/chart.custom.js"></script> -->
     <script src="<?= base_url() ?>assets/js/flat-pickr/flatpickr.js"></script>
     <script src="<?= base_url() ?>assets/js/flat-pickr/custom-flatpickr.js"></script>
-    <!-- <script src="<?= base_url() ?>assets/js/height-equal.js"></script> -->
-    <!-- Plugins JS Ends-->
     <!-- Theme js-->
     <script src="<?= base_url() ?>assets/js/script.js"></script>
     <!-- Sweetalert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-
-    <!-- <script src="<?= base_url() ?>assets/js/theme-customizer/customizer.js"></script> -->
     <!-- Plugin used-->
     <script>
     $(function() {
@@ -559,9 +531,8 @@
             .then(data => {
                 let html = "";
                 const notifBadge = document.getElementById("notif-count");
-                const unreadCount = data.length; // sekarang langsung jumlah total unread
+                const unreadCount = data.length;
 
-                // Update badge merah
                 if (unreadCount > 0) {
                     notifBadge.innerText = unreadCount;
                     notifBadge.style.display = "inline-block";
@@ -569,7 +540,6 @@
                     notifBadge.style.display = "none";
                 }
 
-                // Tampilkan daftar notifikasi
                 if (data.length > 0) {
                     data.forEach(row => {
                         const warna = row.jenis_notifikasi === 'Permintaan' ? 'text-warning' :
@@ -603,19 +573,15 @@
             .catch(error => console.error("Error loading notifikasi:", error));
     }
 
-    // load awal
     loadNotifikasi();
-    // auto refresh tiap 1 menit
     setInterval(loadNotifikasi, 60000);
 
-    // klik satu notifikasi → tandai dibaca
     $(document).on('click', '.notif-item', function() {
         const id = $(this).data('id');
         fetch("<?= site_url('notifikasi/mark_as_read/') ?>" + id)
             .then(() => loadNotifikasi());
     });
 
-    // klik “tandai semua dibaca”
     $(document).on('click', '#mark-all', function(e) {
         e.preventDefault();
         fetch("<?= site_url('notifikasi/mark_as_read_all') ?>")
@@ -640,7 +606,6 @@
         }, function(start, end) {
             $('#reportrange span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'));
 
-            // reload page with date query
             let awal = start.format('YYYY-MM-DD');
             let akhir = end.format('YYYY-MM-DD');
             window.location = "<?= site_url('Bukti_pengeluaran_kas_kecil/riwayat_bpkk'); ?>?awal=" +
@@ -666,7 +631,6 @@
         }, function(start, end) {
             $('#reportrange1 span').html(start.format('DD/MM/YYYY') + ' - ' + end.format('DD/MM/YYYY'));
 
-            // reload page with date query
             let awal = start.format('YYYY-MM-DD');
             let akhir = end.format('YYYY-MM-DD');
             window.location = "<?= site_url('Laporan_cabang/riwayat_mutasi'); ?>?awal=" +

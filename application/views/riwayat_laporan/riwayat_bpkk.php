@@ -1,7 +1,6 @@
 <style>
 #btnGroupDrop1::after {
     display: none;
-    /* Hilangkan panah default */
 }
 </style>
 
@@ -256,7 +255,6 @@ $(function() {
             start.format('YYYY-MM-DD') + "&akhir=" + end.format('YYYY-MM-DD');
     });
 
-    // ✅ tampilkan tanggal saat halaman pertama kali load
     <?php if (!empty($awal) && !empty($akhir)): ?>
     setRangeDisplay(moment("<?= $awal ?>", "YYYY-MM-DD"), moment("<?= $akhir ?>", "YYYY-MM-DD"));
     <?php else: ?>

@@ -3,7 +3,6 @@
     padding-bottom: 20px !important;
 }
 
-/* Wrapper untuk checkbox */
 .custom-checkbox {
     position: relative;
     display: inline-block;
@@ -13,7 +12,6 @@
 
 .custom-checkbox input[type="checkbox"] {
     opacity: 0;
-    /* Sembunyikan bawaan */
     position: absolute;
     cursor: pointer;
     width: 0;
@@ -89,7 +87,7 @@
         <div class="w-100 mb-3">
             <?php
             $status = $detail_permintaansaldo->status_permintaan;
-            $badgeClass = 'bg-warning text-dark'; // default
+            $badgeClass = 'bg-warning text-dark';
 
             if (strtolower($status) === 'done') {
                 $badgeClass = 'bg-success text-white';
@@ -108,7 +106,6 @@
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h4 class="m-0">PETTY CASH</h4>
                             <?php
-                            // Default: semua dianggap approved
                             $semuaApproved = true;
                             foreach ($rowbpkkrembes as $d) {
                                 if ($d['status_cab'] !== 'Approved') {
@@ -210,7 +207,6 @@
                                         </label>
                                     </th> -->
                                     <th class="text-center">No.</th>
-                                    <!-- <th>Tanggal</th> -->
                                     <th>Keterangan </th>
                                     <th>Total Pengeluaran</th>
                                     <th>Status</th>
@@ -232,7 +228,6 @@
                                             <?php endif; ?>
                                         </td> -->
                                     <td class="text-center"><?= $no++ ?>.</td>
-                                    <!-- <td><?= date('d F Y', strtotime($data['tgl_kredit_cab'])); ?></td> -->
                                     <td>
                                         <div class="user-data">
                                             <div><a href="javascript:void(0)" class="text-dark text-decoration-none">
@@ -262,7 +257,6 @@
 
                                     </td>
                                     <td class="text-center">
-                                        <!-- Lihat -->
                                         <div class="d-flex justify-content-center gap-1 mb-1">
                                             <!-- Lihat -->
                                             <a href="#" class="btn btn-outline-info btn-sm viewbpkkrembes"
@@ -326,7 +320,6 @@
                     <br>
                     <div class="col-md-12">
                         <div class="modal-footer">
-                            <!-- <button type="submit" class="btn btn-primary">Simpan</button> -->
                             <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Tutup</button>
                         </div>
                     </div>
@@ -519,7 +512,6 @@ $(document).on('click', '.viewbpkkrembes', function() {
     const fileBpkk = $(this).data('filebpkk');
     const jenisSaldo = $(this).data('jenis_saldo');
 
-    // Isi info permintaan saldo
     const modal = $('#viewbpkkrembes');
     modal.find('td:contains("NO BPKK")').next().text(': ' + noBpkk);
     modal.find('td:contains("TANGGAL")').next().text(': ' + tanggalBpkk);
@@ -788,8 +780,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-
-    // Set awal (disable tombol)
     disableApproveButton();
 });
 
@@ -800,7 +790,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.addEventListener('change', function() {
         const file = this.files[0];
         if (file) {
-            const maxSize = 1 * 1024 * 1024; // 1 MB
+            const maxSize = 1 * 1024 * 1024;
             const fileName = file.name.toLowerCase();
             const isPDF = fileName.endsWith('.pdf');
 
@@ -811,7 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'File harus dalam format PDF.',
                     confirmButtonColor: '#c06240'
                 });
-                this.value = ''; // reset input
+                this.value = '';
                 submitBtn.disabled = true;
                 return;
             }
@@ -823,7 +813,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     text: 'Maksimal ukuran file adalah 1 MB.',
                     confirmButtonColor: '#c06240'
                 });
-                this.value = ''; // reset input
+                this.value = '';
                 submitBtn.disabled = true;
             } else {
                 submitBtn.disabled = false;
@@ -837,12 +827,9 @@ $(document).ready(function() {
         let $button = $(this);
         let currentRow = $(this).closest('tr');
         let prevRow = currentRow.prev('tr');
-
-        // Kalau bukan baris pertama, periksa status baris sebelumnya
         if (index > 0 && prevRow.length) {
             let prevStatus = prevRow.find('td:nth-child(6) .badge').text().trim();
 
-            // Kalau sebelumnya belum "Approved", disable tombol
             if (prevStatus !== 'Approved') {
                 $button.addClass('disabled')
                     .css({
@@ -857,24 +844,20 @@ $(document).ready(function() {
 
 $(document).on('click', '.view-dokumen-pendukung', function() {
 
-    var fileName = $(this).data('file'); // nama dokumen pendukung
-    var idRemb = $(this).data('idrembes'); // ambil id petty cash
+    var fileName = $(this).data('file');
+    var idRemb = $(this).data('idrembes');
     var previewContainer = $('#pratinjauGambardok3');
     previewContainer.empty();
 
-    // SET ID di input hidden
     $('#idremb').val(idRemb);
 
-    // Jika tidak ada file
     if (!fileName || fileName === 'null' || fileName.trim() === '') {
         previewContainer.html('<p class="text-center text-danger mt-3">Dokumen tidak tersedia.</p>');
         return;
     }
 
-    // Lokasi file
     var fileUrl = "<?= base_url('uploads/ppt/'); ?>" + fileName;
 
-    // Cek apakah file ada
     $.ajax({
         url: fileUrl,
         type: 'HEAD',

@@ -8,13 +8,12 @@
             <div class="col-5 d-none d-xl-block"></div>
             <div class="col-xl-3 col-sm-5 box-col-4">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">
+                    <li class="breadcrumb-item"><a href="">
                             <svg class="stroke-icon">
                                 <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-home"></use>
                             </svg></a>
                     </li>
                     <li class="breadcrumb-item">General</li>
-                    <!-- <li class="breadcrumb-item">Riwayat BPKK</li> -->
                     <li class="breadcrumb-item active">Laporan Cabang</li>
                 </ol>
             </div>
@@ -30,19 +29,6 @@
                 <div class="card-header card-no-border">
                     <div class="header-top">
                         <h4>Daftar Data Transaksi - <?= date('F Y'); ?></h4>
-                        <!-- <div class="dropdown icon-dropdown setting-menu">
-                            <button class="btn dropdown-toggle" id="userdropdown3" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <svg>
-                                    <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#setting"></use>
-                                </svg>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userdropdown3">
-                                <a class="dropdown-item" href="#">Weekly</a>
-                                <a class="dropdown-item" href="#">Monthly</a>
-                                <a class="dropdown-item" href="#">Yearly</a>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
                 <div class="px-3 d-flex justify-content-end mb-2">
@@ -124,11 +110,6 @@
                                             </a>
                                         </div>
                                         <div class="d-flex justify-content-center gap-1">
-                                            <!-- <a href="#" class="btn btn-outline-primary btn-sm"
-                                                style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                title="Print">
-                                                <i data-feather="printer" style="width:12px; height:12px;"></i>
-                                            </a> -->
                                         </div>
                                     </td>
                                 </tr>
@@ -208,7 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitBtn = document.getElementById('submitBtn');
     const addressCab = document.getElementById('address_cab');
 
-    // === Toggle Form (BS Group / BDP) ===
     document.getElementById('optionsRadios1')?.addEventListener('change', () => {
         bsGroupForm.style.display = 'block';
         bdpForm.style.display = 'none';
@@ -218,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
         bdpForm.style.display = 'block';
     });
 
-    // === Modal View Data BPKK ===
     $(document).on('click', '[data-bs-target="#viewdatatransaksi"]', function() {
         const modal = $('#viewdatatransaksi');
         const badge = modal.find('#jenisTransaksiBadge');
@@ -235,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
             jenisSaldo: $(this).data('jenissaldo') || ''
         };
 
-        // Tentukan No Transaksi & Total berdasarkan jenis transaksi
         let noTransaksi = '-';
         let totalTransaksi = '-';
 
@@ -258,7 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 .text('TRANSAKSI TIDAK DIKETAHUI');
         }
 
-        // Isi field di tabel modal
         const infoFields = {
             'NO TRANSAKSI': noTransaksi,
             'TANGGAL': data.tanggal,
@@ -273,7 +250,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Tampilkan dokumen
         const preview = $('#pratinjauGambar2');
         if (!data.file.trim()) {
             preview.html(
@@ -291,7 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     $('#viewdatatransaksi').on('hidden.bs.modal', () => $('#pratinjauGambar2').empty());
 
-    // === Format Rupiah Input ===
     window.formatRupiah = el => {
         let num = el.value.replace(/[^,\d]/g, '');
         const parts = num.split(',');
@@ -317,7 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'Rp. ' + (parts[1] ? rupiah + ',' + parts[1] : rupiah);
     };
 
-    // Helper untuk update text tanpa trigger reflow berulang
     function updateTextContent(el, text) {
         window.requestAnimationFrame(() => {
             el.textContent = text;
@@ -353,10 +327,8 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.disabled = false;
         }
     }
-    // **Tambahkan ini supaya bisa dipanggil dari HTML (oninput)**
     window.checkSaldoCukup = checkSaldoCukup;
 
-    // Listener jenis_bpkk
     $(document).on('change', 'input[name="jenis_bpkk"]', () => {
         const selected = document.querySelector('input[name="jenis_bpkk"]:checked');
         totalDebet.disabled = !selected;
@@ -364,7 +336,6 @@ document.addEventListener('DOMContentLoaded', () => {
         checkSaldoCukup();
     });
 
-    // === Tambahkan Class Wrapper ===
     const wrapper = document.querySelector('.summary-wrapper');
     if (wrapper) {
         const count = wrapper.querySelectorAll('.card-inner').length;
@@ -380,7 +351,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (classMap[count]) wrapper.classList.add(classMap[count]);
     }
 
-    // Hilangkan warning Chrome (passive listener)
     window.addEventListener('wheel', () => {}, {
         passive: true
     });

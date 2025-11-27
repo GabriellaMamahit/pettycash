@@ -52,18 +52,6 @@ class M_pettycash extends CI_Model
         return $this->db->update('tb_permintaan_saldo', $data);
     }
 
-
-
-    // public function getlistbpkkwaiting()
-    // {
-    //     $this->db->select('*');
-    //     $this->db->from('tb_bpkk_cab');
-    //     $this->db->where_in('status_cab', ['In process', 'Rejected']);
-    //     $this->db->order_by('id_bpkk_cab', 'DESC');
-    //     $query = $this->db->get();
-    //     return $query->result_array();
-    // }
-
     public function getlistpermintaansaldo($level_user, $address_user)
     {
         $this->db->select('tb_permintaan_saldo.*, tb_sisasaldo_rembes.sisasaldo_remb, tb_dokumen_remb.nama_dokumenremb,
@@ -119,14 +107,6 @@ class M_pettycash extends CI_Model
         return $data6;
     }
 
-
-    // public function update_no_pc_saldo_bpkk($jenis_saldo, $no_pc_saldo)
-    // {
-    //     $this->db->where('jenis_saldo', $jenis_saldo);
-    //     $this->db->where_in('status_cab', ['In progress', 'Rejected']);
-    //     $this->db->update('tb_bpkk_cab', ['no_pc_saldo' => $no_pc_saldo]);
-    // }
-
     public function updatebpkkcab($jenis_saldo, $data3)
     {
         $this->db->where('jenis_saldo', $jenis_saldo);
@@ -158,10 +138,8 @@ class M_pettycash extends CI_Model
         return $this->db->get()->result_array();
     }
 
-    // page data transaksi
     public function getdatadebet($address_user, $level)
     {
-        // Menentukan cabang/jenis_saldo mana saja yang boleh diakses user
         $akses = [];
         if (in_array($level, ['super_admin', 'direktur_finance', 'development', 'finance_bmg'])) {
             $akses = ['JKT', 'BPP', 'TBK', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
@@ -200,13 +178,8 @@ class M_pettycash extends CI_Model
 
     public function getMutasiCabang()
     {
-        // $bulan = date('m');
-        // $tahun = date('Y');
         $this->db->select('*');
         $this->db->from('tb_data_mutasi');
-        // Filter bulan dan tahun berjalan
-        // $this->db->where('MONTH(tanggal)', $bulan);
-        // $this->db->where('YEAR(tanggal)', $tahun);
         $this->db->where('status_mutasi', 'Close');
         $this->db->order_by('tanggal', 'ASC');
         $data = $this->db->get();
@@ -215,10 +188,8 @@ class M_pettycash extends CI_Model
 
     public function get_rekap_pengeluaran($no_pettycash)
     {
-        // Ambil data header dari tb_permintaan_saldo
         $header = $this->db->get_where('tb_permintaan_saldo', ['no_pettycash' => $no_pettycash])->row_array();
 
-        // Ambil detail dari tb_bpkk_cab berdasarkan no_pc_saldo
         $this->db->where('no_pc_saldo', $no_pettycash);
         $this->db->order_by('tgl_kredit_cab', 'ASC');
         $detail = $this->db->get('tb_bpkk_cab')->result_array();
@@ -227,17 +198,14 @@ class M_pettycash extends CI_Model
             return [];
         }
 
-        // Hitung total pengeluaran
         $total_pengeluaran = 0;
         foreach ($detail as $d) {
             $total_pengeluaran += (float)$d['total_kredit_cab'];
         }
 
-        // Sisa saldo akhir dari saldo awal - total pengeluaran
         $saldo_awal = (float)$header['saldo_pettycash'];
         $sisa_saldo = $saldo_awal - $total_pengeluaran;
 
-        // Format detail untuk tampilan rapi
         $formatted_detail = array_map(function ($d) {
             return [
                 'tanggal_bpkk' => $d['tgl_kredit_cab'],
@@ -262,38 +230,6 @@ class M_pettycash extends CI_Model
 
     public function filterMutasi($awal, $akhir)
     {
-        // $level = $this->fungsi->user_login()->level;
-        // $address_user = strtolower($this->fungsi->user_login()->address_user);
-
-        // // Tentukan hak akses
-        // $akses = [];
-        // if (in_array($level, ['super_admin', 'direktur_finance', 'development', 'finance_bmg'])) {
-        //     $akses = ['JKT', 'BPP', 'TBK', 'LU', 'PA_BBM', 'PA_SB', 'PA_RTK']; // Semua cabang dan saldo
-        // } elseif ($level == 'finance_bdp') {
-        //     $akses = ['LU', 'PA_BBM', 'PA_SB', 'PA_RTK'];
-        // } elseif ($level == 'finance_bsgroup') {
-        //     $akses = ['JKT', 'BPP', 'TBK'];
-        // } elseif ($level == 'user') {
-        //     switch ($address_user) {
-        //         case 'jakarta':
-        //             $akses = ['JKT'];
-        //             break;
-        //         case 'balikpapan':
-        //             $akses = ['BPP'];
-        //             break;
-        //         case 'karimun':
-        //             $akses = ['TBK'];
-        //             break;
-        //         case 'galang':
-        //             $akses = ['LU'];
-        //             break;
-        //         case 'sekupang':
-        //             $akses = ['PA_BBM', 'PA_SB', 'PA_RTK'];
-        //             break;
-        //     }
-        // }
-
-        // Query
         return $this->db
             ->from('tb_data_mutasi')
             ->where("DATE(tanggal) >=", $awal)
@@ -359,6 +295,6 @@ class M_pettycash extends CI_Model
         $this->db->where('jenis_saldo', $jenis_saldo);
         $query = $this->db->get();
 
-        return $query->row(); // <-- return objek saldo
+        return $query->row();
     }
 }

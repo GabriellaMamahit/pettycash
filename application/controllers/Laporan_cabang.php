@@ -35,16 +35,13 @@ class Laporan_cabang extends CI_Controller
         $awal  = $this->input->get('awal');
         $akhir = $this->input->get('akhir');
 
-        // Cek apakah format tanggal valid (YYYY-MM-DD)
         if (
             !empty($awal) && !empty($akhir) &&
             preg_match('/^\d{4}-\d{2}-\d{2}$/', $awal) &&
             preg_match('/^\d{4}-\d{2}-\d{2}$/', $akhir)
         ) {
-            // Ambil data berdasarkan filter
             $rowriwayatmutasi = $this->M_pettycash->filterMutasi($awal, $akhir);
         } else {
-            // Jika tidak ada filter → tampilkan semua data
             $rowriwayatmutasi = $this->db->get('tb_data_mutasi')->result_array();
         }
 
@@ -101,7 +98,6 @@ class Laporan_cabang extends CI_Controller
                 ? 'Pemasukan'
                 : (($row['jenis_transaksi'] === 'Kredit') ? 'Pengeluaran' : '-');
 
-            // ✅ Pilih nomor transaksi
             $no_transaksi = ($jenis_transaksi === 'Pemasukan')
                 ? ($row['no_pettycash'] ?? '-')
                 : ($row['no_bpkk_cab'] ?? '-');
@@ -111,7 +107,6 @@ class Laporan_cabang extends CI_Controller
             $pemasukan   = isset($row['total_debet_cab']) ? (float)$row['total_debet_cab'] : null;
             $pengeluaran = isset($row['total_kredit_cab']) ? (float)$row['total_kredit_cab'] : null;
 
-            // ✅ Saldo: Debet = "-", Kredit tampil normal
             $saldo = ($jenis_transaksi === 'Debet')
                 ? '-'
                 : (isset($row['sisa_saldo']) ? (float)$row['sisa_saldo'] : null);
@@ -161,7 +156,6 @@ class Laporan_cabang extends CI_Controller
             $data_mutasi = $this->db->get('tb_data_mutasi')->result_array();
         }
 
-        // Mapping address_user ke kode saldo
         $user_address = $this->fungsi->user_login()->address_user ?? '';
         $kode_saldo = 'BMG';
         switch ($user_address) {
@@ -182,7 +176,6 @@ class Laporan_cabang extends CI_Controller
                 break;
         }
 
-        // Ambil nama perusahaan
         $perusahaan = 'BIAS MANDIRI GROUP';
         $pj = $this->db->get_where('tb_penanggung_jawab', ['jenis_saldo' => $kode_saldo])->row_array();
         if ($pj && isset($pj['perusahaan'])) {
@@ -194,7 +187,6 @@ class Laporan_cabang extends CI_Controller
         $sheet = $excel->getActiveSheet();
         $sheet->setTitle('Rekapan BPKK');
 
-        // HEADER UTAMA
         $sheet->mergeCells('A1:H1');
         $sheet->setCellValue('A1', 'REKAP PENGELUARAN');
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
@@ -216,7 +208,6 @@ class Laporan_cabang extends CI_Controller
             $sheet->getStyle('F4')->getAlignment()->setHorizontal('left');
         }
 
-        // HEADER TABEL
         $sheet->setCellValue('A6', 'No');
         $sheet->setCellValue('B6', 'Tanggal');
         $sheet->setCellValue('C6', 'Trasaksi');
@@ -234,7 +225,6 @@ class Laporan_cabang extends CI_Controller
         ];
         $sheet->getStyle('A6:H6')->applyFromArray($headerStyle);
 
-        // DATA MUTASI
         $row_excel = 7;
         $no = 1;
         $first_data_row = $row_excel;
@@ -249,31 +239,26 @@ class Laporan_cabang extends CI_Controller
             $sheet->setCellValue("G{$row_excel}", $row['total_kredit_cab']);
             $sheet->setCellValue("H{$row_excel}", $row['sisa_saldo']);
 
-            // Rata tengah untuk No & No BPKK
             $sheet->getStyle("A{$row_excel}:A{$row_excel}")
                 ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
             $sheet->getStyle("C{$row_excel}:C{$row_excel}")
                 ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
-            // Format Rupiah untuk Total Pengeluaran & Sisa Saldo
             $sheet->getStyle("F{$row_excel}")->getNumberFormat()->setFormatCode('"Rp"#,##0');
             $sheet->getStyle("G{$row_excel}")->getNumberFormat()->setFormatCode('"Rp"#,##0');
             $sheet->getStyle("H{$row_excel}")->getNumberFormat()->setFormatCode('"Rp"#,##0');
 
-            // Border per baris
             $sheet->getStyle("A{$row_excel}:H{$row_excel}")
                 ->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
             $row_excel++;
         }
 
-        // TOTAL PEMASUKAN
         $sheet->mergeCells("A{$row_excel}:E{$row_excel}");
         $sheet->setCellValue("A{$row_excel}", "Total Pemasukan");
         $sheet->getStyle("A{$row_excel}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
         $sheet->getStyle("A{$row_excel}")->getFont()->setBold(true);
 
-        // Area F-H diberi warna abu-abu
         $sheet->mergeCells("F{$row_excel}:H{$row_excel}");
         $sheet->setCellValue("F{$row_excel}", "=SUM(F{$first_data_row}:F" . ($row_excel - 1) . ")");
         $sheet->getStyle("F{$row_excel}:H{$row_excel}")->applyFromArray([
@@ -290,7 +275,6 @@ class Laporan_cabang extends CI_Controller
         $sheet->getStyle("F{$row_excel}")->getFont()->setBold(true);
         $sheet->getStyle("F{$row_excel}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
 
-        // Geser baris
         $row_excel++;
 
         $sheet->mergeCells("A{$row_excel}:E{$row_excel}");
@@ -313,16 +297,13 @@ class Laporan_cabang extends CI_Controller
         $sheet->getStyle("F{$row_excel}")->getNumberFormat()->setFormatCode('"Rp"#,##0');
         $sheet->getStyle("F{$row_excel}")->getFont()->setBold(true);
         $sheet->getStyle("F{$row_excel}")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-        // Border untuk seluruh baris
         $sheet->getStyle("A{$row_excel}:H{$row_excel}")
             ->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
-        // Auto size kolom
         foreach (range('A', 'H') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
-        // --- Nama file dengan format tanggal awal - akhir ---
         if ($awal && $akhir) {
             $firstDate = new DateTime($awal);
             $lastDate = new DateTime($akhir);
@@ -334,7 +315,6 @@ class Laporan_cabang extends CI_Controller
             $filename = 'Rekapan_BPKK_' . date('Ymd') . '.xls';
         }
 
-        // Kirim header dan download
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
         header('Cache-Control: max-age=0');

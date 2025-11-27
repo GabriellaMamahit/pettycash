@@ -5,10 +5,6 @@
                 <h3>Notifikasi</h3>
             </div>
             <div class="col-5 d-none d-xl-block">
-                <!-- Page Sub Header Start-->
-
-                <!-- Page Sub Header end
-                  -->
             </div>
             <div class="col-xl-3 col-sm-5 box-col-4">
                 <ol class="breadcrumb">
@@ -23,7 +19,6 @@
         </div>
     </div>
 </div>
-<!-- Container-fluid starts-->
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
@@ -40,8 +35,6 @@
                                 <tr>
                                     <th>No.</th>
                                     <th>Notifikasi</th>
-                                    <!-- <th>Keterangan notifikasi</th> -->
-                                    <!-- <th></th> -->
                                     <th></th>
                                     <th>Tanggal</th>
                                     <th></th>
@@ -53,14 +46,6 @@
                                 foreach ($rownotifikasi as $data) { ?>
                                 <tr class="<?= $data['status_notifikasi'] == 0 ? 'bg-light' : '' ?>">
                                     <td><?= $no++ ?></td>
-                                    <!-- <td>
-                                            <strong class="<?=
-                                                            $data['jenis_notifikasi'] == 'Permintaan' ? 'text-warning' : ($data['jenis_notifikasi'] == 'Penambahan' ? 'text-success' : ($data['jenis_notifikasi'] == 'Revisi' ? 'text-primary' : ($data['jenis_notifikasi'] == 'Rejected' ? 'text-danger' : 'text-dark')))
-                                                            ?>">
-                                                <?= $data['jenis_notifikasi']; ?>
-                                            </strong>
-                                        </td> -->
-
                                     <td>
                                         <div class="user-data">
                                             <div>
@@ -81,7 +66,6 @@
                                     <td></td>
                                     </td>
                                     <td class="text-center">
-                                        <!-- Baris pertama: 3 tombol -->
                                         <div class="d-flex justify-content-center gap-1 mb-1">
                                             <!-- Lihat -->
                                             <a href="#" class="btn btn-outline-info btn-sm"
@@ -166,7 +150,6 @@
 $(document).on('click', '[data-bs-target="#viewnotifikasi"]', function() {
     const modal = $('#viewnotifikasi');
 
-    // ambil data dari atribut tombol
     const data = {
         tanggal: $(this).data('tanggalnotifikasi') || '-',
         judnotif: $(this).data('notifikasi') || '-',
@@ -175,7 +158,6 @@ $(document).on('click', '[data-bs-target="#viewnotifikasi"]', function() {
         jenis_notifikasi: $(this).data('jenis_notifikasi') || '-'
     };
 
-    // isi field tabel (selain STATUS)
     const infoFields = {
         'TANGGAL': data.tanggal,
         'NOTIFIKASI': data.judnotif,
@@ -190,7 +172,6 @@ $(document).on('click', '[data-bs-target="#viewnotifikasi"]', function() {
         }
     });
 
-    // Tentukan warna badge berdasarkan jenis_notifikasi
     let badgeClass = '';
     switch (data.jenis_notifikasi) {
         case 'Permintaan':
@@ -209,11 +190,9 @@ $(document).on('click', '[data-bs-target="#viewnotifikasi"]', function() {
             badgeClass = 'bg-secondary';
     }
 
-    // 🔹 Ubah warna badge besar di atas modal (tanpa teks)
     const headerBadge = modal.find('.w-100 .badge');
     headerBadge.removeClass().addClass(`badge d-block w-100 text-center ${badgeClass}`);
 
-    // 🔹 Ubah baris STATUS menjadi badge dengan teks jenis_notifikasi
     modal.find('td').each(function() {
         const label = $(this).text().trim();
         if (label === 'STATUS') {

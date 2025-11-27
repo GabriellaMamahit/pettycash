@@ -3,15 +3,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class M_notifikasi extends CI_Model
 {
-    // 🔹 Notifikasi umum (digunakan di halaman daftar semua)
     public function get_notifikasi($limit = 50)
     {
         $user = $this->fungsi->user_login();
         $this->db->from('tb_notifikasi');
 
-        // =========================
-        // 🔒 FILTER SESUAI LEVEL
-        // =========================
         if ($user->level == 'user') {
             switch ($user->address_user) {
                 case 'jakarta':
@@ -50,7 +46,6 @@ class M_notifikasi extends CI_Model
         return $this->db->get()->result_array();
     }
 
-    // 🔹 Untuk tampilan halaman "Semua notifikasi"
     public function getdatanotifikasi()
     {
         $user = $this->fungsi->user_login();
@@ -94,14 +89,12 @@ class M_notifikasi extends CI_Model
         return $this->db->get()->result_array();
     }
 
-    // 🔔 Ambil semua notifikasi yang BELUM dibaca
     public function get_unread_notifikasi()
     {
         $user = $this->fungsi->user_login();
         $this->db->from('tb_notifikasi');
-        $this->db->where('status_notifikasi', 0); // hanya unread
+        $this->db->where('status_notifikasi', 0);
 
-        // Gunakan filter sama seperti di atas
         if ($user->level == 'user') {
             switch ($user->address_user) {
                 case 'jakarta':

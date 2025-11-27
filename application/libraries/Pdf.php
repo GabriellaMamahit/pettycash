@@ -9,7 +9,7 @@ class Pdf extends FPDF
     var $widths;
     var $aligns;
 
-    public $codecabang; // property untuk kode cabang
+    public $codecabang;
 
     // ============================
     // Setter untuk codecabang
@@ -102,7 +102,6 @@ class Pdf extends FPDF
         $CI = &get_instance();
         $CI->load->model('M_bpkk');
 
-        // Ambil data header dari database berdasarkan codecabang
         $kantor = $CI->M_bpkk->getpenanggungjawabpc($this->codecabang);
         $pengeluaranbpkkjkt = $CI->M_bpkk->getpengeluaranjkt($this->codecabang);
         $rows_all = $CI->M_bpkk->getpengeluaranjkt_all($this->codecabang);
@@ -113,7 +112,6 @@ class Pdf extends FPDF
 
         foreach ($pengeluaranbpkkjkt as $row) {
             $total_kredit_cab   = $row->total_kredit_cab ?? 0;
-            // $sisa_saldo -= $total_kredit_cab;
         }
 
         $sisa_saldo = $debetsaldo;
@@ -181,7 +179,6 @@ class Pdf extends FPDF
         $CI = &get_instance();
         $CI->load->model('M_bpkk');
 
-        // Ambil data penyetuju sesuai cabang
         $penyetuju = $CI->M_bpkk->getpenanggungjawabpc($this->codecabang);
 
         $this->SetY(-50);

@@ -64,7 +64,7 @@
             <div class="col-5 d-none d-xl-block"></div>
             <div class="col-xl-3 col-sm-5 box-col-4">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">
+                    <li class="breadcrumb-item"><a href="">
                             <svg class="stroke-icon">
                                 <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-home"></use>
                             </svg></a>
@@ -94,8 +94,6 @@
                 </div>
                 <div class="card-body pt-0">
                     <div class="mb-3">
-                        <!-- <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-                            data-bs-target="#tambahuser">Tambah User</button> -->
                     </div>
                     <!-- Table -->
                     <div class="table-responsive">
@@ -350,7 +348,6 @@ $(document).on("click", ".edit-levelakses", function() {
     var addressuser = $(this).data('kantorcab');
     var leveluser = $(this).data('leveluser');
 
-    // masukkan ke form modal
     $("#editUserIdakses").val(iduser);
     $("#editemailuserakses").val(emailuser);
     $("#kantorcabanguser").val(addressuser);
@@ -360,12 +357,9 @@ $(document).on("click", ".edit-levelakses", function() {
 $(document).on("click", ".edit-password", function() {
     var iduser = $(this).data('userid');
     var emailuser = $(this).data('useremail');
-    // var passworduser = $(this).data('userpassword');
 
-    // masukkan ke form modal
     $("#editUserId").val(iduser);
     $("#editemailuser").val(emailuser);
-    // $("#newPassword").val(passworduser);
 });
 
 $(document).ready(function() {
@@ -385,7 +379,6 @@ $(document).ready(function() {
             confirmButtonText: "Ya, hapus!"
         }).then((result) => {
             if (result.isConfirmed) {
-                // Redirect ke controller hapus
                 window.location.href = "<?= site_url('users/delete/') ?>" + userId;
             }
         });

@@ -9,7 +9,6 @@ class R_pdf extends FPDF
     var $widths;
     var $aligns;
 
-    // ✅ Tambahkan penyimpan periode
     public $tglAwal;
     public $tglAkhir;
     public $title;
@@ -138,7 +137,6 @@ class R_pdf extends FPDF
         $this->SetXY(120, 8);
         $this->Cell(30, 10, 'REKAP PENGELUARAN KAS KECIL', 0, 1, 'C');
 
-        // 🔥 ambil perusahaan dari cabang user login
         $ci = &get_instance();
         $alamatUser = strtolower($ci->fungsi->user_login()->address_user);
         $namaPerusahaan = $this->getNamaPerusahaan($alamatUser);

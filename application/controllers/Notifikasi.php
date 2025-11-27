@@ -12,41 +12,35 @@ class Notifikasi extends CI_Controller
         }
     }
 
-    // Halaman utama notifikasi
     public function index()
     {
         $data = array(
             'judul' => "Petty Cash | Riwayat BPKK",
-            'notifikasi' => $this->M_notifikasi->get_notifikasi(), // tampilkan semua sesuai filter
+            'notifikasi' => $this->M_notifikasi->get_notifikasi(),
             'rownotifikasi' => $this->M_notifikasi->getdatanotifikasi(),
         );
 
         $this->template->load('template', 'notifikasi', $data);
     }
 
-    // 🔔 Ambil semua notifikasi yang belum dibaca
     public function get_latest()
     {
-        $notifikasi = $this->M_notifikasi->get_unread_notifikasi(); // ambil hanya yang belum dibaca
+        $notifikasi = $this->M_notifikasi->get_unread_notifikasi();
         echo json_encode($notifikasi);
     }
 
-    // Klik notifikasi → tandai sudah dibaca
     public function mark_as_read($id)
     {
         $this->db->where('id_notifikasi', $id);
         $this->db->update('tb_notifikasi', ['status_notifikasi' => 1]);
         echo json_encode(['status' => 'success']);
     }
-
-    // Tandai semua sebagai sudah dibaca
     public function mark_as_read_all()
     {
         $user = $this->fungsi->user_login();
 
-        $this->db->where('status_notifikasi', 0); // hanya yang belum dibaca
+        $this->db->where('status_notifikasi', 0);
 
-        // 🔒 filter sesuai level dan cabang user
         if ($user->level == 'user') {
             switch ($user->address_user) {
                 case 'jakarta':
@@ -68,8 +62,6 @@ class Notifikasi extends CI_Controller
                     $this->db->where('1=0');
                     break;
             }
-
-            // hanya notifikasi jenis tertentu untuk user biasa
             $this->db->where_in('jenis_notifikasi', ['Rejected', 'Penambahan']);
         } elseif ($user->level == 'finance_bdp' || $user->level == 'finance_bsgroup') {
             if ($user->level == 'finance_bdp') {
@@ -80,11 +72,8 @@ class Notifikasi extends CI_Controller
 
             $this->db->where_in('jenis_notifikasi', ['Permintaan', 'Revisi']);
         } elseif (!in_array($user->level, ['development', 'accounting', 'direktur_finance', 'auditor', 'super_admin'])) {
-            // user lain yang tidak punya akses, jangan update apa pun
             $this->db->where('1=0');
         }
-
-        // ✅ update hanya notifikasi sesuai akses
         $this->db->update('tb_notifikasi', ['status_notifikasi' => 1]);
 
         echo json_encode(['status' => 'success']);

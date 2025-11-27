@@ -60,11 +60,6 @@
 .dataTables_wrapper {
     padding-bottom: 20px !important;
 }
-
-/* 
-#pieChart {
-    margin-bottom: 20px;
-} */
 </style>
 
 <!-- === Page Header === -->
@@ -77,7 +72,7 @@
             <div class="col-5 d-none d-xl-block"></div>
             <div class="col-xl-3 col-sm-5 box-col-4">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">
+                    <li class="breadcrumb-item"><a href="">
                             <svg class="stroke-icon">
                                 <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-home"></use>
                             </svg></a>
@@ -195,9 +190,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <?php
-// Ambil data dari controller
 $labels = array_map(function ($label) {
-    // Hilangkan underscore & kapital huruf awal tiap kata
     return ucwords(str_replace('_', ' ', $label));
 }, array_column($chart_data, 'jenis_pengeluaran_cab'));
 

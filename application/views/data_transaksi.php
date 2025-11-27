@@ -1,62 +1,4 @@
 <style>
-.default-dashboard2 .last-orders-table thead tr {
-    border-bottom: 1px solid #f5f5f5;
-}
-
-.default-dashboard2 .last-orders-table thead tr th {
-    color: #848789;
-    padding: 0 5px 11px;
-}
-
-.default-dashboard2 .last-orders-table thead tr th:first-child {
-    padding-left: 0;
-}
-
-.default-dashboard2 .last-orders-table thead tr th:first-child:after {
-    display: none;
-}
-
-.default-dashboard2 .last-orders-table tbody tr td {
-    padding: 18px 5px;
-}
-
-.default-dashboard2 .last-orders-table tbody tr td:first-child {
-    padding-left: 0 !important;
-}
-
-.default-dashboard2 .last-orders-table tbody tr td:last-child {
-    padding-right: 0 !important;
-}
-
-.default-dashboard2 .last-orders-table tbody tr:last-child {
-    border-bottom: none;
-}
-
-.default-dashboard2 .last-orders-table tbody tr:last-child td {
-    border-bottom: none !important;
-    padding-bottom: 0;
-}
-
-.default-dashboard2 .search-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.default-dashboard2 .search-bar label {
-    margin-bottom: 0;
-    color: #333;
-}
-
-.default-dashboard2 .search-bar input {
-    min-width: 200px;
-}
-
-.dataTables_wrapper .dataTables_paginate {
-    margin-top: 20px !important;
-}
-
 .dataTables_wrapper {
     padding-bottom: 20px !important;
 }
@@ -72,13 +14,12 @@
             <div class="col-5 d-none d-xl-block"></div>
             <div class="col-xl-3 col-sm-5 box-col-4">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="index.html">
+                    <li class="breadcrumb-item"><a href="">
                             <svg class="stroke-icon">
                                 <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#stroke-home"></use>
                             </svg></a>
                     </li>
                     <li class="breadcrumb-item">General</li>
-                    <!-- <li class="breadcrumb-item">Riwayat BPKK</li> -->
                     <li class="breadcrumb-item active">Data Transaksi</li>
                 </ol>
             </div>
@@ -94,23 +35,9 @@
                 <div class="card-header card-no-border">
                     <div class="header-top">
                         <h4>Daftar Transaksi Debet</h4>
-                        <!-- <div class="dropdown icon-dropdown setting-menu">
-                            <button class="btn dropdown-toggle" id="userdropdown3" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <svg>
-                                    <use href="<?= base_url() ?>assets/svg/icon-sprite.svg#setting"></use>
-                                </svg>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userdropdown3">
-                                <a class="dropdown-item" href="#">Weekly</a>
-                                <a class="dropdown-item" href="#">Monthly</a>
-                                <a class="dropdown-item" href="#">Yearly</a>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
                 <div class="card-body pt-0">
-                    <!-- Table -->
                     <div class="table-responsive">
                         <table class="last-orders-table table" id="last-orders">
                             <thead>
@@ -145,7 +72,6 @@
                                     <td></td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-1 mb-1">
-                                            <!-- Lihat -->
                                             <a href="#" class="btn btn-outline-info btn-sm"
                                                 style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
                                                 title="Lihat" data-tanggaldebet="<?= $data['tanggal_debet']; ?>"
@@ -158,11 +84,6 @@
                                             </a>
                                         </div>
                                         <div class="d-flex justify-content-center gap-1">
-                                            <!-- <a href="#" class="btn btn-outline-primary btn-sm"
-                                                style="width:20px; height:20px; padding:2px; display:flex; align-items:center; justify-content:center;"
-                                                title="Print">
-                                                <i data-feather="printer" style="width:12px; height:12px;"></i>
-                                            </a> -->
                                         </div>
                                     </td>
                                 </tr>

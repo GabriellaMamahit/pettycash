@@ -42,8 +42,6 @@
                         <?php
                         $level = $this->fungsi->user_login()->level;
                         $address_user = strtolower($this->fungsi->user_login()->address_user);
-
-                        // Tentukan akses sesuai level
                         $akses = [];
 
                         if (in_array($level, ['super_admin', 'direktur_finance', 'development', 'finance_bmg'])) {
@@ -56,11 +54,10 @@
                             if ($address_user == 'sekupang') {
                                 $akses = ['PA_BBM', 'PA_SB', 'PA_RTK'];
                             } else {
-                                $akses = ['JKT', 'BPP', 'TBK', 'LU']; // default user non-Sekupang
+                                $akses = ['JKT', 'BPP', 'TBK', 'LU'];
                             }
                         }
 
-                        // Mapping kode => label
                         $labelCabang = [
                             'JKT' => 'Jakarta',
                             'BPP' => 'Balikpapan',
@@ -84,10 +81,7 @@
                     </div>
                 </div>
 
-
-                <!-- CARD DI DALAM CARD -->
                 <div class="row mt-3">
-
                     <!-- IN PROGRESS -->
                     <div class="col-xl-3 col-lg-6 col-md-6 petty-card"
                         data-type="all JKT BPP TBK LU PA_BBM PA_SB PA_RTK">
@@ -97,25 +91,6 @@
                                 <span class="fw-bold small pb-2"><?= date('F Y'); ?></span>
                                 <h3 id="inProgressCount"><?= $in_progress['count']; ?></h3>
                                 <div>Total: Rp <span id="inProgressTotal"><?= $in_progress['total']; ?></span></div>
-                                <!-- <h3>
-                                    <?php
-                                    $this->db->from('tb_bpkk_cab');
-                                    $this->db->where('status_cab', 'In progress');
-                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
-                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
-                                    echo $this->db->count_all_results(); ?>
-                                </h3>
-                                <div>Total: Rp
-                                    <?php
-                                    $this->db->select_sum('total_kredit_cab');
-                                    $this->db->from('tb_bpkk_cab');
-                                    $this->db->where('status_cab', 'In progress');
-                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
-                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
-                                    $query = $this->db->get()->row();
-                                    echo number_format($query->total_kredit_cab ?? 0, 0, ',', '.');
-                                    ?>
-                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -128,26 +103,6 @@
                                 <span class="fw-bold small pb-2"><?= date('F Y'); ?></span>
                                 <h3 id="approvedCount"><?= $approved['count']; ?></h3>
                                 <div>Total: Rp <span id="approvedTotal"><?= $approved['total']; ?></span></div>
-
-                                <!-- <h3>
-                                    <?php
-                                    $this->db->from('tb_bpkk_cab');
-                                    $this->db->where('status_cab', 'Approved');
-                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
-                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
-                                    echo $this->db->count_all_results(); ?>
-                                </h3>
-                                <div>Total: Rp
-                                    <?php
-                                    $this->db->select_sum('total_kredit_cab');
-                                    $this->db->from('tb_bpkk_cab');
-                                    $this->db->where('status_cab', 'Approved');
-                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
-                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
-                                    $query = $this->db->get()->row();
-                                    echo number_format($query->total_kredit_cab ?? 0, 0, ',', '.');
-                                    ?>
-                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -160,26 +115,6 @@
                                 <span class="fw-bold small pb-2"><?= date('F Y'); ?></span>
                                 <h3 id="revisiCount"><?= $revisi['count']; ?></h3>
                                 <div>Total: Rp <span id="revisiTotal"><?= $revisi['total']; ?></span></div>
-
-                                <!-- <h3>
-                                    <?php
-                                    $this->db->from('tb_bpkk_cab');
-                                    $this->db->where('status_cab', 'Revisi');
-                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
-                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
-                                    echo $this->db->count_all_results(); ?>
-                                </h3>
-                                <div>Total: Rp
-                                    <?php
-                                    $this->db->select_sum('total_kredit_cab');
-                                    $this->db->from('tb_bpkk_cab');
-                                    $this->db->where('status_cab', 'Revisi');
-                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
-                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
-                                    $query = $this->db->get()->row();
-                                    echo number_format($query->total_kredit_cab ?? 0, 0, ',', '.');
-                                    ?>
-                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -192,25 +127,6 @@
                                 <span class="fw-bold small pb-2"><?= date('F Y'); ?></span>
                                 <h3 id="rejectedCount"><?= $rejected['count']; ?></h3>
                                 <div>Total: Rp <span id="rejectedTotal"><?= $rejected['total']; ?></span></div>
-                                <!-- <h3>
-                                    <?php
-                                    $this->db->from('tb_bpkk_cab');
-                                    $this->db->where('status_cab', 'Rejected');
-                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
-                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
-                                    echo $this->db->count_all_results(); ?>
-                                </h3>
-                                <div>Total: Rp
-                                    <?php
-                                    $this->db->select_sum('total_kredit_cab');
-                                    $this->db->from('tb_bpkk_cab');
-                                    $this->db->where('status_cab', 'Rejected');
-                                    $this->db->where('MONTH(tgl_kredit_cab)', date('m'), false);
-                                    $this->db->where('YEAR(tgl_kredit_cab)', date('Y'), false);
-                                    $query = $this->db->get()->row();
-                                    echo number_format($query->total_kredit_cab ?? 0, 0, ',', '.');
-                                    ?>
-                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -224,8 +140,6 @@
 <script>
 function filterWidget() {
     var selected = $('#filterCabang').val();
-
-    // Tampilkan animasi loading
     $('#loader').show();
 
     $.ajax({
@@ -249,7 +163,7 @@ function filterWidget() {
             $("#rejectedCount").text(result.rejected.count);
             $("#rejectedTotal").text(result.rejected.total);
 
-            $('#loader').hide(); // sembunyikan loading
+            $('#loader').hide();
         },
         error: function() {
             alert("Gagal mengambil data filter");
@@ -258,9 +172,6 @@ function filterWidget() {
     });
 }
 </script>
-
-
-
 
 
 <!-- === Main Content === -->
@@ -297,7 +208,7 @@ function filterWidget() {
                                                                 $this->db->from('tb_saldo');
                                                                 $this->db->join('tb_bpkk_cab', 'tb_bpkk_cab.jenis_saldo = tb_saldo.jenis_saldo', 'left');
                                                                 $this->db->where('tb_saldo.jenis_saldo', $data['jenis_saldo']);
-                                                                $this->db->group_start(); // Mulai grup kondisi OR
+                                                                $this->db->group_start();
                                                                 $this->db->where('tb_bpkk_cab.status_cab', 'In progress');
                                                                 $this->db->or_where('tb_bpkk_cab.status_cab', 'Rejected');
                                                                 $this->db->or_where('tb_bpkk_cab.status_cab', 'Revisi');
@@ -326,7 +237,6 @@ function filterWidget() {
                                                 data-saldocabang="<?= $data['saldo_cabang']; ?>" data-bs-toggle="modal"
                                                 data-bs-target="#editbudgetsaldocabang">
                                                 <i data-feather="settings" style="width:12px; height:12px;"></i>
-                                                <!-- <i class="fa fa-credit-card-alt" style="width:12px; height:12px;"></i> -->
                                             </a>
 
                                     </td>
@@ -402,27 +312,21 @@ function filterWidget() {
 <script>
 $(document).on('click', '[data-bs-target="#editbudgetsaldocabang"]', function() {
     const modal = $('#editbudgetsaldocabang');
-
-    // ambil data dari tombol edit
     const kantorcabang = $(this).data('perusahan') || '-';
     const lokasikantor = $(this).data('kantorcab') || '-';
     const saldoCabang = $(this).data('saldocabang') || 0;
     const idCabang = $(this).data('idcabang') || '';
 
-    // isi tabel kantor & lokasi
     modal.find('td').each(function() {
         const label = $(this).text().trim();
         if (label.includes('KANTOR CABANG')) $(this).next().text(': ' + kantorcabang);
         if (label.includes('LOKASI KANTOR')) $(this).next().text(': ' + lokasikantor);
     });
 
-    // isi input total budget & hidden fields
     modal.find('#edit-totalbudget').val(formatRupiahString(saldoCabang));
     modal.find('#edit-totalbudgetRaw').val(saldoCabang);
     modal.find('#idbudgetsaldo').val(idCabang);
-    // modal.find('#edit-totalbudgetOld').val(saldoCabang);
 
-    // simpan ID cabang di hidden field
     if (modal.find('#edit-idcabang').length === 0) {
         $('<input>').attr({
             type: 'hidden',
@@ -435,26 +339,20 @@ $(document).on('click', '[data-bs-target="#editbudgetsaldocabang"]', function() 
     }
 });
 
-// auto-format input dan update hidden field saat user mengetik
 $(document).on('input', '#edit-totalbudget', function() {
     let cursorPosition = this.selectionStart;
     let originalLength = $(this).val().length;
 
-    // ambil angka murni
     let value = $(this).val().replace(/[^0-9]/g, '');
 
-    // update hidden field
     $('#edit-totalbudgetRaw').val(value);
 
-    // format Rupiah
     $(this).val(formatRupiahString(value));
 
-    // jaga posisi cursor agar tidak loncat
     let newLength = $(this).val().length;
     this.selectionEnd = cursorPosition + (newLength - originalLength);
 });
 
-// fungsi untuk format rupiah tampil di input
 function formatRupiahString(angka) {
     if (!angka) return '';
     let number_string = angka.toString().replace(/[^,\d]/g, ''),

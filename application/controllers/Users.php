@@ -77,8 +77,6 @@ class Users extends CI_Controller
     {
         $iduser = $this->input->post('editUserId');
         $passworduser = $this->input->post('newPassword');
-
-        // Edit data kapal dari table tb_user
         $data = array(
             'password_user' => sha1($passworduser),
         );

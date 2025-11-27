@@ -209,7 +209,6 @@ $(document).on('click', '[data-bs-target="#viewdatatransaksi"]', function() {
         jenisSaldo: $(this).data('jenissaldo') || ''
     };
 
-    // Tentukan No Transaksi & Total berdasarkan jenis transaksi
     let noTransaksi = '-';
     let totalTransaksi = '-';
 
@@ -232,7 +231,6 @@ $(document).on('click', '[data-bs-target="#viewdatatransaksi"]', function() {
             .text('TRANSAKSI TIDAK DIKETAHUI');
     }
 
-    // Isi field di tabel modal
     const infoFields = {
         'NO TRANSAKSI': noTransaksi,
         'TANGGAL': data.tanggal,
@@ -247,7 +245,6 @@ $(document).on('click', '[data-bs-target="#viewdatatransaksi"]', function() {
         }
     });
 
-    // Tampilkan dokumen
     const preview = $('#pratinjauGambar2');
     if (!data.file.trim()) {
         preview.html(
@@ -286,7 +283,6 @@ $(function() {
             start.format('YYYY-MM-DD') + "&akhir=" + end.format('YYYY-MM-DD');
     });
 
-    // ✅ tampilkan tanggal saat halaman pertama kali load
     <?php if (!empty($awal) && !empty($akhir)): ?>
     setRangeDisplay(moment("<?= $awal ?>", "YYYY-MM-DD"), moment("<?= $akhir ?>", "YYYY-MM-DD"));
     <?php else: ?>

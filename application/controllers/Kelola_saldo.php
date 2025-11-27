@@ -130,8 +130,6 @@ class Kelola_saldo extends CI_Controller
         $saldo_cabang = $this->M_finance->saldocabang($jenis_saldo);
         $saldo_pettycash = $this->M_finance->saldopettycash($jenis_saldo);
 
-        // $is_low_saldo = ($saldo_cabang >= 0 && $saldo_cabang <= 10000);
-
         $data = array(
             'judul'   => "Petty Cash | Detail Saldo Petty Cash",
             'no_petty_cash' => $no_petty_cash,
@@ -139,7 +137,6 @@ class Kelola_saldo extends CI_Controller
             'jenis_saldo'   => $jenis_saldo,
             'saldo_cabang'   => $saldo_cabang,
             'saldo_pettycash'   => $saldo_pettycash,
-            // 'is_low_saldo'  => $is_low_saldo,
             'detail_saldo'  => $this->M_finance->detail_saldo($id_saldo),
             'rowdetailsaldocabang' => $this->M_finance->getdatasaldo($jenis_saldo)
         );
@@ -151,11 +148,8 @@ class Kelola_saldo extends CI_Controller
     {
         $id_saldo     = $this->session->userdata('id_saldo');
         $jenis_saldo  = $this->session->userdata('jenis_saldo');
-        // Ambil data saldo dari model
         $detail_permintaansaldo = $this->M_finance->apprvpermintaansaldo($id_pettycash);
         $no_petty_cash = $this->M_finance->generatePettycashNumber($jenis_saldo);
-
-        // Pastikan datanya ada sebelum ambil no_pettycash
         $no_pettycash = $detail_permintaansaldo ? $detail_permintaansaldo->no_pettycash : null;
 
         $data = array(
@@ -207,10 +201,7 @@ class Kelola_saldo extends CI_Controller
         if ($this->upload->do_upload('file_dokumen')) {
             $filename = $file_name;
         } else {
-            // Ambil error CI tanpa tag <p>
             $error = $this->upload->display_errors('', '');
-
-            // Buat pesan user-friendly
             if (stripos($error, 'filetype') !== false) {
                 $errorMsg = "File harus dalam format PDF.";
             } elseif (stripos($error, 'exceeds') !== false) {
@@ -219,7 +210,6 @@ class Kelola_saldo extends CI_Controller
                 $errorMsg = "Ukuran file terlalu besar, maksimal 1 MB.";
             }
 
-            // Set flashdata untuk SweetAlert
             $this->session->set_flashdata('error', $errorMsg);
 
             redirect('kelola_saldo/detail_saldo/' . $id_saldo . '/' . $jenissaldo);
@@ -280,127 +270,10 @@ class Kelola_saldo extends CI_Controller
         $this->M_finance->tambahdatamutasi('tb_data_mutasi', $data3);
         $this->M_finance->notifikasitambahsaldo('tb_notifikasi', $data5);
         $this->M_finance->updatesaldo_cab($jenissaldo, $data4, 'tb_saldo');
-        // $this->M_finance->update_saldo_cabang($jenissaldo, $total_debet);
 
         $this->session->set_flashdata('success', 'Saldo petty cash berhasil ditambahkan.');
         redirect('kelola_saldo/detail_saldo/' . $id_saldo . '/' . $jenissaldo);
     }
-
-    // public function tambahsaldorembes()
-    // {
-    //     $namauser     = $this->fungsi->user_login()->nama_user;
-    //     $id_pettycash_saldo          = $this->input->post('id_pettycash_saldo');
-    //     $id_saldo          = $this->input->post('id_saldo_remb');
-    //     $no_petty_cash     = $this->input->post('no_petty_cash');
-    //     $namacabang        = $this->input->post('kantorcabang_saldo');
-    //     $tanggal_input     = $this->input->post('tanggal_saldo');
-    //     $tanggal_debet     = date('Y-m-d', strtotime($tanggal_input));
-    //     $keterangan        = $this->input->post('keterangan_saldo');
-    //     $sbucabang         = $this->input->post('sbucabang_saldo');
-    //     $nopettycashawal   = $this->input->post('nopettycash_asal');
-    //     $total_debet       = $this->input->post('totalDebetRaw_saldo');
-    //     $jenissaldo        = $this->input->post('jenis_saldo_saldo');
-
-    //     $cleaned_no_petty_cash = str_replace('/', '_', $no_petty_cash);
-    //     $cleaned_keterangan    = preg_replace('/[^A-Za-z0-9]/', '', $keterangan);
-    //     $cleaned_tanggal       = preg_replace('/[^A-Za-z0-9]/', '', $tanggal_input);
-    //     $upload_folder    = './uploads/finance/';
-    //     $file_name = $cleaned_no_petty_cash . '_' . $cleaned_keterangan . '_' . $cleaned_tanggal . '.pdf';
-
-    //     $config['upload_path']   = $upload_folder;
-    //     $config['allowed_types'] = 'pdf';
-    //     $config['max_size']      = 1048;
-    //     $config['encrypt_name']  = FALSE;
-    //     $config['file_name']     = $file_name;
-
-    //     $this->load->library('upload', $config);
-    //     $filename = null;
-
-    //     if (!is_dir($upload_folder)) {
-    //         mkdir($upload_folder, 0777, true);
-    //     }
-
-    //     if ($this->upload->do_upload('file_dokumen_saldo')) {
-    //         $filename = $file_name;
-    //     } else {
-    //         // Ambil error CI tanpa tag <p>
-    //         $error = $this->upload->display_errors('', '');
-
-    //         // Buat pesan user-friendly
-    //         if (stripos($error, 'filetype') !== false) {
-    //             $errorMsg = "File harus dalam format PDF.";
-    //         } elseif (stripos($error, 'exceeds') !== false) {
-    //             $errorMsg = "Ukuran file terlalu besar, maksimal 1 MB.";
-    //         } else {
-    //             $errorMsg = "Ukuran file terlalu besar, maksimal 1 MB.";
-    //         }
-
-    //         // Set flashdata untuk SweetAlert
-    //         $this->session->set_flashdata('error', $errorMsg);
-    //         redirect('kelola_saldo/approve_saldo/' . $id_pettycash_saldo . '/' . $jenissaldo);
-    //         return;
-    //     }
-
-    //     // tb_debet_saldo
-    //     $data = [
-    //         'no_petty_cash'            => $no_petty_cash,
-    //         'no_pc_asal'               => $nopettycashawal,
-    //         'kantor_cabang'            => $namacabang,
-    //         'nama_saldo'               => 'Penambahan Saldo ' . $namacabang,
-    //         'saldo_debet'              => $total_debet,
-    //         'jenis_saldo'              => $jenissaldo,
-    //         'tanggal_debet'            => $tanggal_debet,
-    //         'file'                     => $filename,
-    //         'status'                   => 'Done'
-    //     ];
-
-    //     // tb_nopettycash
-    //     $data2 = [
-    //         'no_petty_cash'            => $no_petty_cash,
-    //         'kantor_cab'               => $namacabang,
-    //         'jenis_saldo'              => $jenissaldo
-    //     ];
-
-    //     // tb_data_mutasi
-    //     $data3 = [
-    //         'no_pettycash'             => $no_petty_cash,
-    //         'keterangan'               => $keterangan,
-    //         'sbu'                      => $sbucabang,
-    //         'jenis_saldo'              => $jenissaldo,
-    //         'total_debet_cab'          => $total_debet,
-    //         'tanggal'                  => $tanggal_debet,
-    //         'file'                     => $filename,
-    //         'jenis_transaksi'          => 'Debet',
-    //         'status_mutasi'            => 'Open'
-    //     ];
-
-    //     // tb_permintaan_saldo
-    //     $data4 = [
-    //         'status_permintaan'        => 'Done'
-    //     ];
-
-    //     // tb_bpkk_cab
-    //     $data5 = [
-    //         'jenis_saldo'              => $jenissaldo,
-    //         'jenis_notifikasi'         => 'Penambahan',
-    //         'nama_penanggung_jwb'      => $namauser,
-    //         'judul_notifikasi'         => 'Penambahan Saldo ' . $namacabang,
-    //         'ket_notifikasi'           => $keterangan . ' ' . $no_petty_cash,
-    //         'no_pettycash'             => $no_petty_cash,
-    //         'status_notifikasi'        => '0',
-    //         'tanggal_notifikasi'       => date('Y-m-d H:i:s'),
-    //     ];
-
-    //     $this->M_finance->tambahdatadebet('tb_debet_saldo', $data);
-    //     $this->M_finance->tambahnopettycash('tb_nopettycash', $data2);
-    //     $this->M_finance->tambahdatamutasi('tb_data_mutasi', $data3);
-    //     $this->M_finance->notifikasitambahsaldo('tb_notifikasi', $data5);
-    //     $this->M_finance->updatestatusrembest($id_pettycash_saldo, $data4, 'tb_permintaan_saldo');
-    //     $this->M_finance->update_saldo_cabang($jenissaldo, $total_debet);
-
-    //     $this->session->set_flashdata('success', 'Saldo petty cash berhasil ditambahkan.');
-    //     redirect('kelola_saldo/detail_saldo/' . $id_saldo . '/' . $jenissaldo);
-    // }
 
     public function tambahsaldorembes()
     {
@@ -417,11 +290,9 @@ class Kelola_saldo extends CI_Controller
         $total_debet   = $this->input->post('totalDebetRaw_saldo');
         $jenissaldo    = $this->input->post('jenis_saldo_saldo');
 
-        // --- Ambil sisa saldo pending dari tb_sisasaldo_rembes ---
         $pending = $this->db->get_where('tb_sisasaldo_rembes', ['no_pettycash' => $nopettycashawal])->row_array();
         $sisa_saldo = $pending ? $pending['sisasaldo_remb'] : 0;
 
-        // === Upload file ===
         $cleaned_no_petty_cash = str_replace('/', '_', $no_petty_cash);
         $cleaned_keterangan    = preg_replace('/[^A-Za-z0-9]/', '', $keterangan);
         $cleaned_tanggal       = preg_replace('/[^A-Za-z0-9]/', '', $tanggal_input);
@@ -438,7 +309,7 @@ class Kelola_saldo extends CI_Controller
         $filename = null;
 
         if (!is_dir($upload_folder)) {
-            mkdir($upload_folder, 0777, true); // buat folder beserta parent
+            mkdir($upload_folder, 0777, true);
         }
 
         if (!is_writable($upload_folder)) {
@@ -479,7 +350,7 @@ class Kelola_saldo extends CI_Controller
             'tanggal_debet'   => $tanggal_debet,
             'file'            => $filename,
             'status'          => 'Done',
-            'sisa_saldo'      => $sisa_saldo // ⬅️ Tambahkan dari tb_sisasaldo_rembes
+            'sisa_saldo'      => $sisa_saldo
         ];
 
         // === tb_nopettycash ===
@@ -521,7 +392,6 @@ class Kelola_saldo extends CI_Controller
             'tanggal_notifikasi'  => date('Y-m-d H:i:s'),
         ];
 
-        // === Simpan ke database ===
         $this->M_finance->tambahdatadebet('tb_debet_saldo', $data);
         $this->M_finance->tambahnopettycash('tb_nopettycash', $data2);
         $this->M_finance->tambahdatamutasi('tb_data_mutasi', $data3);
@@ -529,7 +399,6 @@ class Kelola_saldo extends CI_Controller
         $this->M_finance->updatestatusrembest($id_pettycash_saldo, $data4, 'tb_permintaan_saldo');
         $this->M_finance->update_saldo_cabang($jenissaldo, $total_debet);
 
-        // === Setelah berhasil simpan, hapus pending dari tb_sisasaldo_rembes ===
         if ($pending) {
             $this->db->delete('tb_sisasaldo_rembes', ['no_pettycash' => $nopettycashawal]);
         }
@@ -559,30 +428,6 @@ class Kelola_saldo extends CI_Controller
         echo json_encode($result);
     }
 
-    // public function update_status_bpkk()
-    // {
-    //     $no_bpkk = $this->input->post('no_bpkk');
-    //     $status  = $this->input->post('status');
-
-    //     if (!$no_bpkk || !$status) {
-    //         echo json_encode(['status' => 'error', 'message' => 'Data tidak lengkap']);
-    //         return;
-    //     }
-
-    //     $this->db->where('no_bpkk_cab', $no_bpkk);
-    //     $this->db->update('tb_bpkk_cab', ['status_cab' => $status]);
-
-    //     if ($status === 'Rejected') {
-    //         $this->db->where('no_bpkk_cab', $no_bpkk);
-    //         $this->db->update('tb_bpkk_cab', ['status_bpkk' => 'Open']);
-    //     }
-
-    //     $this->db->where('no_bpkk_cab', $no_bpkk);
-    //     $this->db->update('tb_data_mutasi', ['status_cab' => $status]);
-
-    //     echo json_encode(['status' => 'ok']);
-    // }
-
     public function update_status_bpkk()
     {
         $no_bpkk = $this->input->post('no_bpkk');
@@ -593,38 +438,32 @@ class Kelola_saldo extends CI_Controller
             return;
         }
 
-        // Pastikan data BPKK ada
         $bpkk = $this->db->get_where('tb_bpkk_cab', ['no_bpkk_cab' => $no_bpkk])->row_array();
         if (!$bpkk) {
             echo json_encode(['status' => 'error', 'message' => 'Data tidak ditemukan']);
             return;
         }
 
-        // Update status utama
         $this->db->where('no_bpkk_cab', $no_bpkk);
         $this->db->update('tb_bpkk_cab', ['status_cab' => $status]);
 
         if ($status === 'Approved') {
-            // Ambil data saldo pending dari tb_sisasaldo
             $pending = $this->db->get_where('tb_sisasaldo', ['no_bpkk_cab' => $no_bpkk])->row_array();
 
             if ($pending) {
                 $sisa_saldo = $pending['sisa_saldo'];
 
-                // === 1️⃣ Update ke tb_bpkk_cab (kalau masih kosong) ===
                 if (empty($bpkk['sisa_saldo'])) {
                     $this->db->where('no_bpkk_cab', $no_bpkk);
                     $this->db->update('tb_bpkk_cab', ['sisa_saldo' => $sisa_saldo]);
                 }
 
-                // === 2️⃣ Update tb_data_mutasi kalau sudah ada record-nya ===
                 $mutasi = $this->db->get_where('tb_data_mutasi', ['no_bpkk_cab' => $no_bpkk])->row_array();
                 if ($mutasi && empty($mutasi['sisa_saldo'])) {
                     $this->db->where('no_bpkk_cab', $no_bpkk);
                     $this->db->update('tb_data_mutasi', ['sisa_saldo' => $sisa_saldo]);
                 }
 
-                // === 3️⃣ Hapus saldo pending ===
                 $this->db->delete('tb_sisasaldo', ['no_bpkk_cab' => $no_bpkk]);
             }
         }
@@ -640,14 +479,13 @@ class Kelola_saldo extends CI_Controller
         $no_bpkk = $this->input->post('no_bpkk');
         $jenis_saldo = $this->input->post('jenis_saldo');
         $status  = $this->input->post('status');
-        $alasan  = $this->input->post('alasan'); // alasan reject
+        $alasan  = $this->input->post('alasan');
 
         if (!$no_bpkk || !$status) {
             echo json_encode(['status' => 'error', 'message' => 'Data tidak lengkap']);
             return;
         }
 
-        // update status di tabel utama
         $this->db->where('no_bpkk_cab', $no_bpkk);
         $this->db->update('tb_bpkk_cab', ['status_cab' => $status]);
 
@@ -655,7 +493,6 @@ class Kelola_saldo extends CI_Controller
             $this->db->where('no_bpkk_cab', $no_bpkk);
             $this->db->update('tb_bpkk_cab', ['status_bpkk' => 'Open']);
 
-            // simpan alasan ke tabel notifikasi
             $this->db->insert('tb_notifikasi', [
                 'jenis_saldo'           => $jenis_saldo,
                 'no_pettycash'          => $no_bpkk,
@@ -694,7 +531,6 @@ class Kelola_saldo extends CI_Controller
 
         $namaPerusahaan = $perusahaanData['perusahaan'] ?? 'BIAS MANDIRI GROUP';
 
-        // Ambil data tb_debet_saldo
         $dataPermintaan = $this->db
             ->where('no_pc_asal', $no_pettycash)
             ->get('tb_debet_saldo')
@@ -710,7 +546,6 @@ class Kelola_saldo extends CI_Controller
         $no_petty_cash = $dataPermintaan['no_pc_asal'] ?? $dataPermintaan['no_petty_cash'];;
         $fileDebet = $dataPermintaan['file'] ?? null;
 
-        // Ambil data tb_permintaan_saldo
         $dataAsal = $this->db
             ->where('no_pettycash', $no_petty_cash)
             ->get('tb_permintaan_saldo')
@@ -718,7 +553,6 @@ class Kelola_saldo extends CI_Controller
 
         $filePermintaan = $dataAsal['dokumen_pettycash'] ?? null;
 
-        // Ambil data tb_bpkk_cab
         $dataBpkk = $this->db
             ->where('no_pc_saldo', $no_petty_cash)
             ->order_by('tgl_kredit_cab', 'ASC')
@@ -778,14 +612,6 @@ class Kelola_saldo extends CI_Controller
         $pdf->AddPage();
         $pdf->SetFont('Arial', 'B', 14);
 
-        // $filename = 'laporan-pettycash-' . time() . '.pdf';
-
-        // header('Content-Type: application/pdf');
-        // header('Content-Disposition: attachment; filename="' . $filename . '"');
-        // header('Content-Transfer-Encoding: binary');
-        // header('Accept-Ranges: bytes');
-
-        // HEADER + Tabel Summary (Tidak diubah)
         $pdf->Rect(5, 5, 200, 285);
         $logo_width = 17;
         $page_width = $pdf->GetPageWidth();
@@ -816,7 +642,6 @@ class Kelola_saldo extends CI_Controller
         $pdf->Cell(2, 6, ':', 0, 0, 'L');
         $pdf->Cell(48, 6, $dataPettyCash['keterangan'], 0, 1, 'C');
 
-        // data penambahan saldo
         $pdf->Ln(5);
         $pdf->SetFont('Arial', 'B', 9);
         $pdf->Cell(6, 6, 'No', 1, 0, 'C');
@@ -841,7 +666,6 @@ class Kelola_saldo extends CI_Controller
         $pdf->Cell(141, 6, 'Total Penambahan Saldo', 1, 0, 'R');
         $pdf->SetFillColor(211, 211, 211);
         $pdf->Cell(50, 6, 'Rp ' . number_format($dataPettyCash['penambahan'], 0, ',', '.'), 1, 1, 'C', true);
-
 
         // data bpkk
         $pdf->Ln(8);
@@ -876,7 +700,6 @@ class Kelola_saldo extends CI_Controller
         $pdf->Cell(25, 6, 'Rp ' . number_format($dataPettyCash['sisa_saldo'], 0, ',', '.'), 1, 1, 'C', true);
         $pdf->SetFillColor(255, 255, 255);
 
-        // ✅ ========== AUTO ORIENTATION: FILE DEBET ==========
         if (!empty($fileDebet)) {
             $pathDebet = FCPATH . 'uploads/finance/' . $fileDebet;
 
@@ -896,7 +719,6 @@ class Kelola_saldo extends CI_Controller
             }
         }
 
-        // ✅ ========== AUTO ORIENTATION: FILE PERMINTAAN ==========
         if (!empty($filePermintaan)) {
             $pathPermintaan = FCPATH . 'uploads/ppt/' . $filePermintaan;
 
@@ -916,7 +738,6 @@ class Kelola_saldo extends CI_Controller
             }
         }
 
-        // ✅ ========== AUTO ORIENTATION: FILE KWITANSI ==========
         foreach ($dataPettyCash['detail'] as $row) {
             if (!empty($row['upload_file_cab'])) {
                 $filePath = FCPATH . 'uploads/bpkk/' . $jenis . '/' . $row['upload_file_cab'];
